@@ -6,7 +6,7 @@
     "dev": "mkdir -p __generated__ && concurrently \"relay-compiler --watch\" \"next dev --turbopack\"",
     "build": "relay-compiler --validate && next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "relay": "relay-compiler",
     "generate-schema": "dotnet run --project ../backend/api schema export --output schema.graphql"
   },
@@ -53,6 +53,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
     "@types/node": "20.7.1",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.1",
