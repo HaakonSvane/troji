@@ -14,15 +14,15 @@ import {
     Table,
     TableBody,
     TableCaption,
-    TableCell,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { UserPlus2 } from "lucide-react";
+import { Dices } from "lucide-react";
 import { useState } from "react";
 import { graphql, useFragment } from "react-relay";
 import { toast } from "sonner";
+import { GroupGamesTableRow } from "./GroupGamesTableRow";
 import { NewGameForm } from "./NewGameForm";
 
 const GroupGamesPanelFragment = graphql`
@@ -33,19 +33,7 @@ const GroupGamesPanelFragment = graphql`
             edges {
                 node {
                     id
-                    symbol
-                    name
-                    description
-                    trophies {
-                        id
-                    }
-                    topPlayers(first: 1) {
-                        edges {
-                            node {
-                                username
-                            }
-                        }
-                    }
+                    ...GroupGamesTableRowFragment
                 }
             }
         }
@@ -76,7 +64,7 @@ export const GroupGamesPanel = ({ fragmentKey }: GroupGamesPanelProps) => {
                     <DrawerDialogTrigger asChild>
                         <Button
                             variant="secondary"
-                            leadingIcon={UserPlus2}
+                            leadingIcon={Dices}
                             className="whitespace-nowrap"
                         >
                             Create game
@@ -102,7 +90,7 @@ export const GroupGamesPanel = ({ fragmentKey }: GroupGamesPanelProps) => {
                 </DrawerDialog>
             </div>
             <Table>
-                <TableCaption>A list of your recent invoices.</TableCaption>
+                <TableCaption>A list of this group's games!</TableCaption>
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-[50px]"></TableHead>
@@ -114,17 +102,7 @@ export const GroupGamesPanel = ({ fragmentKey }: GroupGamesPanelProps) => {
                 </TableHeader>
                 <TableBody>
                     {data.games?.edges?.map(game => (
-                        <TableRow key={game.node.id}>
-                            <TableCell className="text-center">{game.node.symbol}</TableCell>
-                            <TableCell className="font-medium">{game.node.name}</TableCell>
-                            <TableCell className="text-muted">{game.node.description}</TableCell>
-                            <TableCell className="text-right">
-                                {game.node.trophies.length}
-                            </TableCell>
-                            <TableCell className="text-center">
-                                {game.node.topPlayers?.edges?.at(0)?.node.username ?? "None"}
-                            </TableCell>
-                        </TableRow>
+                        <GroupGamesTableRow key={game.node.id} fragmentKey={game.node} />
                     ))}
                 </TableBody>
             </Table>

@@ -23,20 +23,7 @@ const NewGameFormMutation = graphql`
         createGame(input: $input)
             @prependNode(connections: $connections, edgeTypeName: "GamesEdge") {
             game {
-                id
-                name
-                symbol
-                description
-                topPlayers {
-                    edges {
-                        node {
-                            username
-                        }
-                    }
-                }
-                trophies {
-                    id
-                }
+                ...GroupGamesTableRowFragment
             }
         }
     }

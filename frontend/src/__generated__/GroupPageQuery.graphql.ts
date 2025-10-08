@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fd851f5a94feb87272b044fae9603d34>>
+ * @generated SignedSource<<0b8d5370e8638b2918a38af7704c0245>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -333,12 +333,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "38236798ec40d0a2c9b3f421450333d1",
+    "cacheID": "fb6a6615308c843a5153f698f6c0528c",
     "id": null,
     "metadata": {},
     "name": "GroupPageQuery",
     "operationKind": "query",
-    "text": "query GroupPageQuery(\n  $groupId: ID!\n) {\n  groupById(id: $groupId) {\n    id\n    name\n    adminId\n    ...GroupSocialCardFragment\n    ...GroupGamesPanelFragment\n  }\n}\n\nfragment GroupGamesPanelFragment on Group {\n  id\n  games(first: 10, order: [{createdDate: DESC}]) {\n    edges {\n      node {\n        id\n        symbol\n        name\n        description\n        trophies {\n          id\n        }\n        topPlayers(first: 1) {\n          edges {\n            node {\n              username\n              id\n            }\n          }\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment GroupInviteFragment on Group {\n  id\n  invite {\n    inviteCode\n    expirationDate\n  }\n}\n\nfragment GroupSocialCardFragment on Group {\n  name\n  description\n  ...GroupInviteFragment\n}\n"
+    "text": "query GroupPageQuery(\n  $groupId: ID!\n) {\n  groupById(id: $groupId) {\n    id\n    name\n    adminId\n    ...GroupSocialCardFragment\n    ...GroupGamesPanelFragment\n  }\n}\n\nfragment GroupGamesPanelFragment on Group {\n  id\n  games(first: 10, order: [{createdDate: DESC}]) {\n    edges {\n      node {\n        id\n        ...GroupGamesTableRowFragment\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment GroupGamesTableRowFragment on Game {\n  id\n  symbol\n  name\n  description\n  trophies {\n    id\n  }\n  topPlayers(first: 1) {\n    edges {\n      node {\n        username\n        id\n      }\n    }\n  }\n}\n\nfragment GroupInviteFragment on Group {\n  id\n  invite {\n    inviteCode\n    expirationDate\n  }\n}\n\nfragment GroupSocialCardFragment on Group {\n  name\n  description\n  ...GroupInviteFragment\n}\n"
   }
 };
 })();

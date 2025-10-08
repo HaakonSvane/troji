@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c34282bb8dd0b878220e6fc34952ea7f>>
+ * @generated SignedSource<<f6e782b36ed383f94c2d202a9ac4019b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,20 +15,8 @@ export type GroupGamesPanelFragment$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly description: string | null | undefined;
         readonly id: string;
-        readonly name: string;
-        readonly symbol: string;
-        readonly topPlayers: {
-          readonly edges: ReadonlyArray<{
-            readonly node: {
-              readonly username: string;
-            };
-          }> | null | undefined;
-        } | null | undefined;
-        readonly trophies: ReadonlyArray<{
-          readonly id: string;
-        }>;
+        readonly " $fragmentSpreads": FragmentRefs<"GroupGamesTableRowFragment">;
       };
     }> | null | undefined;
   } | null | undefined;
@@ -102,83 +90,9 @@ return {
               "selections": [
                 (v0/*: any*/),
                 {
-                  "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
-                  "name": "symbol",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "name",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "description",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "Trophy",
-                  "kind": "LinkedField",
-                  "name": "trophies",
-                  "plural": true,
-                  "selections": [
-                    (v0/*: any*/)
-                  ],
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": [
-                    {
-                      "kind": "Literal",
-                      "name": "first",
-                      "value": 1
-                    }
-                  ],
-                  "concreteType": "TopPlayersConnection",
-                  "kind": "LinkedField",
-                  "name": "topPlayers",
-                  "plural": false,
-                  "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "concreteType": "TopPlayersEdge",
-                      "kind": "LinkedField",
-                      "name": "edges",
-                      "plural": true,
-                      "selections": [
-                        {
-                          "alias": null,
-                          "args": null,
-                          "concreteType": "User",
-                          "kind": "LinkedField",
-                          "name": "node",
-                          "plural": false,
-                          "selections": [
-                            {
-                              "alias": null,
-                              "args": null,
-                              "kind": "ScalarField",
-                              "name": "username",
-                              "storageKey": null
-                            }
-                          ],
-                          "storageKey": null
-                        }
-                      ],
-                      "storageKey": null
-                    }
-                  ],
-                  "storageKey": "topPlayers(first:1)"
+                  "kind": "FragmentSpread",
+                  "name": "GroupGamesTableRowFragment"
                 },
                 {
                   "alias": null,
@@ -246,6 +160,6 @@ return {
 };
 })();
 
-(node as any).hash = "f71ed6b8c7138480865f853d5f091937";
+(node as any).hash = "14e35913f37f238c04154b9b83f5486e";
 
 export default node;

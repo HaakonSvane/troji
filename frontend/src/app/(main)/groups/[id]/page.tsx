@@ -2,7 +2,8 @@ import GroupQueryNode, { GroupPageQuery } from "@/__generated__/GroupPageQuery.g
 import { loadSerializableQuery } from "@/relay/loadSerializableQuery";
 import { GroupQuery } from "./Group";
 
-const GroupPage = async ({ params }: { params: { id: string } }) => {
+const GroupPage = async (props: { params: Promise<{ id: string }> }) => {
+    const params = await props.params;
     const decodedId = decodeURIComponent(params.id);
     const preloadedGroupQuery = await loadSerializableQuery<typeof GroupQueryNode, GroupPageQuery>(
         GroupQueryNode.params,

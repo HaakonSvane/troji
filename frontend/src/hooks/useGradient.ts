@@ -2,7 +2,7 @@ import { useState, useEffect, RefObject, useMemo } from "react";
 
 const SPEED = 1;
 
-export const useGradient = (element: RefObject<HTMLElement>, colors: string[]) => {
+export const useGradient = (element: RefObject<HTMLElement | null>, colors: string[]) => {
     const percentages = useMemo(
         () => Array.from({ length: colors.length }).map((_, index) => index * 100),
         [colors],
