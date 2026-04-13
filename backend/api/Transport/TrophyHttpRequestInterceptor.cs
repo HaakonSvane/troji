@@ -7,7 +7,7 @@ namespace api.Transport;
 public class TrophyHttpRequestInterceptor : DefaultHttpRequestInterceptor
 {
     public override async ValueTask OnCreateAsync(HttpContext context, IRequestExecutor requestExecutor,
-        IQueryRequestBuilder requestBuilder,
+        OperationRequestBuilder requestBuilder,
         CancellationToken cancellationToken)
     {
         

@@ -21,7 +21,9 @@ export const DashboardClientMainView = ({
     return (
         <>
             <Header queryRef={headerQueryRef} />
-            <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-10 py-6">{children}</div>
+            <div className="max-w-(--breakpoint-2xl) mx-auto px-4 sm:px-6 lg:px-10 py-6">
+                {children}
+            </div>
         </>
     );
 };

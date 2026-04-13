@@ -40,9 +40,7 @@ const GroupGamesPanelFragment = graphql`
     }
 `;
 
-type GroupGamesPanelProps = {
-    fragmentKey: GroupGamesPanelFragment$key;
-};
+type GroupGamesPanelProps = { fragmentKey: GroupGamesPanelFragment$key };
 
 export const GroupGamesPanel = ({ fragmentKey }: GroupGamesPanelProps) => {
     const data = useFragment(GroupGamesPanelFragment, fragmentKey);
@@ -90,7 +88,7 @@ export const GroupGamesPanel = ({ fragmentKey }: GroupGamesPanelProps) => {
                 </DrawerDialog>
             </div>
             <Table>
-                <TableCaption>A list of this group's games!</TableCaption>
+                <TableCaption>{"A list of this group's games!"}</TableCaption>
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-[50px]"></TableHead>

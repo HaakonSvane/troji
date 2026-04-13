@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f6e782b36ed383f94c2d202a9ac4019b>>
+ * @generated SignedSource<<7f4b7427552db94f7f8b001eec6ec416>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type GroupGamesPanelFragment$data = {
   readonly games: {

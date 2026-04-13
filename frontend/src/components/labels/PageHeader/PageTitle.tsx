@@ -16,7 +16,7 @@ export const PageTitle = ({ ...props }: React.HTMLAttributes<HTMLDivElement>) =>
                 transition: "all ease-in-out 0.2s",
             }}
             className={cn(
-                "inline-block text-transparent !bg-clip-text text-3xl sm:text-4xl font-bold tracking-tight",
+                "inline-block text-transparent bg-clip-text! text-3xl sm:text-4xl font-bold tracking-tight",
                 props.className,
             )}
             {...props}

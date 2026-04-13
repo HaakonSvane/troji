@@ -26,7 +26,7 @@ export const TrophyStack = ({ queryReference, groupId, numberShown = 3 }: Trophy
     const filteredTropies = groupId
         ? data.trophies.filter(trophy => trophy.game.groupId === groupId)
         : data.trophies;
-    const topNTrophies = (filteredTropies as any[])
+    const topNTrophies = filteredTropies
         .sort((a, b) => new Date(b.awardedDate).getTime() - new Date(a.awardedDate).getTime())
         .slice(0, numberShown);
     return (

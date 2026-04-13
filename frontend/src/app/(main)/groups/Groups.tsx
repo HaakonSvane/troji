@@ -6,7 +6,7 @@ import { MyGroups } from "./components/MyGroups";
 import { getCurrentEnvironment } from "@/relay/environment";
 import { useSerializablePreloadedQuery } from "@/relay/useSerializablePreloadedQuery";
 import { SerializablePreloadedQuery } from "@/relay/loadSerializableQuery";
-import GroupsPageQueryNode, { GroupsPageQuery } from "@/__generated__/GroupsPageQuery.graphql";
+import GroupsPageQueryNode, { type GroupsPageQuery } from "@/__generated__/GroupsPageQuery.graphql";
 import { Input } from "@/components/ui/input";
 import {
     DrawerDialog,

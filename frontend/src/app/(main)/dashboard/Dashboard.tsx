@@ -3,7 +3,7 @@ import { graphql, usePreloadedQuery } from "react-relay";
 import { PageDescription, PageHeader, PageTitle } from "@/components/labels/PageHeader";
 import { SerializablePreloadedQuery } from "@/relay/loadSerializableQuery";
 import DashboardPageQueryNode, {
-    DashboardPageQuery,
+    type DashboardPageQuery,
 } from "@/__generated__/DashboardPageQuery.graphql";
 import { useSerializablePreloadedQuery } from "@/relay/useSerializablePreloadedQuery";
 import { getCurrentEnvironment } from "@/relay/environment";
@@ -30,7 +30,7 @@ export const DashboardQuery = ({ preloadedQuery }: DashboardQueryProps) => {
     return (
         <>
             <PageHeader>
-                <PageTitle>Welcome dude!</PageTitle>
+                <PageTitle>{`Welcome ${data.me.userProfile?.firstName}`}</PageTitle>
                 <PageDescription>Here is a quick overview of your groups</PageDescription>
             </PageHeader>
         </>

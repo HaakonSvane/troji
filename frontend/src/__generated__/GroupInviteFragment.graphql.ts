@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<50a00c9140e00ac153cb85b2ab0b1458>>
+ * @generated SignedSource<<09ae9117e6cb0b60794bf0f245554960>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type GroupInviteFragment$data = {
   readonly id: string;

@@ -9,6 +9,7 @@ namespace api.API.Account;
 public static class UserQueries
 {
     [Error(typeof(NoUserException))]
+    [Error(typeof(UserNotRegisteredException))]
     public static async Task<User> GetMeAsync(
         [TokenUser] TokenUser? user,
         IUsersByIdsDataLoader dataLoader,
@@ -20,6 +21,10 @@ public static class UserQueries
             throw new NoUserException();
         }
         var dbUser = await dataLoader.LoadAsync(user.Id, cancellationToken);
+        if (dbUser is null)
+        {
+            throw new UserNotRegisteredException();
+        }
         return dbUser;
     }
 

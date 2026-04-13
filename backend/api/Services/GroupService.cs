@@ -9,11 +9,11 @@ public class GroupService : IGroupService
 {
     private readonly IGroupRepository _groupRepository;
     private readonly IGroupsByIdsDataLoader _groupsByIdsDataLoader;
-    private readonly IIdSerializer _idSerializer;
     
-    public GroupService(IGroupRepository groupRepository)
+    public GroupService(IGroupRepository groupRepository, IGroupsByIdsDataLoader groupsByIdsDataLoader)
     {
         _groupRepository = groupRepository;
+        _groupsByIdsDataLoader = groupsByIdsDataLoader;
     }
 
     public async Task<GroupInvite> ResetGroupInviteAsync(string userId, int groupId, CancellationToken cancellationToken)
@@ -21,8 +21,7 @@ public class GroupService : IGroupService
         var group = await _groupsByIdsDataLoader.LoadAsync(groupId, cancellationToken);
         if (group is null)
         {
-            var serializedId = _idSerializer.Serialize(null, "Group", groupId) ?? "[MISSING]";
-            throw new GroupNotFoundException(serializedId);
+            throw new GroupNotFoundException(groupId.ToString());
         }
         if (group.AdminId != userId)
         {

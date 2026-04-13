@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0c941acfe61367cc473efe1612a4ee8c>>
+ * @generated SignedSource<<93b906a8ef21f15a272576056567900e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type GroupBoxFragment$data = {
   readonly description: string | null | undefined;

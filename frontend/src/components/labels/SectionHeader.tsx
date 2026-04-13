@@ -19,7 +19,7 @@ export const SectionHeader = ({ title }: SectionHeaderProps) => {
                 wordSpacing: 5,
                 transition: "all ease-in-out 0.2s",
             }}
-            className={cn("inline-block text-transparent !bg-clip-text")}
+            className={cn("inline-block text-transparent bg-clip-text!")}
         >
             {title}
         </h2>

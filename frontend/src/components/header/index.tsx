@@ -1,5 +1,5 @@
 import { UserButton } from "@/components/buttons/UserButton";
-import { HeaderQuery } from "@/generated/HeaderQuery.graphql";
+import { type HeaderQuery } from "@/__generated__/HeaderQuery.graphql";
 import { PreloadedQuery, graphql, usePreloadedQuery } from "react-relay";
 import { DropdownMenu, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Container } from "./Container";
@@ -15,9 +15,7 @@ const HeaderQuery = graphql`
     }
 `;
 
-type HeaderProps = {
-    queryRef: PreloadedQuery<HeaderQuery>;
-};
+type HeaderProps = { queryRef: PreloadedQuery<HeaderQuery> };
 
 export const Header = ({ queryRef }: HeaderProps) => {
     const data = usePreloadedQuery(HeaderQuery, queryRef);

@@ -2,7 +2,7 @@
 
 import { SerializablePreloadedQuery } from "@/relay/loadSerializableQuery";
 import { graphql, usePreloadedQuery } from "react-relay";
-import GroupPageQueryNode, { GroupPageQuery } from "@/__generated__/GroupPageQuery.graphql";
+import GroupPageQueryNode, { type GroupPageQuery } from "@/__generated__/GroupPageQuery.graphql";
 import { getCurrentEnvironment } from "@/relay/environment";
 import { useSerializablePreloadedQuery } from "@/relay/useSerializablePreloadedQuery";
 import { PageHeader, PageTitle } from "@/components/labels/PageHeader";

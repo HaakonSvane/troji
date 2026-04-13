@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cfee5bc3b207f8c20e8245bb010fb1f3>>
+ * @generated SignedSource<<b2dfb4c422411ff7742f00d89f0326a4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Query } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 export type DashboardPageQuery$variables = Record<PropertyKey, never>;
 export type DashboardPageQuery$data = {
   readonly me: {

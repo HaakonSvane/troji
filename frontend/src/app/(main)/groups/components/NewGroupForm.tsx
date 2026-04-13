@@ -37,26 +37,16 @@ const NewGroupMutation = graphql`
     }
 `;
 
-type NewGroupFormProps = {
-    connectionId: string;
-    onSuccess?: () => void;
-};
+type NewGroupFormProps = { connectionId: string; onSuccess?: () => void };
 
 export const NewGroupForm = ({ connectionId, onSuccess }: NewGroupFormProps) => {
-    const form = useForm<z.infer<typeof newGroupSchema>>({
-        resolver: zodResolver(newGroupSchema),
-    });
+    const form = useForm<z.infer<typeof newGroupSchema>>({ resolver: zodResolver(newGroupSchema) });
 
     const [commitMutation, isMutationInFlight] =
         useMutation<NewGroupFormMutation>(NewGroupMutation);
 
     const onSubmit = (data: z.infer<typeof newGroupSchema>) => {
-        commitMutation({
-            variables: {
-                input: data,
-                connections: [connectionId],
-            },
-        });
+        commitMutation({ variables: { input: data, connections: [connectionId] } });
         onSuccess?.();
     };
 
@@ -73,7 +63,7 @@ export const NewGroupForm = ({ connectionId, onSuccess }: NewGroupFormProps) => 
                                 <Input {...field} />
                             </FormControl>
                             <FormDescription>
-                                This is your group's name. It will be displayed to other users.
+                                {"This is your group's name. It will be displayed to other users."}
                             </FormDescription>
                             <FormMessage />
                         </FormItem>

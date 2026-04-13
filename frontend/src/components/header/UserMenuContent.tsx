@@ -23,6 +23,7 @@ import {
 } from "../ui/dropdown-menu";
 import { NewFeedbackForm } from "./NewFeedbackForm";
 import { UserMenuContentFragment$key } from "@/__generated__/UserMenuContentFragment.graphql";
+import Link from "next/link";
 
 const UserMenuFragment = graphql`
     fragment UserMenuContentFragment on User {
@@ -34,9 +35,7 @@ const UserMenuFragment = graphql`
     }
 `;
 
-type UserMenuContentProps = {
-    fragmentKey: UserMenuContentFragment$key;
-};
+type UserMenuContentProps = { fragmentKey: UserMenuContentFragment$key };
 
 export const UserMenuContent = ({ fragmentKey }: UserMenuContentProps) => {
     const data = useFragment(UserMenuFragment, fragmentKey);
@@ -64,10 +63,10 @@ export const UserMenuContent = ({ fragmentKey }: UserMenuContentProps) => {
                         <span>Profile</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem className={cn("text-destructive")} asChild>
-                        <a href="/api/auth/logout">
+                        <Link href="/api/auth/logout">
                             <LogOut className={cn("mr-4")} />
                             <span>Sign out</span>
-                        </a>
+                        </Link>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
 
@@ -86,8 +85,9 @@ export const UserMenuContent = ({ fragmentKey }: UserMenuContentProps) => {
                 <DrawerDialogHeader>
                     <DrawerDialogTitle>Leave some feedback</DrawerDialogTitle>
                     <DrawerDialogDescription>
-                        Thank you for wanting to provide some feedback. Don't let anything stop you
-                        from sharing your thoughts, be it praise, complaints or suggestions!
+                        {
+                            "Thank you for wanting to provide some feedback. Don't let anything stop you from sharing your thoughts, be it praise, complaints or suggestions!"
+                        }
                     </DrawerDialogDescription>
                 </DrawerDialogHeader>
                 <DrawerDialogBody>

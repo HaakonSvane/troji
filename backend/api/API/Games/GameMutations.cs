@@ -19,7 +19,6 @@ public static class GameMutations
         string? description,
         IGroupsByIdsDataLoader groupsByIdsDataLoader,
         IGameRepository gameRepository,
-        [Service] IIdSerializer serializer,
         CancellationToken cancellationToken)
     {
         if (tokenUser is null)
@@ -30,8 +29,7 @@ public static class GameMutations
         var group = await groupsByIdsDataLoader.LoadAsync(groupId, cancellationToken);
         if (group is null)
         {
-            var serializedId = serializer.Serialize(null, "Group", groupId) ?? "[MISSING]";
-            throw new GroupNotFoundException(serializedId);
+            throw new GroupNotFoundException(groupId.ToString());
         }
 
         var newGame = new Game()

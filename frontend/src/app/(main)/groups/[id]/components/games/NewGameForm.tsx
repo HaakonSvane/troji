@@ -1,4 +1,4 @@
-import { NewGameFormMutation } from "@/__generated__/NewGameFormMutation.graphql";
+import { type NewGameFormMutation } from "@/__generated__/NewGameFormMutation.graphql";
 import { Button } from "@/components/ui/button";
 import { EmojiPicker } from "@/components/ui/emojiPicker";
 import {
@@ -29,30 +29,16 @@ const NewGameFormMutation = graphql`
     }
 `;
 
-type NewGameFormProps = {
-    groupId: string;
-    connectionId: string;
-    onSuccess?: () => void;
-};
+type NewGameFormProps = { groupId: string; connectionId: string; onSuccess?: () => void };
 
 export const NewGameForm = ({ groupId, connectionId, onSuccess }: NewGameFormProps) => {
-    const form = useForm<z.infer<typeof newGameSchema>>({
-        resolver: zodResolver(newGameSchema),
-    });
+    const form = useForm<z.infer<typeof newGameSchema>>({ resolver: zodResolver(newGameSchema) });
 
     const [commitMutation, isMutationInFlight] =
         useMutation<NewGameFormMutation>(NewGameFormMutation);
 
     const onSubmit = (data: z.infer<typeof newGameSchema>) => {
-        commitMutation({
-            variables: {
-                input: {
-                    groupId,
-                    ...data,
-                },
-                connections: [connectionId],
-            },
-        });
+        commitMutation({ variables: { input: { groupId, ...data }, connections: [connectionId] } });
         onSuccess?.();
     };
 

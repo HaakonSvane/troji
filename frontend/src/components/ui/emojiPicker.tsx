@@ -168,7 +168,7 @@ export const EmojiButton = ({ isSelected, onClick, emoji }: EmojiButtonProps) =>
         <Button
             id={id}
             className={cn(`w-[${BUTTON_SIZE}px] h-[${BUTTON_SIZE}px] text-xl`)}
-            variant={isSelected ? "outline" : "ghost"}
+            variant={isSelected ? "outline-solid" : "ghost"}
             onClick={onClick}
             role="option"
             aria-disabled={false}

@@ -1,6 +1,8 @@
 import { loadSerializableQuery } from "@/relay/loadSerializableQuery";
 import { DashboardQuery } from "./Dashboard";
-import DashboardPageQueryNode, { DashboardPageQuery } from "@/generated/DashboardPageQuery.graphql";
+import DashboardPageQueryNode, {
+    DashboardPageQuery,
+} from "@/__generated__/DashboardPageQuery.graphql";
 
 const DashboardPage = async () => {
     const preloadedDashboardQuery = await loadSerializableQuery<

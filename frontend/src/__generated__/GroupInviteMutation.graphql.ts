@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<697b75ba78e2738125860808df57acde>>
+ * @generated SignedSource<<788f0797908bac305839aa058480b8d4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Mutation } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 export type GroupInviteMutation$variables = {
   groupId: string;
 };

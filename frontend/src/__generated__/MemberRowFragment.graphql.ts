@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<483db3beb4d7cae66b0f28d17193e15e>>
+ * @generated SignedSource<<76e4a3cad972a63170f45cb5c09efc88>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type MemberRowFragment$data = {
   readonly userProfile: {

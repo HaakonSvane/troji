@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<af8d579c0771330635ec51311be90f18>>
+ * @generated SignedSource<<4d8acb7956ca7bb3df184d674b8e79e7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type GroupGamesTableRowFragment$data = {
   readonly description: string | null | undefined;

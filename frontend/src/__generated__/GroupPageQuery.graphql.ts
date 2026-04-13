@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0b8d5370e8638b2918a38af7704c0245>>
+ * @generated SignedSource<<bba572f352c207cb082b84eed52200c0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Query } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type GroupPageQuery$variables = {
   groupId: string;

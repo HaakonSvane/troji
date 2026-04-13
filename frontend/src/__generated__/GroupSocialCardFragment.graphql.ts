@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<81261c0a68ed9791425355751ac459d2>>
+ * @generated SignedSource<<a61774bb3d2cb0a1a698564eac12156d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type GroupSocialCardFragment$data = {
   readonly description: string | null | undefined;

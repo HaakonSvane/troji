@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e03ff8d6138184f88fd3d2e3e013fa7e>>
+ * @generated SignedSource<<6df76aa87b75b0c98aa7bc7e842edf91>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type TrophyAvatarFragment$data = {
   readonly game: {

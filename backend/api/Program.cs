@@ -1,5 +1,4 @@
 using System.Reflection;
-using api.API.Middleware;
 using api.Auth.Handlers;
 using api.Auth.Requirements;
 using api.Database;
@@ -62,15 +61,11 @@ public class Program
         builder.Services
             .AddGraphQLServer()
             .AddAuthorization()
-            .RegisterService<IUserRepository>(ServiceKind.Resolver)
-            .RegisterService<IGroupRepository>(ServiceKind.Resolver)
-            .RegisterService<IGameRepository>(ServiceKind.Resolver)
             .AddTypes()
             .AddGlobalObjectIdentification()
             .AddMutationConventions(applyToAllMutations: true)
             .AddQueryFieldToMutationPayloads()
             .AddHttpRequestInterceptor<TrophyHttpRequestInterceptor>()
-            .UseRequest<UserMiddleware>()
             .UseDefaultPipeline()
             .AddSorting();
 
@@ -82,7 +77,7 @@ public class Program
 
         if (builder.Environment.IsDevelopment())
         {
-            app.MapBananaCakePop("/dev");
+            app.MapNitroApp("/dev");
         }
         
         app.MapGraphQLHttp().RequireAuthorization();

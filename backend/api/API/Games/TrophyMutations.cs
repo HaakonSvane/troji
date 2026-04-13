@@ -23,8 +23,7 @@ public static class TrophyMutations
         IUsersByGroupIdsDataLoader usersByGroupIdsDataLoader,
         IGroupsByIdsDataLoader groupsByIdsDataLoader,
         IGameRepository gameRepository,
-        CancellationToken cancellationToken,
-        [Service] IIdSerializer serializer)
+        CancellationToken cancellationToken)
     {
         if (tokenUser is null)
         {
@@ -41,20 +40,17 @@ public static class TrophyMutations
         var members = await usersByGroupIdsDataLoader.LoadAsync(game.ParentGroupId, cancellationToken);
         if (members.All(member => member.Id != tokenUser.Id))
         {
-            string serializedGroupId = serializer.Serialize(null, nameof(Group), game.ParentGroupId) ?? "[MISSING]";
-            throw new NoMemberException(tokenUser.Id, serializedGroupId);
+            throw new NoMemberException(tokenUser.Id, game.ParentGroupId.ToString());
         }
         if (members.All(member => member.Id != userId))
         {
-            string serializedGroupId = serializer.Serialize(null, nameof(Group), game.ParentGroupId) ?? "[MISSING]";
-            throw new NoMemberException(tokenUser.Id, serializedGroupId);
+            throw new NoMemberException(tokenUser.Id, game.ParentGroupId.ToString());
         }
 
         var group = await groupsByIdsDataLoader.LoadAsync(game.ParentGroupId, cancellationToken);
         if (group is null)
         {
-            string serializedGroupId = serializer.Serialize(null, nameof(Group), game.ParentGroupId) ?? "[MISSING]";
-            throw new GroupNotFoundException(serializedGroupId);
+            throw new GroupNotFoundException(game.ParentGroupId.ToString());
         }
 
         var trophy = new Trophy()

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<96383b3aae706ba2152704767661cb92>>
+ * @generated SignedSource<<68dc5932196765dd419e93c2ac8afebe>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Mutation } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type CreateGameInput = {
   description?: string | null | undefined;

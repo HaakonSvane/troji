@@ -7,12 +7,9 @@ namespace api.API.Games;
 public static class GameNode
 {
     [BindMember(nameof(Game.ParentGroupId))]
-    public static string GetGroupId(
-        [Parent] Game game,
-        [Service] IIdSerializer idSerializer)
+    public static string GetGroupId([Parent] Game game)
     {
-        var serializedId = idSerializer.Serialize(null,nameof(Group), game.ParentGroupId);
-        return serializedId ?? "";
+        return game.ParentGroupId.ToString();
     }
     
     public static async Task<IReadOnlyCollection<Trophy>> GetTrophiesAsync(

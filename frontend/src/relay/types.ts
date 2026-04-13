@@ -7,13 +7,13 @@ export type RelayPageProps = {
 };
 
 export type GetRelayServerSideProps<
-    P extends { [key: string]: any } = { [key: string]: any },
+    P extends { [key: string]: unknown } = { [key: string]: unknown },
     Q extends ParsedUrlQuery = ParsedUrlQuery,
     D extends PreviewData = PreviewData,
 > = GetServerSideProps<P & Required<RelayPageProps>, Q, D>;
 
 export type GetRelayStaticProps<
-    P extends { [key: string]: any } = { [key: string]: any },
+    P extends { [key: string]: unknown } = { [key: string]: unknown },
     Q extends ParsedUrlQuery = ParsedUrlQuery,
     D extends PreviewData = PreviewData,
 > = GetStaticProps<P & Required<RelayPageProps>, Q, D>;

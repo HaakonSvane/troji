@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a4021c226db4dc3398bcee02d1576529>>
+ * @generated SignedSource<<e7ebb4fbcaa5ac4bc4d457a2959ae801>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Mutation } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type RuleType = "DEMOCRACY" | "DICTATORSHIP" | "%future added value";
 export type CreateGroupInput = {

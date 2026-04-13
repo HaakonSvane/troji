@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f678c8b9b5d5162af7412754add9f67f>>
+ * @generated SignedSource<<461e7143893ec6a33be895680b454063>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type TrophyStackFragment$data = {
   readonly trophies: ReadonlyArray<{

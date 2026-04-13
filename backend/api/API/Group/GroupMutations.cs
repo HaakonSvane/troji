@@ -2,7 +2,6 @@ using api.API.Errors;
 using api.Database.Models;
 using api.Repository;
 using api.Transport;
-using IIdSerializer = HotChocolate.Types.Relay.IIdSerializer;
 
 namespace api.API.Group;
 
@@ -18,8 +17,7 @@ public static class GroupMutations
         [ID] int groupId,
         IGroupRepository groupRepository,
         IGroupsByIdsDataLoader dataLoader,
-        CancellationToken cancellationToken,
-        [Service] IIdSerializer serializer)
+        CancellationToken cancellationToken)
     {
         if (tokenUser is null)
         {
@@ -29,8 +27,7 @@ public static class GroupMutations
         var group = await dataLoader.LoadAsync(groupId, cancellationToken);
         if (group is null)
         {
-            var serializedId = serializer.Serialize(null, "Group", groupId) ?? "[MISSING]";
-            throw new GroupNotFoundException(serializedId);
+            throw new GroupNotFoundException(groupId.ToString());
         }
         if (group.AdminId != tokenUser.Id)
         {
@@ -42,6 +39,7 @@ public static class GroupMutations
     
     [Error(typeof(NoInviteException))]
     [Error(typeof(NoUserException))]
+    [Error(typeof(UserNotRegisteredException))]
     [Error(typeof(InviteExpiredException))]
     [Error(typeof(GroupNotFoundException))]
     [Error(typeof(AlreadyMemberException))]
@@ -52,11 +50,19 @@ public static class GroupMutations
         IGroupRepository groupRepository,
         IGroupsByIdsDataLoader groupsByIdsDataLoader,
         IGroupsByUserIdsDataLoader groupsByUserIdsDataLoader,
+        IUserRepository userRepository,
         CancellationToken cancellationToken)
     {
         if (tokenUser is null)
         {
             throw new NoUserException();
+        }
+
+        // Ensure user is registered before joining group
+        var user = await userRepository.GetUserByIdAsync(tokenUser.Id, cancellationToken);
+        if (user is null)
+        {
+            throw new UserNotRegisteredException();
         }
 
         var invite = await invitesDataLoader.LoadAsync(inviteCode, cancellationToken);
@@ -78,27 +84,35 @@ public static class GroupMutations
         }
 
         var myGroups = await groupsByUserIdsDataLoader.LoadAsync(tokenUser.Id, cancellationToken);
-        if (myGroups.Any(myGroup => myGroup.Id == group.Id))
+        if (myGroups != null && myGroups.Any(myGroup => myGroup.Id == group.Id))
         {
             throw new AlreadyMemberException();
         }
-        groupsByUserIdsDataLoader.Clear();
         return await groupRepository.AddUserToGroup(tokenUser.Id, group, cancellationToken);
     }
         
     
     [Error<NoUserException>]
+    [Error<UserNotRegisteredException>]
     public static async Task<api.Database.Models.Group> CreateGroupAsync(
         [TokenUser] TokenUser? tokenUser,
         string name,
         string? description,
         api.Database.Models.Group.RuleType? decisionModel,
         IGroupRepository groupRepository,
+        IUserRepository userRepository,
         CancellationToken cancellationToken)
     {
         if (tokenUser is null)
         {
             throw new NoUserException();
+        }
+
+        // Ensure user is registered before creating group
+        var user = await userRepository.GetUserByIdAsync(tokenUser.Id, cancellationToken);
+        if (user is null)
+        {
+            throw new UserNotRegisteredException();
         }
 
         var group = new api.Database.Models.Group()

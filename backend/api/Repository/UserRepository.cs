@@ -35,10 +35,7 @@ public sealed class UserRepository : IUserRepository
             Id = userId,
             Username = UsernameGenerator.Generate(),
         };
-        await _context.Users.Upsert(user)
-            .On(u => u.Id)
-            .NoUpdate()
-            .RunAsync(cancellationToken);
+        await _context.Users.AddAsync(user, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
         return user;
     }
