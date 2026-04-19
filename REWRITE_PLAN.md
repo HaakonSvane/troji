@@ -1,7 +1,7 @@
 # Trophy Tracker — Rewrite Plan
 
 > Created: 2026-04-13
-> Status: Not started
+> Status: Phase 3 complete
 
 ---
 
@@ -326,30 +326,30 @@ dev: db-up run-backend dev-frontend
 Track progress by marking items as they are completed. Each phase should be done in order. Tasks
 within a phase can be parallelized where dependencies allow.
 
-- [ ] **Phase 1 — Infrastructure & Repository Setup**
-  - [ ] 1.1 Archive old frontend to a branch and remove from main
-  - [ ] 1.2 Create root `justfile` with all recipes
-  - [ ] 1.3 Update `global.json` to .NET SDK 10.0.5
-  - [ ] 1.4 Update root `.gitignore`
-  - [ ] 1.5 Simplify Docker Compose (PostgreSQL only)
-- [ ] **Phase 2 — Backend Modernization**
-  - [ ] 2.1 Upgrade HotChocolate to 16.0.0-rc.1.30
-  - [ ] 2.2 Upgrade other NuGet packages to latest
-  - [ ] 2.3 Replace Auth0 JWT config with Clerk JWT config
-  - [ ] 2.4 Update `FakeAuthHandler` for Clerk-style user IDs
-  - [ ] 2.5 Update `TrophyHttpRequestInterceptor` for Clerk JWT claims
-  - [ ] 2.6 Add CORS configuration for frontend origin
-  - [ ] 2.7 Clean up dead code and empty directories
-  - [ ] 2.8 Build, run tests, update schema snapshot
-  - [ ] 2.9 Export fresh GraphQL schema
-- [ ] **Phase 3 — Frontend Scaffold**
-  - [ ] 3.1 Initialize React Router v7 project (framework mode, TypeScript)
-  - [ ] 3.2 Configure TypeScript with `@/*` path alias
-  - [ ] 3.3 Install and configure Tailwind v4
-  - [ ] 3.4 Initialize shadcn/ui and install components
-  - [ ] 3.5 Install and configure Relay (compiler, Vite plugin, config)
-  - [ ] 3.6 Install and configure Clerk (`@clerk/react-router`)
-  - [ ] 3.7 Port formatting config (Prettier, ESLint)
+- [x] **Phase 1 — Infrastructure & Repository Setup**
+  - [x] 1.1 Archive old frontend to a branch and remove from main
+  - [x] 1.2 Create root `justfile` with all recipes
+  - [x] 1.3 Update `global.json` to .NET SDK 10.0.5
+  - [x] 1.4 Update root `.gitignore`
+  - [x] 1.5 Simplify Docker Compose (PostgreSQL only)
+- [x] **Phase 2 — Backend Modernization**
+  - [x] 2.1 Upgrade HotChocolate to 16.0.0-rc.1.30
+  - [x] 2.2 Upgrade other NuGet packages to latest
+  - [x] 2.3 Replace Auth0 JWT config with Clerk JWT config
+  - [x] 2.4 Update `FakeAuthHandler` for Clerk-style user IDs
+  - [x] 2.5 Update `TrophyHttpRequestInterceptor` for Clerk JWT claims
+  - [x] 2.6 Add CORS configuration for frontend origin
+  - [x] 2.7 Clean up dead code and empty directories
+  - [x] 2.8 Build, run tests, update schema snapshot
+  - [x] 2.9 Export fresh GraphQL schema
+- [x] **Phase 3 — Frontend Scaffold**
+  - [x] 3.1 Initialize React Router v7 project (framework mode, TypeScript)
+  - [x] 3.2 Configure TypeScript with `@/*` path alias
+  - [x] 3.3 Install and configure Tailwind v4
+  - [x] 3.4 Initialize shadcn/ui and install components
+  - [x] 3.5 Install and configure Relay (compiler, Vite plugin, config)
+  - [x] 3.6 Install and configure Clerk (`@clerk/react-router`)
+  - [x] 3.7 Port formatting config (Prettier, ESLint)
 - [ ] **Phase 4 — Frontend Core Architecture**
   - [ ] 4.1 Set up Relay environment with Clerk token injection
   - [ ] 4.2 Set up Clerk auth (ClerkProvider, rootAuthLoader, sign-in/sign-up routes)

@@ -43,8 +43,10 @@ obj/
 ### Node / Vite / React Router ###
 node_modules/
 dist/
+build/
 .vite/
 frontend/.react-router/
+frontend/app/__generated__/
 
 ### Env files ###
 .env
