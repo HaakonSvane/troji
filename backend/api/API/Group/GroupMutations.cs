@@ -2,7 +2,7 @@ using api.API.Errors;
 using api.Database.Models;
 using api.Repository;
 using api.Transport;
-using IIdSerializer = HotChocolate.Types.Relay.IIdSerializer;
+using HotChocolate.Types.Relay;
 
 namespace api.API.Group;
 
@@ -19,7 +19,7 @@ public static class GroupMutations
         IGroupRepository groupRepository,
         IGroupsByIdsDataLoader dataLoader,
         CancellationToken cancellationToken,
-        [Service] IIdSerializer serializer)
+        [Service] INodeIdSerializer serializer)
     {
         if (tokenUser is null)
         {
@@ -29,7 +29,7 @@ public static class GroupMutations
         var group = await dataLoader.LoadAsync(groupId, cancellationToken);
         if (group is null)
         {
-            var serializedId = serializer.Serialize(null, "Group", groupId) ?? "[MISSING]";
+            var serializedId = serializer.Format("Group", groupId);
             throw new GroupNotFoundException(serializedId);
         }
         if (group.AdminId != tokenUser.Id)
@@ -82,7 +82,6 @@ public static class GroupMutations
         {
             throw new AlreadyMemberException();
         }
-        groupsByUserIdsDataLoader.Clear();
         return await groupRepository.AddUserToGroup(tokenUser.Id, group, cancellationToken);
     }
         
@@ -105,6 +104,8 @@ public static class GroupMutations
         {
             Name = name,
             Description = description,
+            AdminId = tokenUser.Id,
+            Admin = null!,
             CreatedDate = DateTimeOffset.Now.ToUniversalTime(),
             DecisionModel = decisionModel ?? api.Database.Models.Group.RuleType.Democracy,
         };

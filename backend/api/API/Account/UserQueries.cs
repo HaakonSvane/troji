@@ -20,6 +20,10 @@ public static class UserQueries
             throw new NoUserException();
         }
         var dbUser = await dataLoader.LoadAsync(user.Id, cancellationToken);
+        if (dbUser is null)
+        {
+            throw new NoUserException();
+        }
         return dbUser;
     }
 

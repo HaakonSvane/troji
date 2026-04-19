@@ -10,24 +10,24 @@ public class Group
         Democracy,
         Dictatorship
     }
-    
+
     [Key] public int Id { get; set; }
 
     public required string Name { get; set; }
 
     public string? Description { get; set; }
-    
+
     public string? ImageId { get; set; }
 
-    public string AdminId { get; set; }
-    
-    
-    public GroupInvite? Invite { get; set; } 
-    
+    public required string AdminId { get; set; }
+
+
+    public GroupInvite? Invite { get; set; }
+
     public required RuleType DecisionModel { get; set; }
 
-    [ForeignKey("AdminId")] public User Admin { get; set; }
-    
+    [ForeignKey("AdminId")] public User? Admin { get; set; }
+
     [GraphQLIgnore]
     public ICollection<UserGroup> UserGroups { get; set; } = new List<UserGroup>();
 
