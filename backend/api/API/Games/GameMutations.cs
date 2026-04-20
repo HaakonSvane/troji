@@ -3,6 +3,7 @@ using api.API.Group;
 using api.Repository;
 using api.Transport;
 using api.Database.Models;
+using HotChocolate.Types.Relay;
 
 namespace api.API.Games;
 
@@ -19,7 +20,7 @@ public static class GameMutations
         string? description,
         IGroupsByIdsDataLoader groupsByIdsDataLoader,
         IGameRepository gameRepository,
-        [Service] IIdSerializer serializer,
+        [Service] INodeIdSerializer serializer,
         CancellationToken cancellationToken)
     {
         if (tokenUser is null)
@@ -30,7 +31,7 @@ public static class GameMutations
         var group = await groupsByIdsDataLoader.LoadAsync(groupId, cancellationToken);
         if (group is null)
         {
-            var serializedId = serializer.Serialize(null, "Group", groupId) ?? "[MISSING]";
+            var serializedId = serializer.Format("Group", groupId);
             throw new GroupNotFoundException(serializedId);
         }
 

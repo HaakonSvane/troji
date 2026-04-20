@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using api.Database;
@@ -11,9 +12,11 @@ using api.Database;
 namespace api.Migrations
 {
     [DbContext(typeof(TrophyDbContext))]
-    partial class TrophyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260419053523_DropUsername")]
+    partial class DropUsername
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -179,20 +182,6 @@ namespace api.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("text");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ImageId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("MiddleName")
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Id");
@@ -216,6 +205,30 @@ namespace api.Migrations
                     b.HasIndex("GroupId");
 
                     b.ToTable("UserGroups");
+                });
+
+            modelBuilder.Entity("api.Database.Models.UserProfile", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("MiddleName")
+                        .HasColumnType("text");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("UserProfiles");
                 });
 
             modelBuilder.Entity("api.Database.Models.Game", b =>
@@ -319,6 +332,17 @@ namespace api.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("api.Database.Models.UserProfile", b =>
+                {
+                    b.HasOne("api.Database.Models.User", "User")
+                        .WithOne("UserProfile")
+                        .HasForeignKey("api.Database.Models.UserProfile", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("api.Database.Models.Game", b =>
                 {
                     b.Navigation("Trophies");
@@ -349,6 +373,8 @@ namespace api.Migrations
                     b.Navigation("Trophies");
 
                     b.Navigation("UserGroups");
+
+                    b.Navigation("UserProfile");
                 });
 #pragma warning restore 612, 618
         }

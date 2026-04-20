@@ -1,6 +1,6 @@
+using api.API.Errors;
 using api.Database;
 using api.Database.Models;
-using api.Utilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Repository;
@@ -8,7 +8,7 @@ namespace api.Repository;
 public sealed class UserRepository : IUserRepository
 {
     private readonly TrophyDbContext _context;
-    
+
     public UserRepository(TrophyDbContext context)
     {
         _context = context;
@@ -28,40 +28,33 @@ public sealed class UserRepository : IUserRepository
             .ToDictionaryAsync(user => user.Id, user => user, cancellationToken);
     }
 
-    public async Task<User> CreateUserAsync(string userId, CancellationToken cancellationToken)
+    public async Task<User> RegisterUserAsync(
+        string userId,
+        string firstName,
+        string? middleName,
+        string lastName,
+        CancellationToken cancellationToken)
     {
-        var user = new User()
+        var existing = await _context.Users
+            .AnyAsync(u => u.Id == userId, cancellationToken);
+
+        if (existing)
+        {
+            throw new UserAlreadyRegisteredException();
+        }
+
+        var user = new User
         {
             Id = userId,
-            Username = UsernameGenerator.Generate(),
+            FirstName = firstName,
+            MiddleName = middleName,
+            LastName = lastName,
         };
-        await _context.Users.Upsert(user)
-            .On(u => u.Id)
-            .NoUpdate()
-            .RunAsync(cancellationToken);
+
+        await _context.Users.AddAsync(user, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
+
         return user;
-    }
-
-    public async Task<UserProfile> CreateUserProfileAsync(
-        string userId,
-        UserProfile userProfile,
-        CancellationToken cancellationToken)
-    {
-        userProfile.User = null;
-        userProfile.UserId = userId;
-        await _context.AddAsync(userProfile, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
-        return userProfile;
-    }
-
-    public async Task<IReadOnlyDictionary<string, UserProfile>> GetUserProfilesByIdsAsync(
-        IReadOnlyList<string> ids,
-        CancellationToken cancellationToken)
-    {
-        return await _context.UserProfiles
-            .Where(userProfile => ids.Contains(userProfile.UserId))
-            .ToDictionaryAsync(userProfile => userProfile.UserId, userProfile => userProfile, cancellationToken);
     }
 
     public async Task<ILookup<int, User>> GetUsersByGroupIdsAsync(IReadOnlyList<int> ids, CancellationToken cancellationToken)
@@ -72,7 +65,7 @@ public sealed class UserRepository : IUserRepository
             .ToListAsync(cancellationToken);
         return userGroups.ToLookup(userGroup => userGroup.GroupId, userGroup => userGroup.User);
     }
-    
+
     public ILookup<int, User> GetUsersByGameIdsAsync(IReadOnlyList<int> ids)
     {
         return _context.Trophies
@@ -80,5 +73,4 @@ public sealed class UserRepository : IUserRepository
             .Include(trophy => trophy.Receiver)
             .ToLookup(trophy => trophy.GameId, trophy => trophy.Receiver);
     }
-    
 }

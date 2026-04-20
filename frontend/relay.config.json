@@ -4,5 +4,8 @@
     "language": "typescript",
     "artifactDirectory": "./app/__generated__",
     "eagerEsModules": true,
-    "excludes": ["**/.server/**", "**/.client/**"]
+    "excludes": [
+        "**/.server/**",
+        "**/.client/**"
+    ]
 }

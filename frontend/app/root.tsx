@@ -1,5 +1,5 @@
 import { ClerkProvider } from "@clerk/react-router";
-import { rootAuthLoader } from "@clerk/react-router/server";
+import { clerkMiddleware, rootAuthLoader } from "@clerk/react-router/server";
 import { ThemeProvider } from "next-themes";
 import {
     isRouteErrorResponse,
@@ -20,6 +20,8 @@ export const links: Route.LinksFunction = () => [
         href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
     },
 ];
+
+export const middleware: Route.MiddlewareFunction[] = [clerkMiddleware()];
 
 export const loader = (args: Route.LoaderArgs) => rootAuthLoader(args);
 

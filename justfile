@@ -1,4 +1,5 @@
 set dotenv-load
+set dotenv-path := "backend/api/.env"
 
 # ── Backend ──────────────────────────────────────────────
 

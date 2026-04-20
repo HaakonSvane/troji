@@ -3,8 +3,8 @@ services:
     image: postgres:alpine3.18
     restart: always
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: mydevpassword
+      POSTGRES_USER: ${Database__User}
+      POSTGRES_PASSWORD: ${Database__Password}
     ports:
       - "5432:5432"
     healthcheck:

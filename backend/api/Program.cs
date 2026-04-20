@@ -1,13 +1,14 @@
 using System.Reflection;
-using api.API.Middleware;
+using System.Security.Claims;
 using api.Auth.Handlers;
 using api.Auth.Requirements;
 using api.Database;
 using api.Repository;
 using api.Transport;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Npgsql;
 
 namespace api;
@@ -16,6 +17,8 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        var isSchemaExport = args.Length > 0 && args[0] == "schema";
+
         var builder = WebApplication.CreateBuilder(args);
 
         IConfiguration config = new ConfigurationBuilder()
@@ -25,76 +28,98 @@ public class Program
             .AddUserSecrets(Assembly.GetExecutingAssembly(), true)
             .AddEnvironmentVariables()
             .Build();
-        
-        var connectionStringBuilder = new NpgsqlConnectionStringBuilder();
-        connectionStringBuilder.Host = config["Database:Host"];
-        connectionStringBuilder.Port = config.GetValue<int>("Database:Port");
-        connectionStringBuilder.Username = config["Database:User"];
-        connectionStringBuilder.Password = config["Database:Password"];
 
-        builder.Services.AddDbContextPool<TrophyDbContext>(options =>
-            options
-                .UseNpgsql(connectionStringBuilder.ConnectionString));
-
-        var authBuilder = builder.Services.AddAuthentication(options =>
+        if (!isSchemaExport)
         {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;   
+            var connectionStringBuilder = new NpgsqlConnectionStringBuilder();
+            connectionStringBuilder.Host = config["Database:Host"];
+            var port = config.GetValue<int>("Database:Port");
+            if (port > 0) connectionStringBuilder.Port = port;
+            connectionStringBuilder.Username = config["Database:User"];
+            connectionStringBuilder.Password = config["Database:Password"];
+
+            builder.Services.AddDbContextPool<TrophyDbContext>(options =>
+                options.UseNpgsql(connectionStringBuilder.ConnectionString));
+        }
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy
+                    .WithOrigins("http://localhost:5173")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+            });
         });
-        authBuilder
+
+        builder.Services
+            .AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer(options =>
             {
                 options.Authority = config["Auth:Authority"];
-                options.Audience = config["Auth:Audience"];
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = false,
+                    NameClaimType = ClaimTypes.NameIdentifier,
+                };
             });
-        
-        builder.Services.AddAuthorization(cfg => 
+
+        builder.Services.AddAuthorization(cfg =>
             cfg.AddPolicy("IsGroupMember", policy => policy.Requirements.Add(new GroupMemberRequirement()))
-            );
+        );
+
+        if (!isSchemaExport)
+        {
+            builder.Services.AddSingleton<IAuthorizationHandler, GroupMemberHandler>();
+        }
 
         builder.Services
             .AddScoped<IUserRepository, UserRepository>()
             .AddScoped<IGroupRepository, GroupRepository>()
             .AddScoped<IGameRepository, GameRepository>();
 
-        builder.Services.AddSingleton<IAuthorizationHandler, GroupMemberHandler>();
-
         builder.Services
             .AddGraphQLServer()
             .AddAuthorization()
-            .RegisterService<IUserRepository>(ServiceKind.Resolver)
-            .RegisterService<IGroupRepository>(ServiceKind.Resolver)
-            .RegisterService<IGameRepository>(ServiceKind.Resolver)
             .AddTypes()
             .AddGlobalObjectIdentification()
             .AddMutationConventions(applyToAllMutations: true)
             .AddQueryFieldToMutationPayloads()
             .AddHttpRequestInterceptor<TrophyHttpRequestInterceptor>()
-            .UseRequest<UserMiddleware>()
             .UseDefaultPipeline()
             .AddSorting();
 
         var app = builder.Build();
 
-        app
-            .UseAuthentication()
-            .UseAuthorization();
+        app.UseCors();
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         if (builder.Environment.IsDevelopment())
         {
-            app.MapBananaCakePop("/dev");
+            app.MapNitroApp("/dev").AllowAnonymous();
+            app.MapGraphQLSchema("/graphql/schema.graphql").AllowAnonymous();
         }
-        
+        else
+        {
+            app.MapGraphQLSchema("/graphql/schema.graphql");
+        }
+
         app.MapGraphQLHttp().RequireAuthorization();
         app.MapGraphQLWebSocket();
-        app.MapGraphQLSchema();
-        
-        if (args.Length > 0)
+
+        if (isSchemaExport)
         {
             app.RunWithGraphQLCommandsAsync(args);
             return;
         }
-        
+
         app.Run();
     }
 }

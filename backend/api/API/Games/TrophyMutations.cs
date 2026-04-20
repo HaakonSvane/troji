@@ -5,6 +5,7 @@ using api.Database.Models;
 using api.Repository;
 using api.Transport;
 using HotChocolate.Language;
+using HotChocolate.Types.Relay;
 
 namespace api.API.Games;
 
@@ -24,7 +25,7 @@ public static class TrophyMutations
         IGroupsByIdsDataLoader groupsByIdsDataLoader,
         IGameRepository gameRepository,
         CancellationToken cancellationToken,
-        [Service] IIdSerializer serializer)
+        [Service] INodeIdSerializer serializer)
     {
         if (tokenUser is null)
         {
@@ -41,20 +42,20 @@ public static class TrophyMutations
         var members = await usersByGroupIdsDataLoader.LoadAsync(game.ParentGroupId, cancellationToken);
         if (members.All(member => member.Id != tokenUser.Id))
         {
-            string serializedGroupId = serializer.Serialize(null, nameof(Group), game.ParentGroupId) ?? "[MISSING]";
+            string serializedGroupId = serializer.Format(nameof(Group), game.ParentGroupId);
             throw new NoMemberException(tokenUser.Id, serializedGroupId);
         }
         if (members.All(member => member.Id != userId))
         {
-            string serializedGroupId = serializer.Serialize(null, nameof(Group), game.ParentGroupId) ?? "[MISSING]";
-            throw new NoMemberException(tokenUser.Id, serializedGroupId);
+            string serializedGroupId2 = serializer.Format(nameof(Group), game.ParentGroupId);
+            throw new NoMemberException(tokenUser.Id, serializedGroupId2);
         }
 
         var group = await groupsByIdsDataLoader.LoadAsync(game.ParentGroupId, cancellationToken);
         if (group is null)
         {
-            string serializedGroupId = serializer.Serialize(null, nameof(Group), game.ParentGroupId) ?? "[MISSING]";
-            throw new GroupNotFoundException(serializedGroupId);
+            string serializedGroupId3 = serializer.Format(nameof(Group), game.ParentGroupId);
+            throw new GroupNotFoundException(serializedGroupId3);
         }
 
         var trophy = new Trophy()

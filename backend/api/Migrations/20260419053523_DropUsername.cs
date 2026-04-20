@@ -5,10 +5,18 @@
 namespace api.Migrations
 {
     /// <inheritdoc />
-    public partial class username : Migration
+    public partial class DropUsername : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropColumn(
+                name: "Username",
+                table: "Users");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
                 name: "Username",
@@ -16,14 +24,6 @@ namespace api.Migrations
                 type: "text",
                 nullable: false,
                 defaultValue: "");
-        }
-
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "Username",
-                table: "Users");
         }
     }
 }

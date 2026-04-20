@@ -13,8 +13,8 @@ public class FakeAuthHandler : AuthenticationHandler<FakeAuthHandlerOptions>
 {
     public const string AuthenticationScheme = "DEV";
 
-    public FakeAuthHandler(IOptionsMonitor<FakeAuthHandlerOptions> options, ILoggerFactory logger, UrlEncoder encoder,
-        ISystemClock clock) : base(options, logger, encoder, clock)
+    public FakeAuthHandler(IOptionsMonitor<FakeAuthHandlerOptions> options, ILoggerFactory logger, UrlEncoder encoder)
+        : base(options, logger, encoder)
     {
     }
 
@@ -22,7 +22,7 @@ public class FakeAuthHandler : AuthenticationHandler<FakeAuthHandlerOptions>
     {
         var claims = new List<Claim>
         {
-            new(ClaimTypes.NameIdentifier, "123123"),
+            new(ClaimTypes.NameIdentifier, "user_devlocalfakeuser001"),
             new(ClaimTypes.Name, "Developer Dude"),
             new(ClaimTypes.Email, "dev@trophydev.com"),
             new(ClaimTypes.Role, "Admin")
@@ -31,8 +31,6 @@ public class FakeAuthHandler : AuthenticationHandler<FakeAuthHandlerOptions>
         var principal = new ClaimsPrincipal(identity);
         var ticket = new AuthenticationTicket(principal, AuthenticationScheme);
 
-        var result = AuthenticateResult.Success(ticket);
-
-        return Task.FromResult(result);
+        return Task.FromResult(AuthenticateResult.Success(ticket));
     }
 }

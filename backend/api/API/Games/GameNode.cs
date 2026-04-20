@@ -1,5 +1,6 @@
 using api.Database.Models;
 using api.Repository;
+using HotChocolate.Types.Relay;
 
 namespace api.API.Games;
 
@@ -9,10 +10,10 @@ public static class GameNode
     [BindMember(nameof(Game.ParentGroupId))]
     public static string GetGroupId(
         [Parent] Game game,
-        [Service] IIdSerializer idSerializer)
+        [Service] INodeIdSerializer idSerializer)
     {
-        var serializedId = idSerializer.Serialize(null,nameof(Group), game.ParentGroupId);
-        return serializedId ?? "";
+        var serializedId = idSerializer.Format(nameof(Group), game.ParentGroupId);
+        return serializedId;
     }
     
     public static async Task<IReadOnlyCollection<Trophy>> GetTrophiesAsync(

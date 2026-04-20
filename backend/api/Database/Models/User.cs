@@ -10,12 +10,16 @@ public class User
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public required string Id { get; init; }
-    
-    public required string Username { get; set; }
+
+    public required string FirstName { get; set; }
+
+    public string? MiddleName { get; set; }
+
+    public required string LastName { get; set; }
+
+    public string? ImageId { get; set; }
 
     public ICollection<Trophy> Trophies { get; set; } = new List<Trophy>();
-    
-    public UserProfile? UserProfile { get; set; }
 
     [GraphQLIgnore] public ICollection<UserGroup> UserGroups { get; set; } = new List<UserGroup>();
 }

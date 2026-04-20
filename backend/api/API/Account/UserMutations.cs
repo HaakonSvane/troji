@@ -1,3 +1,4 @@
+using api.API.Errors;
 using api.Database.Models;
 using api.Repository;
 using api.Transport;
@@ -7,7 +8,8 @@ namespace api.API.Account;
 [MutationType]
 public static class UserMutations
 {
-    public static async Task<UserProfile> CreateUserProfileAsync(
+    [Error(typeof(UserAlreadyRegisteredException))]
+    public static async Task<User> RegisterUserAsync(
         [TokenUser] TokenUser? user,
         string firstName,
         string? middleName,
@@ -15,13 +17,11 @@ public static class UserMutations
         IUserRepository repository,
         CancellationToken cancellationToken)
     {
-        if (user is null) return null;
-        var userProfile = new UserProfile()
+        if (user is null)
         {
-            FirstName = firstName,
-            MiddleName = middleName,
-            LastName = lastName
-        };
-        return await repository.CreateUserProfileAsync(user.Id, userProfile, cancellationToken);
+            throw new UnauthorizedAccessException("Not authenticated.");
+        }
+
+        return await repository.RegisterUserAsync(user.Id, firstName, middleName, lastName, cancellationToken);
     }
 }

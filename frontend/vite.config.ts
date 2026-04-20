@@ -8,4 +8,15 @@ export default defineConfig({
   resolve: {
     tsconfigPaths: true,
   },
+  // relay-runtime and react-relay are CJS-only packages. noExternal tells Vite to
+  // transform them (rather than leaving them as Node externals) during SSR so that
+  // named ESM exports work. Do NOT add ssr.optimizeDeps for these — pre-bundling
+  // them causes a duplicate React instance because the pre-bundled chunk resolves
+  // react via a different path than react-dom/server.
+  ssr: {
+    noExternal: [/^relay-runtime(?:\/|$)/, /^react-relay(?:\/|$)/],
+  },
+  optimizeDeps: {
+    include: ["relay-runtime", "relay-runtime/experimental", "react-relay"],
+  },
 });

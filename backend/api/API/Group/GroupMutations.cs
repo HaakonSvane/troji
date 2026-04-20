@@ -36,10 +36,10 @@ public static class GroupMutations
         {
             throw new NoAdminException();
         }
-        
+
         return await groupRepository.UpsertGroupInviteAsync(group, cancellationToken);
     }
-    
+
     [Error(typeof(NoInviteException))]
     [Error(typeof(NoUserException))]
     [Error(typeof(InviteExpiredException))]
@@ -64,7 +64,7 @@ public static class GroupMutations
         {
             throw new NoInviteException();
         }
-        
+
         if (invite.ExpirationDate < DateTimeOffset.UtcNow)
         {
             throw new InviteExpiredException(invite.ExpirationDate);
@@ -84,8 +84,8 @@ public static class GroupMutations
         }
         return await groupRepository.AddUserToGroup(tokenUser.Id, group, cancellationToken);
     }
-        
-    
+
+
     [Error<NoUserException>]
     public static async Task<api.Database.Models.Group> CreateGroupAsync(
         [TokenUser] TokenUser? tokenUser,
