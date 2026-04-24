@@ -32,7 +32,7 @@ public static class TrophyMutations
         {
             throw new NoUserException();
         }
-        
+
         var game = await gamesByIdsDataLoader.LoadAsync(gameId, cancellationToken);
 
         if (game is null)
@@ -119,14 +119,14 @@ public static class TrophyMutations
         {
             throw new NoUserException();
         }
-        
+
         var request = await trophyRequestsByTrophyIdsDataLoader.LoadAsync(trophyId, cancellationToken);
 
         if (request is null)
         {
             throw new NoTrophyRequestException(trophyId.ToString());
         }
-        
+
         var myApproval = request.Approvals.FirstOrDefault(approval => approval.UserId == tokenUser.Id);
         if (myApproval is null || myApproval.IsApproved)
         {
@@ -134,7 +134,7 @@ public static class TrophyMutations
         }
 
         myApproval.IsApproved = true;
-        
+
         if (request.Approvals.All(approval => approval.IsApproved))
         {
             var trophy = await trophiesByIdsDataLoader.LoadAsync(trophyId, cancellationToken);

@@ -37,7 +37,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
     const firstName = data.me?.firstName ?? "there";
 
     return (
-        <main className="container mx-auto p-8">
+        <main className="flex min-h-screen flex-col container mx-auto p-8">
             <h1 className="text-3xl font-semibold">Dashboard</h1>
             <p className="mt-2 text-muted-foreground">Welcome back, {firstName}.</p>
         </main>

@@ -29,7 +29,8 @@ const RegisterUserMutation = graphql`
 export default function RegisterPage() {
     const { user } = useUser();
     const navigate = useNavigate();
-    const [commitRegisterUser, isSubmitting] = useMutation<registerUserMutation>(RegisterUserMutation);
+    const [commitRegisterUser, isSubmitting] =
+        useMutation<registerUserMutation>(RegisterUserMutation);
 
     const [firstName, setFirstName] = useState("");
     const [middleName, setMiddleName] = useState("");

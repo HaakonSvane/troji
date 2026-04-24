@@ -72,5 +72,3 @@ export function getRelayEnvironment(): Environment {
     }
     return _currentEnvironment;
 }
-
-

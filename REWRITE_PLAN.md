@@ -1,7 +1,7 @@
 # Trophy Tracker — Rewrite Plan
 
 > Created: 2026-04-13
-> Status: Phase 3 complete
+> Status: Phase 4 complete, Phase 5 in progress
 
 ---
 
@@ -350,18 +350,18 @@ within a phase can be parallelized where dependencies allow.
   - [x] 3.5 Install and configure Relay (compiler, Vite plugin, config)
   - [x] 3.6 Install and configure Clerk (`@clerk/react-router`)
   - [x] 3.7 Port formatting config (Prettier, ESLint)
-- [ ] **Phase 4 — Frontend Core Architecture**
-  - [ ] 4.1 Set up Relay environment with Clerk token injection
-  - [ ] 4.2 Set up Clerk auth (ClerkProvider, rootAuthLoader, sign-in/sign-up routes)
-  - [ ] 4.3 Implement root layout (ClerkProvider → ThemeProvider → RelayEnvironmentProvider)
-  - [ ] 4.4 Implement auth-protected layout route
-  - [ ] 4.5 Establish `clientLoader` + `loadQuery` reusable pattern
-  - [ ] 4.6 Set up error boundaries
+- [x] **Phase 4 — Frontend Core Architecture**
+  - [x] 4.1 Set up Relay environment with Clerk token injection
+  - [x] 4.2 Set up Clerk auth (ClerkProvider, rootAuthLoader, sign-in/sign-up routes)
+  - [x] 4.3 Implement root layout (ClerkProvider → ThemeProvider → RelayEnvironmentProvider)
+  - [x] 4.4 Implement auth-protected layout route
+  - [x] 4.5 Establish `clientLoader` + `loadQuery` reusable pattern
+  - [x] 4.6 Set up error boundaries
 - [ ] **Phase 5 — Frontend Routes & Features**
   - [ ] 5.1 Landing page (`/`)
-  - [ ] 5.2 Sign-in / Sign-up pages
-  - [ ] 5.3 User registration flow (post-Clerk-signup `registerUser` mutation)
-  - [ ] 5.4 Dashboard page (`/dashboard`)
+  - [x] 5.2 Sign-in / Sign-up pages
+  - [x] 5.3 User registration flow (post-Clerk-signup `registerUser` mutation)
+  - [x] 5.4 Dashboard page (`/dashboard`)
   - [ ] 5.5 Groups list page (`/groups`)
   - [ ] 5.6 Create group (mutation + DrawerDialog form)
   - [ ] 5.7 Group detail page (`/groups/:id`)
