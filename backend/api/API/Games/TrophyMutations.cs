@@ -15,6 +15,7 @@ public static class TrophyMutations
     [Error<NoUserException>]
     [Error<NoGameException>]
     [Error<GroupNotFoundException>]
+    [Error<NoMemberException>]
     public static async Task<Trophy> CreateTrophyRequest(
         [TokenUser] TokenUser? tokenUser,
         [ID] string userId,

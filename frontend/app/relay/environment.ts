@@ -1,18 +1,28 @@
 import { Environment, Network, RecordSource, Store } from "relay-runtime";
-import type { FetchFunction } from "relay-runtime";
+import type { FetchFunction, RequestParameters, Variables } from "relay-runtime";
+import type { GraphQLResponse } from "relay-runtime/lib/network/RelayNetworkTypes";
+
+async function executeGraphQLRequest(
+    getToken: () => Promise<string | null>,
+    request: RequestParameters,
+    variables: Variables
+): Promise<GraphQLResponse> {
+    const token = await getToken();
+    const response = await fetch(import.meta.env.VITE_GRAPHQL_URL as string, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ query: request.text, variables }),
+    });
+
+    return response.json() as Promise<GraphQLResponse>;
+}
 
 function createFetchFn(getToken: () => Promise<string | null>): FetchFunction {
     return async (request, variables) => {
-        const token = await getToken();
-        const response = await fetch(import.meta.env.VITE_GRAPHQL_URL as string, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                ...(token ? { Authorization: `Bearer ${token}` } : {}),
-            },
-            body: JSON.stringify({ query: request.text, variables }),
-        });
-        return response.json();
+        return await executeGraphQLRequest(getToken, request, variables);
     };
 }
 
@@ -62,3 +72,5 @@ export function getRelayEnvironment(): Environment {
     }
     return _currentEnvironment;
 }
+
+

@@ -1,3 +1,4 @@
+import type { registerUserMutation } from "@/__generated__/registerUserMutation.graphql";
 import { useUser } from "@clerk/react-router";
 import { useEffect, useState } from "react";
 import { graphql, useMutation } from "react-relay";
@@ -28,7 +29,7 @@ const RegisterUserMutation = graphql`
 export default function RegisterPage() {
     const { user } = useUser();
     const navigate = useNavigate();
-    const [commitRegisterUser, isSubmitting] = useMutation(RegisterUserMutation);
+    const [commitRegisterUser, isSubmitting] = useMutation<registerUserMutation>(RegisterUserMutation);
 
     const [firstName, setFirstName] = useState("");
     const [middleName, setMiddleName] = useState("");
@@ -69,6 +70,9 @@ export default function RegisterPage() {
                     lastName: normalizedLastName,
                 },
             },
+            // @types/react-relay is v18 but react-relay is v20; onCompleted is typed as
+            // (response: {}) in the older types, so a cast is required here.
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onCompleted: (response: any) => {
                 const payload = response.registerUser;
 
@@ -78,6 +82,7 @@ export default function RegisterPage() {
                 }
 
                 const alreadyRegistered = payload?.errors?.some(
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     (error: any) => error?.__typename === "UserAlreadyRegisteredError"
                 );
 

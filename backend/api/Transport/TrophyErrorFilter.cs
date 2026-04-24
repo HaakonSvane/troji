@@ -13,7 +13,19 @@ public sealed class TrophyErrorFilter : IErrorFilter
             return error;
         }
 
-        if (error.Exception.GetType().Namespace != typeof(NoUserException).Namespace)
+        if (error.Exception is not (
+            NoUserException or
+            UserAlreadyRegisteredException or
+            GroupNotFoundException or
+            NoAdminException or
+            NoInviteException or
+            InviteExpiredException or
+            AlreadyMemberException or
+            InviteResetTooSoonException or
+            NoGameException or
+            NoTrophyRequestException or
+            NoApprovalRequiredException or
+            NoMemberException))
         {
             return error;
         }

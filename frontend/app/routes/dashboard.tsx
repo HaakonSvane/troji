@@ -4,8 +4,6 @@ import { getRelayEnvironment } from "@/relay/environment";
 import type { Route } from "./+types/dashboard";
 
 // Phase 5.4: replace this with the real DashboardPageQuery and render proper content.
-// Phase 5.3: add registration guard — catch NoUserError from `me` and redirect("/register").
-//   Also requires a backend fix: throw NoUserException in GetMeAsync when dbUser is null.
 const DashboardQuery = graphql`
     query dashboardQuery {
         me {
