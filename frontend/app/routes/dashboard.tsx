@@ -10,6 +10,7 @@ const DashboardQuery = graphql`
     query dashboardQuery {
         me {
             id
+            firstName
         }
     }
 `;
@@ -34,13 +35,13 @@ export function HydrateFallback() {
 export default function Dashboard({ loaderData }: Route.ComponentProps) {
     // usePreloadedQuery suspends until the query completes.
     // The Suspense boundary in _protected.tsx shows the spinner while loading.
-    const _data = usePreloadedQuery(DashboardQuery, loaderData.queryRef);
+    const data = usePreloadedQuery(DashboardQuery, loaderData.queryRef);
+    const firstName = data.me?.firstName ?? "there";
 
     return (
         <main className="container mx-auto p-8">
             <h1 className="text-3xl font-semibold">Dashboard</h1>
-            <p className="mt-2 text-muted-foreground">Welcome back!</p>
+            <p className="mt-2 text-muted-foreground">Welcome back, {firstName}.</p>
         </main>
     );
 }
-

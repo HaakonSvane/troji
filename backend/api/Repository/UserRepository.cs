@@ -35,6 +35,16 @@ public sealed class UserRepository : IUserRepository
         string lastName,
         CancellationToken cancellationToken)
     {
+        var normalizedFirstName = firstName.Trim();
+        var normalizedLastName = lastName.Trim();
+        var normalizedMiddleName = string.IsNullOrWhiteSpace(middleName) ? null : middleName.Trim();
+
+        if (string.IsNullOrWhiteSpace(normalizedFirstName) ||
+            string.IsNullOrWhiteSpace(normalizedLastName))
+        {
+            throw new ArgumentException("First name and last name are required.");
+        }
+
         var existing = await _context.Users
             .AnyAsync(u => u.Id == userId, cancellationToken);
 
@@ -46,9 +56,9 @@ public sealed class UserRepository : IUserRepository
         var user = new User
         {
             Id = userId,
-            FirstName = firstName,
-            MiddleName = middleName,
-            LastName = lastName,
+            FirstName = normalizedFirstName,
+            MiddleName = normalizedMiddleName,
+            LastName = normalizedLastName,
         };
 
         await _context.Users.AddAsync(user, cancellationToken);

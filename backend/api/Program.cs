@@ -41,6 +41,13 @@ public class Program
             builder.Services.AddDbContextPool<TrophyDbContext>(options =>
                 options.UseNpgsql(connectionStringBuilder.ConnectionString));
         }
+        else
+        {
+            // Schema export builds the DI container and validates repository dependencies.
+            // Register a dummy DbContext so export works without requiring local DB env vars.
+            builder.Services.AddDbContextPool<TrophyDbContext>(options =>
+                options.UseNpgsql("Host=localhost;Port=5432;Database=schema_export;Username=none;Password=none"));
+        }
 
         builder.Services.AddCors(options =>
         {
@@ -91,6 +98,7 @@ public class Program
             .AddGlobalObjectIdentification()
             .AddMutationConventions(applyToAllMutations: true)
             .AddQueryFieldToMutationPayloads()
+            .AddErrorFilter<TrophyErrorFilter>()
             .AddHttpRequestInterceptor<TrophyHttpRequestInterceptor>()
             .UseDefaultPipeline()
             .AddSorting();

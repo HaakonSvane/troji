@@ -1,4 +1,5 @@
 using api.Repository;
+using api.Transport;
 using HotChocolate.Execution;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
@@ -22,6 +23,7 @@ public class SchemaShould
             .AddGlobalObjectIdentification()
             .AddMutationConventions(applyToAllMutations: true)
             .AddQueryFieldToMutationPayloads()
+            .AddErrorFilter<TrophyErrorFilter>()
             .AddSorting()
             .BuildSchemaAsync();
         schema.ToString().ShouldMatchSnapshot();

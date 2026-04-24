@@ -3,7 +3,7 @@ namespace api.API.Errors;
 public sealed class NoUserException : Exception
 {
     public NoUserException()
-        : base("There exists no user in the request context. Please log in.")
+        : base("No registered user exists for the current authenticated identity. Complete registration first.")
     {
     }
 }

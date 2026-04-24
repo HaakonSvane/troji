@@ -2,20 +2,20 @@ import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
 import relay from "vite-plugin-relay";
 import { defineConfig } from "vite";
+import { relaySsrPlugin } from "./app/relay/vite-plugin-relay-ssr";
 
 export default defineConfig({
-  plugins: [tailwindcss(), relay, reactRouter()],
+  plugins: [tailwindcss(), relay, relaySsrPlugin(), reactRouter()],
   resolve: {
     tsconfigPaths: true,
   },
-  // relay-runtime and react-relay are CJS-only packages. noExternal tells Vite to
-  // transform them (rather than leaving them as Node externals) during SSR so that
-  // named ESM exports work. Do NOT add ssr.optimizeDeps for these — pre-bundling
-  // them causes a duplicate React instance because the pre-bundled chunk resolves
-  // react via a different path than react-dom/server.
+  // Tell Vite not to externalize relay packages during SSR so they go through
+  // the plugin pipeline where relaySsrPlugin() intercepts them.
   ssr: {
     noExternal: [/^relay-runtime(?:\/|$)/, /^react-relay(?:\/|$)/],
   },
+  // Client-side pre-bundling: converts relay's CJS to ESM for the browser.
+  // SSR is handled by relaySsrPlugin() instead — see that file for details.
   optimizeDeps: {
     include: ["relay-runtime", "relay-runtime/experimental", "react-relay"],
   },

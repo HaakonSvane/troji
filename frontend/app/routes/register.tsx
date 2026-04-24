@@ -1,18 +1,163 @@
-// Phase 5.3: implement the full registration form and registerUser mutation here.
-// This page is reached when a Clerk-authenticated user does not yet have a backend
-// User/UserProfile record. The clientLoader of protected routes detects this by
-// catching a GraphQL `NoUserError` on the `me` query and redirecting here.
-//
-// Note: the backend also needs a 1-line fix in UserQueries.GetMeAsync to throw
-// NoUserException when `dbUser` is null (currently only thrown when token is missing).
+import { useUser } from "@clerk/react-router";
+import { useEffect, useState } from "react";
+import { graphql, useMutation } from "react-relay";
+import { useNavigate } from "react-router";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+const RegisterUserMutation = graphql`
+    mutation registerUserMutation($input: RegisterUserInput!) {
+        registerUser(input: $input) {
+            user {
+                id
+                firstName
+                lastName
+            }
+            errors {
+                __typename
+                ... on UserAlreadyRegisteredError {
+                    message
+                }
+            }
+        }
+    }
+`;
 
 export default function RegisterPage() {
+    const { user } = useUser();
+    const navigate = useNavigate();
+    const [commitRegisterUser, isSubmitting] = useMutation(RegisterUserMutation);
+
+    const [firstName, setFirstName] = useState("");
+    const [middleName, setMiddleName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [formError, setFormError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!user) {
+            return;
+        }
+
+        if (!firstName && user.firstName) {
+            setFirstName(user.firstName);
+        }
+
+        if (!lastName && user.lastName) {
+            setLastName(user.lastName);
+        }
+    }, [firstName, lastName, user]);
+
+    const onSubmit = () => {
+        setFormError(null);
+
+        const normalizedFirstName = firstName.trim();
+        const normalizedLastName = lastName.trim();
+        const normalizedMiddleName = middleName.trim();
+
+        if (!normalizedFirstName || !normalizedLastName) {
+            setFormError("First name and last name are required.");
+            return;
+        }
+
+        commitRegisterUser({
+            variables: {
+                input: {
+                    firstName: normalizedFirstName,
+                    middleName: normalizedMiddleName || null,
+                    lastName: normalizedLastName,
+                },
+            },
+            onCompleted: (response: any) => {
+                const payload = response.registerUser;
+
+                if (payload?.user) {
+                    navigate("/dashboard", { replace: true });
+                    return;
+                }
+
+                const alreadyRegistered = payload?.errors?.some(
+                    (error: any) => error?.__typename === "UserAlreadyRegisteredError"
+                );
+
+                if (alreadyRegistered) {
+                    navigate("/dashboard", { replace: true });
+                    return;
+                }
+
+                setFormError("Could not complete registration. Please try again.");
+            },
+            onError: () => {
+                setFormError("Could not complete registration. Please try again.");
+            },
+        });
+    };
+
     return (
-        <div className="flex h-screen w-full flex-col items-center justify-center gap-4 p-8">
-            <h1 className="text-2xl font-semibold">Complete your registration</h1>
-            <p className="text-muted-foreground">
-                Registration form coming in Phase 5.3.
-            </p>
-        </div>
+        <main className="flex min-h-screen w-full items-center justify-center p-6">
+            <Card className="w-full max-w-md">
+                <CardHeader>
+                    <CardTitle>Complete your registration</CardTitle>
+                    <CardDescription>
+                        Add your name to create your profile in Trophy Tracker.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <form
+                        className="space-y-4"
+                        onSubmit={(event) => {
+                            event.preventDefault();
+                            onSubmit();
+                        }}
+                    >
+                        <div className="space-y-2">
+                            <Label htmlFor="firstName">First name</Label>
+                            <Input
+                                id="firstName"
+                                name="firstName"
+                                value={firstName}
+                                onChange={(event) => setFirstName(event.target.value)}
+                                autoComplete="given-name"
+                                required
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="middleName">Middle name (optional)</Label>
+                            <Input
+                                id="middleName"
+                                name="middleName"
+                                value={middleName}
+                                onChange={(event) => setMiddleName(event.target.value)}
+                                autoComplete="additional-name"
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="lastName">Last name</Label>
+                            <Input
+                                id="lastName"
+                                name="lastName"
+                                value={lastName}
+                                onChange={(event) => setLastName(event.target.value)}
+                                autoComplete="family-name"
+                                required
+                            />
+                        </div>
+
+                        {formError ? (
+                            <p className="text-sm text-destructive" role="alert">
+                                {formError}
+                            </p>
+                        ) : null}
+
+                        <Button type="submit" className="w-full" disabled={isSubmitting}>
+                            {isSubmitting ? "Saving..." : "Create profile"}
+                        </Button>
+                    </form>
+                </CardContent>
+            </Card>
+        </main>
     );
 }

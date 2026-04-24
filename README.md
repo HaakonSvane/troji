@@ -1,4 +1,4 @@
-# Trophy Tracker
+# TROJI
 
 This repo is under construction
 

@@ -33,7 +33,7 @@ schema-export:
 
 # Run Relay compiler
 relay:
-    npm run relay --prefix frontend
+    npx relay-compiler --prefix frontend
 
 # Full schema update pipeline: export → relay codegen → snapshot
 update-schema: schema-export relay update-snapshot
