@@ -12,7 +12,8 @@ const GroupsPageQuery = graphql`
     query groupsPageQuery {
         me {
             id
-            groups(first: 24, order: { createdDate: DESC }) @connection(key: "Groups_groups", filters: []) {
+            groups(first: 24, order: { createdDate: DESC })
+                @connection(key: "Groups_groups", filters: []) {
                 edges {
                     node {
                         id
@@ -70,7 +71,11 @@ export default function Groups({ loaderData }: Route.ComponentProps) {
                     })}
                 </div>
             )}
-            <NewGroupForm open={newGroupOpen} onOpenChange={setNewGroupOpen} connectionOwner={data.me?.id ?? ""} />
+            <NewGroupForm
+                open={newGroupOpen}
+                onOpenChange={setNewGroupOpen}
+                connectionOwner={data.me?.id ?? ""}
+            />
         </main>
     );
 }
