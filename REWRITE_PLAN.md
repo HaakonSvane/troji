@@ -357,17 +357,17 @@ within a phase can be parallelized where dependencies allow.
   - [x] 4.4 Implement auth-protected layout route
   - [x] 4.5 Establish `clientLoader` + `loadQuery` reusable pattern
   - [x] 4.6 Set up error boundaries
-- [ ] **Phase 5 — Frontend Routes & Features**
-  - [ ] 5.1 Landing page (`/`)
+- [x] **Phase 5 — Frontend Routes & Features**
+  - [x] 5.1 Landing page (`/`)
   - [x] 5.2 Sign-in / Sign-up pages
   - [x] 5.3 User registration flow (post-Clerk-signup `registerUser` mutation)
   - [x] 5.4 Dashboard page (`/dashboard`)
-  - [ ] 5.5 Groups list page (`/groups`)
-  - [ ] 5.6 Create group (mutation + DrawerDialog form)
-  - [ ] 5.7 Group detail page (`/groups/:id`)
-  - [ ] 5.8 Create game (mutation + emoji picker form)
-  - [ ] 5.9 Group invite (mutation + invite code display + QR)
-  - [ ] 5.10 Trophy request and approval (mutations)
+  - [x] 5.5 Groups list page (`/groups`)
+  - [x] 5.6 Create group (mutation + DrawerDialog form)
+  - [x] 5.7 Group detail page (`/groups/:id`)
+  - [x] 5.8 Create game (mutation + emoji picker form)
+  - [x] 5.9 Group invite (mutation + invite code display)
+  - [x] 5.10 Trophy request and approval (mutations)
 - [ ] **Phase 6 — Port UI Components**
   - [ ] 6.1 Custom shadcn extensions (DrawerDialog, EmojiPicker, extended Button)
   - [ ] 6.2 Header and navigation (adapt for Clerk `<UserButton />`)
