@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 const GroupsPageQuery = graphql`
     query groupsPageQuery {
         me {
+            id
             groups(first: 24, order: { createdDate: DESC }) @connection(key: "Groups_groups") {
                 edges {
                     node {
@@ -69,7 +70,7 @@ export default function Groups({ loaderData }: Route.ComponentProps) {
                     })}
                 </div>
             )}
-            <NewGroupForm open={newGroupOpen} onOpenChange={setNewGroupOpen} />
+            <NewGroupForm open={newGroupOpen} onOpenChange={setNewGroupOpen} connectionOwner={data.me?.id ?? ""} />
         </main>
     );
 }

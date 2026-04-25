@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { graphql, useMutation } from "react-relay";
+import { ConnectionHandler, graphql, useMutation } from "react-relay";
 import { useNavigate } from "react-router";
 import type { NewGroupFormMutation } from "@/__generated__/NewGroupFormMutation.graphql";
 import { Button } from "@/components/ui/button";
@@ -33,11 +33,13 @@ const CreateGroupMutation = graphql`
 interface NewGroupFormProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    /** Relay store ID of the connection owner (the viewer/me record) */
+    connectionOwner: string;
     /** Called with the new group id on success */
     onCreated?: (id: string) => void;
 }
 
-export function NewGroupForm({ open, onOpenChange, onCreated }: NewGroupFormProps) {
+export function NewGroupForm({ open, onOpenChange, connectionOwner, onCreated }: NewGroupFormProps) {
     const navigate = useNavigate();
     const [commitCreateGroup, isSubmitting] =
         useMutation<NewGroupFormMutation>(CreateGroupMutation);
@@ -69,6 +71,20 @@ export function NewGroupForm({ open, onOpenChange, onCreated }: NewGroupFormProp
                     description: description.trim() || null,
                     decisionModel,
                 },
+            },
+            updater: (store) => {
+                const payload = store.getRootField("createGroup");
+                const newGroup = payload?.getLinkedRecord("group");
+                if (!newGroup) return;
+
+                const owner = store.get(connectionOwner);
+                if (!owner) return;
+
+                const conn = ConnectionHandler.getConnection(owner, "Groups_groups");
+                if (!conn) return;
+
+                const edge = ConnectionHandler.createEdge(store, conn, newGroup, "GroupsEdge");
+                ConnectionHandler.insertEdgeBefore(conn, edge);
             },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onCompleted: (response: any) => {
