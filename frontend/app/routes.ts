@@ -7,5 +7,7 @@ export default [
     layout("routes/_protected.tsx", [
         route("register", "routes/register.tsx"),
         route("dashboard", "routes/dashboard.tsx"),
+        route("groups", "routes/groups.tsx"),
+        route("groups/:id", "routes/groups.$id.tsx"),
     ]),
 ] satisfies RouteConfig;

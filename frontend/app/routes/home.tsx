@@ -12,12 +12,9 @@ export async function loader(args: Route.LoaderArgs) {
 }
 
 export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "TROJI" },
-    { name: "description", content: "Track wins with your group." },
-  ];
+    return [{ title: "TROJI" }, { name: "description", content: "Track wins with your group." }];
 }
 
 export default function Home() {
-  return <Welcome />;
+    return <Welcome />;
 }

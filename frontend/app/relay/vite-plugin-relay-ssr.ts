@@ -28,6 +28,19 @@ interface PackageShim {
   exports: string[];
 }
 
+/**
+ * Type-only exports from relay-runtime that are not present in module.exports
+ * but appear in generated graphql artifact files as value imports.
+ * These are TypeScript interfaces/types erased at runtime; Rolldown still
+ * needs a binding for each named import, so we emit `export const X = undefined`.
+ */
+const RELAY_RUNTIME_TYPE_STUBS = [
+  "ConcreteRequest",
+  "FragmentRefs",
+  "ReaderFragment",
+  "ReaderInlineDataFragment",
+] as const;
+
 export function relaySsrPlugin(): Plugin {
   const packages: PackageShim[] = [
     { specifier: "relay-runtime", exports: [] },
@@ -86,6 +99,13 @@ export function relaySsrPlugin(): Plugin {
         ...pkg.exports.map(
           (name) => `export const ${name} = __mod[${JSON.stringify(name)}];`,
         ),
+        // Type-only stubs: TypeScript erases these at runtime but Rolldown
+        // needs a binding for each named import in generated relay artifacts.
+        ...(specifier === "relay-runtime"
+          ? RELAY_RUNTIME_TYPE_STUBS.filter(
+              (name) => !pkg.exports.includes(name)
+            ).map((name) => `export const ${name} = undefined;`)
+          : []),
         `export default __mod;`,
       ];
 

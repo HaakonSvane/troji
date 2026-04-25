@@ -1,6 +1,6 @@
 on:
   repository_dispatch:
-    types: [submit_feedback]
+    types: [ submit_feedback ]
 
 permissions:
   contents: read
@@ -10,7 +10,18 @@ jobs:
   create-issue:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - name: Create issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: "Automated issue: build failed",
+              body: "The workflow failed. Check logs.",
+              labels: ["bug", "automated"]
+            })
       - uses: dblock/create-a-github-issue@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

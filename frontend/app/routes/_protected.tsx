@@ -2,6 +2,7 @@ import { getAuth } from "@clerk/react-router/server";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Outlet, redirect } from "react-router";
+import { Header } from "@/components/Header";
 import type { Route } from "./+types/_protected";
 
 export async function loader(args: Route.LoaderArgs) {
@@ -32,10 +33,13 @@ function RouteError({ error }: { error: unknown }) {
 
 export default function ProtectedLayout() {
     return (
-        <Suspense fallback={<FullPageSpinner />}>
-            <ErrorBoundary FallbackComponent={RouteError}>
-                <Outlet />
-            </ErrorBoundary>
-        </Suspense>
+        <>
+            <Header />
+            <Suspense fallback={<FullPageSpinner />}>
+                <ErrorBoundary FallbackComponent={RouteError}>
+                    <Outlet />
+                </ErrorBoundary>
+            </Suspense>
+        </>
     );
 }
