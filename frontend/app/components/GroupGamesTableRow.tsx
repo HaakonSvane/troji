@@ -38,11 +38,7 @@ export function GroupGamesTableRow({ game, onRequestTrophy }: GroupGamesTableRow
                 {data.trophies.length}
             </TableCell>
             <TableCell className="text-right">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onRequestTrophy?.(data.id)}
-                >
+                <Button variant="outline" size="sm" onClick={() => onRequestTrophy?.(data.id)}>
                     Request trophy
                 </Button>
             </TableCell>

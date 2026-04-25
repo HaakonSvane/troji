@@ -29,6 +29,14 @@ export async function clientLoader(_args: Route.ClientLoaderArgs) {
     return { queryRef };
 }
 
+export function HydrateFallback() {
+    return (
+        <div className="flex h-screen w-full items-center justify-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </div>
+    );
+}
+
 export function meta() {
     return [{ title: "Groups — Troji" }];
 }

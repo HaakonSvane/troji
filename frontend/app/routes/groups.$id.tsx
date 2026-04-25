@@ -78,6 +78,14 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
     return { queryRef };
 }
 
+export function HydrateFallback() {
+    return (
+        <div className="flex h-screen w-full items-center justify-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </div>
+    );
+}
+
 export function meta() {
     return [{ title: "Group — Troji" }];
 }
@@ -108,7 +116,11 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
 
     return (
         <main className="container mx-auto px-4 py-8">
-            <Button variant="link" className="px-0 mb-4 text-muted-foreground" onClick={() => navigate("/groups")}>
+            <Button
+                variant="link"
+                className="px-0 mb-4 text-muted-foreground"
+                onClick={() => navigate("/groups")}
+            >
                 ← Groups
             </Button>
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr]">
@@ -183,13 +195,21 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
 
                     {/* Invite tab */}
                     <TabsContent value="invite" className="mt-4">
-                        <GroupInvitePanel groupId={group.id} invite={group.invite ?? null} isAdmin={isAdmin} />
+                        <GroupInvitePanel
+                            groupId={group.id}
+                            invite={group.invite ?? null}
+                            isAdmin={isAdmin}
+                        />
                     </TabsContent>
 
                     {/* Trophies tab */}
                     <TabsContent value="trophies" className="mt-4">
                         <TrophyApprovalPanel
-                            trophies={group.trophies as Parameters<typeof TrophyApprovalPanel>[0]["trophies"]}
+                            trophies={
+                                group.trophies as Parameters<
+                                    typeof TrophyApprovalPanel
+                                >[0]["trophies"]
+                            }
                             myId={myId}
                         />
                     </TabsContent>
@@ -197,16 +217,20 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
             </div>
 
             {/* Dialogs */}
-            <NewGameForm
-                groupId={group.id}
-                open={newGameOpen}
-                onOpenChange={setNewGameOpen}
-            />
+            <NewGameForm groupId={group.id} open={newGameOpen} onOpenChange={setNewGameOpen} />
             <TrophyRequestForm
                 gameId={requestTrophyGameId}
                 open={requestTrophyGameId !== null}
-                onOpenChange={(open) => { if (!open) setRequestTrophyGameId(null); }}
-                groupMembers={members as Array<{ id: string; firstName?: string | null; lastName?: string | null }>}
+                onOpenChange={(open) => {
+                    if (!open) setRequestTrophyGameId(null);
+                }}
+                groupMembers={
+                    members as Array<{
+                        id: string;
+                        firstName?: string | null;
+                        lastName?: string | null;
+                    }>
+                }
             />
         </main>
     );

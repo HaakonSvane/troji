@@ -61,7 +61,11 @@ function formatExpiry(iso: string) {
     });
 }
 
-export function GroupInvitePanel({ groupId, invite: initialInvite, isAdmin }: GroupInvitePanelProps) {
+export function GroupInvitePanel({
+    groupId,
+    invite: initialInvite,
+    isAdmin,
+}: GroupInvitePanelProps) {
     const navigate = useNavigate();
     const [currentInvite, setCurrentInvite] = useState<InviteData | null>(initialInvite);
     const [inviteError, setInviteError] = useState<string | null>(null);
@@ -72,8 +76,7 @@ export function GroupInvitePanel({ groupId, invite: initialInvite, isAdmin }: Gr
 
     const [commitCreate, isCreating] =
         useMutation<GroupInvitePanelCreateMutation>(CreateGroupInviteMutation);
-    const [commitJoin, isJoining] =
-        useMutation<GroupInvitePanelJoinMutation>(JoinGroupMutation);
+    const [commitJoin, isJoining] = useMutation<GroupInvitePanelJoinMutation>(JoinGroupMutation);
 
     const handleCreateInvite = () => {
         setInviteError(null);

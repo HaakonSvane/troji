@@ -39,7 +39,8 @@ interface NewGroupFormProps {
 
 export function NewGroupForm({ open, onOpenChange, onCreated }: NewGroupFormProps) {
     const navigate = useNavigate();
-    const [commitCreateGroup, isSubmitting] = useMutation<NewGroupFormMutation>(CreateGroupMutation);
+    const [commitCreateGroup, isSubmitting] =
+        useMutation<NewGroupFormMutation>(CreateGroupMutation);
 
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -128,9 +129,7 @@ export function NewGroupForm({ open, onOpenChange, onCreated }: NewGroupFormProp
                     <Label htmlFor="group-decision-model">Decision model</Label>
                     <Select
                         value={decisionModel}
-                        onValueChange={(v) =>
-                            setDecisionModel(v as "DEMOCRACY" | "DICTATORSHIP")
-                        }
+                        onValueChange={(v) => setDecisionModel(v as "DEMOCRACY" | "DICTATORSHIP")}
                         disabled={isSubmitting}
                     >
                         <SelectTrigger id="group-decision-model">

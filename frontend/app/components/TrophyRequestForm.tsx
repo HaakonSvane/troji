@@ -48,8 +48,9 @@ export function TrophyRequestForm({
     groupMembers,
     onRequested,
 }: TrophyRequestFormProps) {
-    const [commitRequest, isSubmitting] =
-        useMutation<TrophyRequestFormMutation>(CreateTrophyRequestMutation);
+    const [commitRequest, isSubmitting] = useMutation<TrophyRequestFormMutation>(
+        CreateTrophyRequestMutation
+    );
 
     const [userId, setUserId] = useState("");
     const [description, setDescription] = useState("");
@@ -126,19 +127,14 @@ export function TrophyRequestForm({
                 <form className="space-y-4" onSubmit={handleSubmit}>
                     <div className="space-y-2">
                         <Label htmlFor="trophy-recipient">Recipient</Label>
-                        <Select
-                            value={userId}
-                            onValueChange={setUserId}
-                            disabled={isSubmitting}
-                        >
+                        <Select value={userId} onValueChange={setUserId} disabled={isSubmitting}>
                             <SelectTrigger id="trophy-recipient">
                                 <SelectValue placeholder="Select a member…" />
                             </SelectTrigger>
                             <SelectContent>
                                 {groupMembers.map((m) => {
-                                    const label = [m.firstName, m.lastName]
-                                        .filter(Boolean)
-                                        .join(" ") || m.id;
+                                    const label =
+                                        [m.firstName, m.lastName].filter(Boolean).join(" ") || m.id;
                                     return (
                                         <SelectItem key={m.id} value={m.id}>
                                             {label}

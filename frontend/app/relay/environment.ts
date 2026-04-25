@@ -17,7 +17,20 @@ async function executeGraphQLRequest(
         body: JSON.stringify({ query: request.text, variables }),
     });
 
-    return response.json() as Promise<GraphQLResponse>;
+    const json = await response.json();
+
+    // Authenticated but no DB user row → redirect to registration
+    const hasNoUserError =
+        Array.isArray((json as any).errors) &&
+        (json as any).errors.some(
+            (e: any) => e?.extensions?.code === "NoUserError"
+        );
+    if (hasNoUserError && typeof window !== "undefined") {
+        window.location.href = "/register";
+        return { data: null } as unknown as GraphQLResponse;
+    }
+
+    return json as GraphQLResponse;
 }
 
 function createFetchFn(getToken: () => Promise<string | null>): FetchFunction {

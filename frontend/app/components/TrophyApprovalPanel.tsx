@@ -104,7 +104,9 @@ export function TrophyApprovalPanel({ trophies, myId }: TrophyApprovalPanelProps
 
     if (trophies.length === 0) {
         return (
-            <p className="text-sm text-muted-foreground">No trophies yet. Request one from a game!</p>
+            <p className="text-sm text-muted-foreground">
+                No trophies yet. Request one from a game!
+            </p>
         );
     }
 

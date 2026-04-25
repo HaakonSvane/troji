@@ -74,10 +74,7 @@ export function EmojiPicker({ value, onChange, disabled = false }: EmojiPickerPr
                     className="mb-2 h-8 text-sm"
                     autoFocus
                 />
-                <div
-                    ref={parentRef}
-                    style={{ height: `${CELL_SIZE * 6}px`, overflow: "auto" }}
-                >
+                <div ref={parentRef} style={{ height: `${CELL_SIZE * 6}px`, overflow: "auto" }}>
                     <div
                         style={{
                             height: `${rowVirtualizer.getTotalSize()}px`,

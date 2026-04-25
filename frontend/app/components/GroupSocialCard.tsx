@@ -31,9 +31,7 @@ function formatDate(iso: string) {
 
 export function GroupSocialCard({ group, memberCount }: GroupSocialCardProps) {
     const data = useFragment(GroupSocialCardFragment, group);
-    const adminName = data.admin
-        ? `${data.admin.firstName} ${data.admin.lastName}`
-        : "Unknown";
+    const adminName = data.admin ? `${data.admin.firstName} ${data.admin.lastName}` : "Unknown";
 
     return (
         <div className="rounded-xl border border-border bg-card p-6 space-y-4">
