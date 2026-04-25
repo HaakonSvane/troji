@@ -12,7 +12,7 @@ const GroupsPageQuery = graphql`
     query groupsPageQuery {
         me {
             id
-            groups(first: 24, order: { createdDate: DESC }) @connection(key: "Groups_groups") {
+            groups(first: 24, order: { createdDate: DESC }) @connection(key: "Groups_groups", filters: []) {
                 edges {
                     node {
                         id
