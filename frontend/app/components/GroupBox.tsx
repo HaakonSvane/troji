@@ -21,7 +21,7 @@ export function GroupBox({ group }: GroupBoxProps) {
             <div className="flex items-start justify-between gap-2">
                 <h3 className="text-base font-semibold leading-tight">{data.name}</h3>
                 <span className="shrink-0 rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground capitalize">
-                    {data.decisionModel === "DEMOCRACY" ? "Democracy" : "Dictatorship"}
+                    Open
                 </span>
             </div>
             {data.description && (

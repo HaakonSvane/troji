@@ -5,13 +5,6 @@ import type { NewGroupFormMutation } from "@/__generated__/NewGroupFormMutation.
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { DrawerDialog } from "@/components/DrawerDialog";
 
@@ -39,20 +32,23 @@ interface NewGroupFormProps {
     onCreated?: (id: string) => void;
 }
 
-export function NewGroupForm({ open, onOpenChange, connectionOwner, onCreated }: NewGroupFormProps) {
+export function NewGroupForm({
+    open,
+    onOpenChange,
+    connectionOwner,
+    onCreated,
+}: NewGroupFormProps) {
     const navigate = useNavigate();
     const [commitCreateGroup, isSubmitting] =
         useMutation<NewGroupFormMutation>(CreateGroupMutation);
 
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-    const [decisionModel, setDecisionModel] = useState<"DEMOCRACY" | "DICTATORSHIP">("DEMOCRACY");
     const [formError, setFormError] = useState<string | null>(null);
 
     const reset = () => {
         setName("");
         setDescription("");
-        setDecisionModel("DEMOCRACY");
         setFormError(null);
     };
 
@@ -69,7 +65,6 @@ export function NewGroupForm({ open, onOpenChange, connectionOwner, onCreated }:
                 input: {
                     name: trimmedName,
                     description: description.trim() || null,
-                    decisionModel,
                 },
             },
             updater: (store) => {
@@ -117,7 +112,7 @@ export function NewGroupForm({ open, onOpenChange, connectionOwner, onCreated }:
                 }
             }}
             title="Create a group"
-            description="Give your group a name and choose how trophies are awarded."
+            description="Give your group a name. Trophy gifting is open by default."
         >
             <form className="space-y-4" onSubmit={handleSubmit}>
                 <div className="space-y-2">
@@ -140,24 +135,6 @@ export function NewGroupForm({ open, onOpenChange, connectionOwner, onCreated }:
                         onChange={(e) => setDescription(e.target.value)}
                         disabled={isSubmitting}
                     />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="group-decision-model">Decision model</Label>
-                    <Select
-                        value={decisionModel}
-                        onValueChange={(v) => setDecisionModel(v as "DEMOCRACY" | "DICTATORSHIP")}
-                        disabled={isSubmitting}
-                    >
-                        <SelectTrigger id="group-decision-model">
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="DEMOCRACY">Democracy — majority votes</SelectItem>
-                            <SelectItem value="DICTATORSHIP">
-                                Dictatorship — admin decides
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
                 </div>
                 {formError && <p className="text-sm text-destructive">{formError}</p>}
                 <div className="flex justify-end gap-2 pt-2">

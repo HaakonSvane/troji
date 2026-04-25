@@ -14,7 +14,6 @@ public static class TrophyMutations
 {
     [Error<NoUserException>]
     [Error<NoGameException>]
-    [Error<GroupNotFoundException>]
     [Error<NoMemberException>]
     public static async Task<Trophy> CreateTrophyRequest(
         [TokenUser] TokenUser? tokenUser,
@@ -23,7 +22,6 @@ public static class TrophyMutations
         string? description,
         IGamesByIdsDataLoader gamesByIdsDataLoader,
         IUsersByGroupIdsDataLoader usersByGroupIdsDataLoader,
-        IGroupsByIdsDataLoader groupsByIdsDataLoader,
         IGameRepository gameRepository,
         CancellationToken cancellationToken,
         [Service] INodeIdSerializer serializer)
@@ -52,13 +50,6 @@ public static class TrophyMutations
             throw new NoMemberException(tokenUser.Id, serializedGroupId2);
         }
 
-        var group = await groupsByIdsDataLoader.LoadAsync(game.ParentGroupId, cancellationToken);
-        if (group is null)
-        {
-            string serializedGroupId3 = serializer.Format(nameof(Group), game.ParentGroupId);
-            throw new GroupNotFoundException(serializedGroupId3);
-        }
-
         var trophy = new Trophy()
         {
             GameId = game.Id,
@@ -80,27 +71,8 @@ public static class TrophyMutations
                 IsApproved = true,
             }
         };
-        if (group.DecisionModel == Database.Models.Group.RuleType.Democracy)
-        {
-            foreach (var member in members)
-            {
-                if (member.Id == tokenUser.Id)
-                {
-                    continue;
-                }
-                approvals.Push(new TrophyRequestApproval()
-                {
-                    UserId = member.Id,
-                    Request = request,
-                    IsApproved = false
-                });
-            }
-        }
 
-        if (approvals.All(approval => approval.IsApproved))
-        {
-            trophy.AwardedDate = DateTimeOffset.UtcNow;
-        }
+        trophy.AwardedDate = DateTimeOffset.UtcNow;
         return await gameRepository.CreateTrophyAsync(trophy, request, approvals, cancellationToken);
     }
 

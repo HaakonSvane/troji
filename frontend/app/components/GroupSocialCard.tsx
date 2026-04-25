@@ -54,7 +54,7 @@ export function GroupSocialCard({ group, memberCount }: GroupSocialCardProps) {
                 <div className="flex justify-between">
                     <dt className="text-muted-foreground">Decision model</dt>
                     <dd className="font-medium capitalize">
-                        {data.decisionModel === "DEMOCRACY" ? "Democracy" : "Dictatorship"}
+                        Open
                     </dd>
                 </div>
                 <div className="flex justify-between">
