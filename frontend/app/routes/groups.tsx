@@ -51,11 +51,11 @@ export default function Groups({ loaderData }: Route.ComponentProps) {
     return (
         <main className="container mx-auto px-4 py-8">
             <div className="mb-6 flex items-center justify-between">
-                 <h1 className="heading-page">Groups</h1>
+                <h1 className="heading-page">Groups</h1>
                 <Button onClick={() => setNewGroupOpen(true)}>New group</Button>
             </div>
             {edges.length === 0 ? (
-                 <p className="text-supporting">
+                <p className="text-supporting">
                     You have no groups yet.{" "}
                     <span className="text-foreground font-medium">Create one to get started.</span>
                 </p>

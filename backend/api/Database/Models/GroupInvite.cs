@@ -9,6 +9,7 @@ namespace api.Database.Models;
 [GraphQLName("Invite")]
 public class GroupInvite
 {
+    [GraphQLIgnore]
     [Key]
     [ForeignKey("Group")]
     public int GroupId { get; set; }

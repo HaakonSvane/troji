@@ -18,6 +18,7 @@ public class Group
 
     public string? ImageId { get; set; }
 
+    [GraphQLIgnore]
     public required string AdminId { get; set; }
 
 

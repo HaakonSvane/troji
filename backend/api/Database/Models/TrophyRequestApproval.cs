@@ -4,7 +4,7 @@ namespace api.Database.Models;
 
 public class TrophyRequestApproval
 {
-    [ID(nameof(User))]
+    [GraphQLIgnore]
     public string UserId { get; set; }
     
     [ForeignKey("UserId")]

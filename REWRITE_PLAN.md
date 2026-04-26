@@ -373,8 +373,7 @@ within a phase can be parallelized where dependencies allow.
   - [ ] 6.2 Header and navigation (adapt for Clerk `<UserButton />`)
   - [ ] 6.3 Domain components (TrophyAvatar, TrophyStack, GroupBox, MemberRow, etc.)
   - [ ] 6.4 Zod validation schemas
-  - [ ] 6.5 Custom hooks (useGradient, useMediaQuery)
-  - [ ] 6.6 Theme and styling (CSS variables, gradients, dark mode, Poppins font)
+  - [ ] 6.5 Theme and styling (CSS variables, gradients, dark mode)
 - [ ] **Phase 7 — Polish & DevOps**
   - [ ] 7.1 Frontend Dockerfile
   - [ ] 7.2 Full-stack Docker Compose (postgres + backend + frontend)

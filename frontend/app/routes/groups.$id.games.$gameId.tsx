@@ -26,7 +26,9 @@ const GroupGameDetailQuery = graphql`
         }
         gameById(id: $gameId) {
             id
-            groupId
+            group {
+                id
+            }
             name
             symbol
             description
@@ -47,7 +49,9 @@ const GroupGameDetailQuery = graphql`
                 request {
                     id
                     approvals {
-                        userId
+                        user {
+                            id
+                        }
                         isApproved
                     }
                 }
@@ -88,7 +92,7 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
     const myId = data.me?.id;
     const [awardOpen, setAwardOpen] = useState(false);
 
-    if (!group || !game || game.groupId !== group.id) {
+    if (!group || !game || game.group?.id !== group.id) {
         return (
             <main className="container mx-auto px-4 py-8">
                 <p className="text-supporting">Game not found.</p>

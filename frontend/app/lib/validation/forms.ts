@@ -3,12 +3,13 @@ import type { CreateGroupInput } from "@/__generated__/NewGroupFormMutation.grap
 import type { CreateTrophyRequestInput } from "@/__generated__/TrophyRequestFormMutation.graphql";
 import { z } from "zod";
 
-type ValidationResult<T> =
-    | { success: true; data: T }
-    | { success: false; error: string };
+type ValidationResult<T> = { success: true; data: T } | { success: false; error: string };
 
 const requiredText = (message: string) => z.string().trim().min(1, message);
-const optionalText = z.string().trim().transform((value) => value || null);
+const optionalText = z
+    .string()
+    .trim()
+    .transform((value) => value || null);
 
 const createGameInputSchema = z.object({
     groupId: requiredText("Group is required."),

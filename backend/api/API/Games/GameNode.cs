@@ -1,21 +1,20 @@
+using api.API.Group;
 using api.Database.Models;
 using api.Repository;
-using HotChocolate.Types.Relay;
 
 namespace api.API.Games;
 
 [ExtendObjectType<Game>]
 public static class GameNode
 {
-    [BindMember(nameof(Game.ParentGroupId))]
-    public static string GetGroupId(
+    public static async Task<Database.Models.Group?> GetGroupAsync(
         [Parent] Game game,
-        [Service] INodeIdSerializer idSerializer)
+        IGroupsByIdsDataLoader dataLoader,
+        CancellationToken cancellationToken)
     {
-        var serializedId = idSerializer.Format(nameof(Group), game.ParentGroupId);
-        return serializedId;
+        return await dataLoader.LoadAsync(game.ParentGroupId, cancellationToken);
     }
-    
+
     public static async Task<IReadOnlyCollection<Trophy>> GetTrophiesAsync(
         [Parent] Game game,
         ITrophiesByGameIdsDataLoader dataLoader,

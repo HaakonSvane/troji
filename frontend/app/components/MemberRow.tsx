@@ -28,7 +28,7 @@ export function MemberRow({ user, isAdmin = false }: MemberRowProps) {
             <span className="text-sm font-medium flex-1">{fullName}</span>
             {isAdmin && (
                 <span className="rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground">
-                    Admin
+                    Owner
                 </span>
             )}
         </div>

@@ -10,11 +10,13 @@ public class Trophy
     [Key] 
     public int Id { get; set; }
     
+    [GraphQLIgnore]
     public int GameId { get; set; }
 
     [ForeignKey("GameId")]
     public Game Game { get; set; }
 
+    [GraphQLIgnore]
     public string ReceiverId { get; set; }
 
     [ForeignKey("ReceiverId")]

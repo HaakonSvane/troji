@@ -18,7 +18,9 @@ const GroupPageQuery = graphql`
     query groupsDetailQuery($id: ID!) {
         groupById(id: $id) {
             id
-            adminId
+            admin {
+                id
+            }
             ...GroupSocialCard_group
             games(first: 50, order: { createdDate: DESC })
                 @connection(key: "GroupDetail_games", filters: ["order"]) {
@@ -60,7 +62,9 @@ const GroupPageQuery = graphql`
                 request {
                     id
                     approvals {
-                        userId
+                        user {
+                            id
+                        }
                         isApproved
                     }
                 }
@@ -112,7 +116,7 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
 
     const games = group.games?.edges?.map((e) => e?.node).filter(Boolean) ?? [];
     const members = group.members?.edges?.map((e) => e?.node).filter(Boolean) ?? [];
-    const isAdmin = myId != null && group.adminId === myId;
+    const isAdmin = myId != null && group.admin?.id === myId;
 
     return (
         <main className="container mx-auto px-4 py-8">
@@ -174,7 +178,7 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                                 <MemberRow
                                     key={member!.id}
                                     user={member!}
-                                    isAdmin={member!.id === group.adminId}
+                                    isAdmin={member!.id === group.admin?.id}
                                 />
                             ))}
                         </div>

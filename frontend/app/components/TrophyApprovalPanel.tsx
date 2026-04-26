@@ -25,7 +25,7 @@ interface TrophyItem {
     receiver: { id: string; firstName: string; lastName: string };
     request: {
         id: number;
-        approvals: Array<{ userId: string; isApproved: boolean }>;
+        approvals: Array<{ user: { id: string }; isApproved: boolean }>;
     };
 }
 
@@ -44,7 +44,7 @@ function TrophyApprovalRow({
     const [commitApprove, isSubmitting] =
         useMutation<TrophyApprovalPanelMutation>(ApproveTrophyMutation);
 
-    const myApproval = trophy.request.approvals.find((a) => a.userId === myId);
+    const myApproval = trophy.request.approvals.find((a) => a.user.id === myId);
     const approvedCount = trophy.request.approvals.filter((a) => a.isApproved).length;
     const totalApprovers = trophy.request.approvals.length;
     const receiverName = `${trophy.receiver.firstName} ${trophy.receiver.lastName}`;

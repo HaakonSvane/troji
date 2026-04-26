@@ -2,10 +2,8 @@ import { cn } from "@/lib/utils";
 
 const medalToneClassName = {
     gold: "bg-[radial-gradient(circle_at_30%_25%,var(--color-medal-gold)_0%,var(--color-medal-gold-shadow)_100%)]",
-    silver:
-        "bg-[radial-gradient(circle_at_30%_25%,var(--color-medal-silver)_0%,var(--color-medal-silver-shadow)_100%)]",
-    bronze:
-        "bg-[radial-gradient(circle_at_30%_25%,var(--color-medal-bronze)_0%,var(--color-medal-bronze-shadow)_100%)]",
+    silver: "bg-[radial-gradient(circle_at_30%_25%,var(--color-medal-silver)_0%,var(--color-medal-silver-shadow)_100%)]",
+    bronze: "bg-[radial-gradient(circle_at_30%_25%,var(--color-medal-bronze)_0%,var(--color-medal-bronze-shadow)_100%)]",
 } as const;
 
 const medalSizeClassName = {
