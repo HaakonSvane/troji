@@ -110,8 +110,8 @@ export function TrophyRequestForm({
                     if (!next) reset();
                 }
             }}
-            title="Request a trophy"
-            description="Nominate a member to receive a trophy for this game."
+            title="Award a trophy"
+            description="Choose who should receive this reward and add a note if you want."
         >
             {success ? (
                 <div className="space-y-4 py-2">
@@ -156,7 +156,7 @@ export function TrophyRequestForm({
                         <Label htmlFor="trophy-description">Reason (optional)</Label>
                         <Textarea
                             id="trophy-description"
-                            placeholder="Why do they deserve this trophy?"
+                            placeholder="What earned them this reward?"
                             rows={3}
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
@@ -177,7 +177,7 @@ export function TrophyRequestForm({
                             Cancel
                         </Button>
                         <Button type="submit" busy={isSubmitting} disabled={isSubmitting}>
-                            Request trophy
+                            Award trophy
                         </Button>
                     </div>
                 </form>

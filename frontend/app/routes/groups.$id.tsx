@@ -10,7 +10,6 @@ import { NewGameForm } from "@/components/NewGameForm";
 import { GroupInvitePanel } from "@/components/GroupInvitePanel";
 import { TrophyRequestForm } from "@/components/TrophyRequestForm";
 import { TrophyApprovalPanel } from "@/components/TrophyApprovalPanel";
-import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import type { Route } from "./+types/groups.$id";
@@ -21,7 +20,8 @@ const GroupPageQuery = graphql`
             id
             adminId
             ...GroupSocialCard_group
-            games(first: 50, order: { createdDate: DESC }) {
+            games(first: 50, order: { createdDate: DESC })
+                @connection(key: "GroupDetail_games", filters: ["order"]) {
                 edges {
                     node {
                         id
@@ -141,9 +141,7 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                     {/* Games tab */}
                     <TabsContent value="games" className="mt-4">
                         <div className="mb-3 flex items-center justify-between">
-                            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-                                Games
-                            </h2>
+                            <h2 className="heading-section">Games</h2>
                             {isAdmin && (
                                 <Button size="sm" onClick={() => setNewGameOpen(true)}>
                                     New game
@@ -151,29 +149,18 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                             )}
                         </div>
                         {games.length === 0 ? (
-                            <p className="text-sm text-muted-foreground">No games yet.</p>
+                            <p className="text-supporting">No games yet.</p>
                         ) : (
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead className="w-12" />
-                                        <TableHead>Game</TableHead>
-                                        <TableHead className="text-center">Trophies</TableHead>
-                                        <TableHead />
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {games.map((game) => (
-                                        <GroupGamesTableRow
-                                            key={game!.id}
-                                            game={game!}
-                                            onRequestTrophy={(gameId) =>
-                                                setRequestTrophyGameId(gameId)
-                                            }
-                                        />
-                                    ))}
-                                </TableBody>
-                            </Table>
+                            <div className="space-y-3">
+                                {games.map((game) => (
+                                    <GroupGamesTableRow
+                                        key={game!.id}
+                                        groupId={group.id}
+                                        game={game!}
+                                        onAwardTrophy={(gameId) => setRequestTrophyGameId(gameId)}
+                                    />
+                                ))}
+                            </div>
                         )}
                     </TabsContent>
 
@@ -217,7 +204,12 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
             </div>
 
             {/* Dialogs */}
-            <NewGameForm groupId={group.id} open={newGameOpen} onOpenChange={setNewGameOpen} />
+            <NewGameForm
+                groupId={group.id}
+                connectionOwner={group.id}
+                open={newGameOpen}
+                onOpenChange={setNewGameOpen}
+            />
             <TrophyRequestForm
                 gameId={requestTrophyGameId}
                 open={requestTrophyGameId !== null}

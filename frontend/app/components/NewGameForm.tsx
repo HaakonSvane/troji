@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { graphql, useMutation } from "react-relay";
+import { ConnectionHandler, graphql, useMutation } from "react-relay";
 import type { NewGameFormMutation } from "@/__generated__/NewGameFormMutation.graphql";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,12 +25,19 @@ const CreateGameMutation = graphql`
 
 interface NewGameFormProps {
     groupId: string;
+    connectionOwner?: string;
     open: boolean;
     onOpenChange: (open: boolean) => void;
     onCreated?: (gameId: string) => void;
 }
 
-export function NewGameForm({ groupId, open, onOpenChange, onCreated }: NewGameFormProps) {
+export function NewGameForm({
+    groupId,
+    connectionOwner,
+    open,
+    onOpenChange,
+    onCreated,
+}: NewGameFormProps) {
     const [commitCreateGame, isSubmitting] = useMutation<NewGameFormMutation>(CreateGameMutation);
 
     const [name, setName] = useState("");
@@ -62,6 +69,24 @@ export function NewGameForm({ groupId, open, onOpenChange, onCreated }: NewGameF
         commitCreateGame({
             variables: {
                 input: validation.data,
+            },
+            updater: (store) => {
+                if (!connectionOwner) return;
+
+                const payload = store.getRootField("createGame");
+                const newGame = payload?.getLinkedRecord("game");
+                if (!newGame) return;
+
+                const owner = store.get(connectionOwner);
+                if (!owner) return;
+
+                const connection = ConnectionHandler.getConnection(owner, "GroupDetail_games", {
+                    order: [{ createdDate: "DESC" }],
+                });
+                if (!connection) return;
+
+                const edge = ConnectionHandler.createEdge(store, connection, newGame, "GamesEdge");
+                ConnectionHandler.insertEdgeBefore(connection, edge);
             },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onCompleted: (response: any) => {

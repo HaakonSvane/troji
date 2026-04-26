@@ -9,5 +9,6 @@ export default [
         route("dashboard", "routes/dashboard.tsx"),
         route("groups", "routes/groups.tsx"),
         route("groups/:id", "routes/groups.$id.tsx"),
+        route("groups/:id/games/:gameId", "routes/groups.$id.games.$gameId.tsx"),
     ]),
 ] satisfies RouteConfig;
