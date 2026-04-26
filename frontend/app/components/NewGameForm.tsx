@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { DrawerDialog } from "@/components/DrawerDialog";
 import { EmojiPicker } from "@/components/EmojiPicker";
+import { validateCreateGameInput } from "@/lib/validation/forms";
 
 const CreateGameMutation = graphql`
     mutation NewGameFormMutation($input: CreateGameInput!) {
@@ -47,19 +48,20 @@ export function NewGameForm({ groupId, open, onOpenChange, onCreated }: NewGameF
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setFormError(null);
-        const trimmedName = name.trim();
-        if (!trimmedName) {
-            setFormError("Game name is required.");
+        const validation = validateCreateGameInput({
+            groupId,
+            name,
+            symbol,
+            description,
+        });
+        if (!validation.success) {
+            setFormError(validation.error);
             return;
         }
+
         commitCreateGame({
             variables: {
-                input: {
-                    groupId,
-                    name: trimmedName,
-                    symbol,
-                    description: description.trim() || null,
-                },
+                input: validation.data,
             },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onCompleted: (response: any) => {
@@ -129,8 +131,8 @@ export function NewGameForm({ groupId, open, onOpenChange, onCreated }: NewGameF
                     >
                         Cancel
                     </Button>
-                    <Button type="submit" disabled={isSubmitting}>
-                        {isSubmitting ? "Creating…" : "Create game"}
+                    <Button type="submit" busy={isSubmitting} disabled={isSubmitting}>
+                        Create game
                     </Button>
                 </div>
             </form>

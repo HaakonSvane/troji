@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { DrawerDialog } from "@/components/DrawerDialog";
+import { validateCreateGroupInput } from "@/lib/validation/forms";
 
 const CreateGroupMutation = graphql`
     mutation NewGroupFormMutation($input: CreateGroupInput!) {
@@ -55,17 +56,18 @@ export function NewGroupForm({
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setFormError(null);
-        const trimmedName = name.trim();
-        if (!trimmedName) {
-            setFormError("Group name is required.");
+        const validation = validateCreateGroupInput({
+            name,
+            description,
+        });
+        if (!validation.success) {
+            setFormError(validation.error);
             return;
         }
+
         commitCreateGroup({
             variables: {
-                input: {
-                    name: trimmedName,
-                    description: description.trim() || null,
-                },
+                input: validation.data,
             },
             updater: (store) => {
                 const payload = store.getRootField("createGroup");
@@ -149,8 +151,8 @@ export function NewGroupForm({
                     >
                         Cancel
                     </Button>
-                    <Button type="submit" disabled={isSubmitting}>
-                        {isSubmitting ? "Creating…" : "Create group"}
+                    <Button type="submit" busy={isSubmitting} disabled={isSubmitting}>
+                        Create group
                     </Button>
                 </div>
             </form>

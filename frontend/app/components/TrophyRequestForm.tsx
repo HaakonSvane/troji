@@ -12,6 +12,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { DrawerDialog } from "@/components/DrawerDialog";
+import { validateCreateTrophyRequestInput } from "@/lib/validation/forms";
 
 const CreateTrophyRequestMutation = graphql`
     mutation TrophyRequestFormMutation($input: CreateTrophyRequestInput!) {
@@ -56,34 +57,40 @@ export function TrophyRequestForm({
     const [description, setDescription] = useState("");
     const [formError, setFormError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
+    const [awardedImmediately, setAwardedImmediately] = useState(false);
 
     const reset = () => {
         setUserId("");
         setDescription("");
         setFormError(null);
         setSuccess(false);
+        setAwardedImmediately(false);
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setFormError(null);
-        if (!userId) {
-            setFormError("Select a member to receive the trophy.");
+        if (!gameId) return;
+
+        const validation = validateCreateTrophyRequestInput({
+            gameId,
+            userId,
+            description,
+        });
+        if (!validation.success) {
+            setFormError(validation.error);
             return;
         }
-        if (!gameId) return;
+
         commitRequest({
             variables: {
-                input: {
-                    gameId,
-                    userId,
-                    description: description.trim() || null,
-                },
+                input: validation.data,
             },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onCompleted: (response: any) => {
                 const payload = response.createTrophyRequest;
                 if (payload?.trophy?.id) {
+                    setAwardedImmediately(Boolean(payload.trophy.isAwarded));
                     setSuccess(true);
                     onRequested?.();
                     return;
@@ -108,9 +115,10 @@ export function TrophyRequestForm({
         >
             {success ? (
                 <div className="space-y-4 py-2">
-                    <p className="text-sm text-muted-foreground">
-                        Trophy request submitted! Members will vote or the admin will decide,
-                        depending on the group's decision model.
+                    <p className="text-supporting">
+                        {awardedImmediately
+                            ? "Trophy awarded right away. Open groups do not require additional approval."
+                            : "Trophy request submitted successfully."}
                     </p>
                     <div className="flex justify-end">
                         <Button
@@ -168,8 +176,8 @@ export function TrophyRequestForm({
                         >
                             Cancel
                         </Button>
-                        <Button type="submit" disabled={isSubmitting}>
-                            {isSubmitting ? "Submitting…" : "Request trophy"}
+                        <Button type="submit" busy={isSubmitting} disabled={isSubmitting}>
+                            Request trophy
                         </Button>
                     </div>
                 </form>

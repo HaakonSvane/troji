@@ -63,7 +63,9 @@ body {
   --color-medal-gold: var(--medal-gold);
   --color-medal-gold-shadow: var(--medal-gold-shadow);
   --color-medal-silver: var(--medal-silver);
+  --color-medal-silver-shadow: var(--medal-silver-shadow);
   --color-medal-bronze: var(--medal-bronze);
+  --color-medal-bronze-shadow: var(--medal-bronze-shadow);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
   --radius-sm: calc(var(--radius) * 0.6);
@@ -111,7 +113,9 @@ body {
   --medal-gold: oklch(0.82 0.16 84);
   --medal-gold-shadow: oklch(0.62 0.12 71);
   --medal-silver: oklch(0.86 0.02 255);
+  --medal-silver-shadow: oklch(0.67 0.02 255);
   --medal-bronze: oklch(0.65 0.14 48);
+  --medal-bronze-shadow: oklch(0.46 0.11 38);
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
@@ -159,7 +163,9 @@ body {
   --medal-gold: oklch(0.78 0.14 84);
   --medal-gold-shadow: oklch(0.5 0.11 71);
   --medal-silver: oklch(0.73 0.02 255);
+  --medal-silver-shadow: oklch(0.54 0.015 255);
   --medal-bronze: oklch(0.58 0.13 48);
+  --medal-bronze-shadow: oklch(0.4 0.09 38);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
