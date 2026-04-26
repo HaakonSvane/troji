@@ -34,29 +34,29 @@ export function GroupSocialCard({ group, memberCount }: GroupSocialCardProps) {
     const adminName = data.admin ? `${data.admin.firstName} ${data.admin.lastName}` : "Unknown";
 
     return (
-        <div className="rounded-xl border border-border bg-card p-6 space-y-4">
+        <div className="surface-card space-y-4 p-6">
             <div>
-                <h2 className="text-xl font-semibold leading-tight">{data.name}</h2>
+                <h2 className="heading-card">{data.name}</h2>
                 {data.description && (
-                    <p className="mt-1 text-sm text-muted-foreground">{data.description}</p>
+                    <p className="mt-1 text-supporting">{data.description}</p>
                 )}
             </div>
             <Separator />
             <dl className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                    <dt className="text-muted-foreground">Admin</dt>
+                    <dt className="text-label-muted">Admin</dt>
                     <dd className="font-medium">{adminName}</dd>
                 </div>
                 <div className="flex justify-between">
-                    <dt className="text-muted-foreground">Members</dt>
+                    <dt className="text-label-muted">Members</dt>
                     <dd className="font-medium">{memberCount ?? "—"}</dd>
                 </div>
                 <div className="flex justify-between">
-                    <dt className="text-muted-foreground">Decision model</dt>
+                    <dt className="text-label-muted">Decision model</dt>
                     <dd className="font-medium capitalize">Open</dd>
                 </div>
                 <div className="flex justify-between">
-                    <dt className="text-muted-foreground">Created</dt>
+                    <dt className="text-label-muted">Created</dt>
                     <dd className="font-medium">{formatDate(data.createdDate)}</dd>
                 </div>
             </dl>

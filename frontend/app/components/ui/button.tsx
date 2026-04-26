@@ -1,5 +1,6 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import { LoaderCircle } from "lucide-react"
 import { Slot } from "radix-ui"
 
 import { cn } from "@/lib/utils"
@@ -46,21 +47,45 @@ function Button({
   variant = "default",
   size = "default",
   asChild = false,
+  children,
+  leadingIcon,
+  trailingIcon,
+  busy = false,
+  disabled,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean
+    leadingIcon?: React.ReactNode
+    trailingIcon?: React.ReactNode
+    busy?: boolean
   }) {
   const Comp = asChild ? Slot.Root : "button"
+  const startIcon = busy ? <LoaderCircle className="animate-spin" /> : leadingIcon
+  const isDisabled = disabled || busy
 
   return (
     <Comp
       data-slot="button"
       data-variant={variant}
       data-size={size}
+      aria-busy={busy || undefined}
+      disabled={asChild ? undefined : isDisabled}
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
-    />
+    >
+      {startIcon ? (
+        <span data-icon="inline-start" className="inline-flex items-center justify-center">
+          {startIcon}
+        </span>
+      ) : null}
+      {children ? <span className="inline-flex items-center gap-1">{children}</span> : null}
+      {!busy && trailingIcon ? (
+        <span data-icon="inline-end" className="inline-flex items-center justify-center">
+          {trailingIcon}
+        </span>
+      ) : null}
+    </Comp>
   )
 }
 
