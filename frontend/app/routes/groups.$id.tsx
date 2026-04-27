@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { graphql, usePreloadedQuery, loadQuery } from "react-relay";
+import { ConnectionHandler } from "relay-runtime";
 import { useNavigate } from "react-router";
 import type { groupsDetailQuery } from "@/__generated__/groupsDetailQuery.graphql";
 import { getRelayEnvironment } from "@/relay/environment";
@@ -117,6 +118,11 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
     const games = group.games?.edges?.map((e) => e?.node).filter(Boolean) ?? [];
     const members = group.members?.edges?.map((e) => e?.node).filter(Boolean) ?? [];
     const isAdmin = myId != null && group.admin?.id === myId;
+    const gameConnections = [
+        ConnectionHandler.getConnectionID(group.id, "GroupDetail_games", {
+            order: { createdDate: "DESC" },
+        }),
+    ];
 
     return (
         <main className="container mx-auto px-4 py-8">
@@ -130,7 +136,11 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr]">
                 {/* Sidebar */}
                 <div>
-                    <GroupSocialCard group={group} memberCount={members.length} />
+                    <GroupSocialCard
+                        group={group}
+                        memberCount={members.length}
+                        currentUserId={myId}
+                    />
                 </div>
 
                 {/* Tabs */}
@@ -179,6 +189,7 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                                     key={member!.id}
                                     user={member!}
                                     isAdmin={member!.id === group.admin?.id}
+                                    isSelf={member!.id === myId}
                                 />
                             ))}
                         </div>
@@ -210,7 +221,7 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
             {/* Dialogs */}
             <NewGameForm
                 groupId={group.id}
-                connectionOwner={group.id}
+                connections={gameConnections}
                 open={newGameOpen}
                 onOpenChange={setNewGameOpen}
             />
@@ -227,6 +238,7 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                         lastName?: string | null;
                     }>
                 }
+                currentUserId={myId}
             />
         </main>
     );

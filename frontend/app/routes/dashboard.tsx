@@ -1,5 +1,6 @@
 import { graphql, usePreloadedQuery, loadQuery } from "react-relay";
 import type { dashboardQuery } from "@/__generated__/dashboardQuery.graphql";
+import { PersonName } from "@/components/PersonName";
 import { getRelayEnvironment } from "@/relay/environment";
 import type { Route } from "./+types/dashboard";
 
@@ -34,12 +35,18 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
     // usePreloadedQuery suspends until the query completes.
     // The Suspense boundary in _protected.tsx shows the spinner while loading.
     const data = usePreloadedQuery(DashboardQuery, loaderData.queryRef);
-    const firstName = data.me?.firstName ?? "there";
-
     return (
         <main className="flex min-h-screen flex-col container mx-auto p-8">
             <h1 className="text-3xl font-semibold">Dashboard</h1>
-            <p className="mt-2 text-muted-foreground">Welcome back, {firstName}.</p>
+            <p className="mt-2 text-muted-foreground">
+                Welcome back,{" "}
+                <PersonName
+                    firstName={data.me?.firstName}
+                    fallback="there"
+                    isSelf={data.me != null}
+                />
+                .
+            </p>
         </main>
     );
 }

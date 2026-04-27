@@ -1,5 +1,6 @@
 import { graphql, useMutation } from "react-relay";
 import type { TrophyApprovalPanelMutation } from "@/__generated__/TrophyApprovalPanelMutation.graphql";
+import { PersonName } from "@/components/PersonName";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
@@ -47,7 +48,6 @@ function TrophyApprovalRow({
     const myApproval = trophy.request.approvals.find((a) => a.user.id === myId);
     const approvedCount = trophy.request.approvals.filter((a) => a.isApproved).length;
     const totalApprovers = trophy.request.approvals.length;
-    const receiverName = `${trophy.receiver.firstName} ${trophy.receiver.lastName}`;
 
     const handleApprove = () => {
         commitApprove({
@@ -62,7 +62,14 @@ function TrophyApprovalRow({
             <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium">
                     {trophy.game.name}{" "}
-                    <span className="font-normal text-muted-foreground">→ {receiverName}</span>
+                    <span className="font-normal text-muted-foreground">
+                        →{" "}
+                        <PersonName
+                            firstName={trophy.receiver.firstName}
+                            lastName={trophy.receiver.lastName}
+                            isSelf={trophy.receiver.id === myId}
+                        />
+                    </span>
                 </p>
                 {trophy.description && (
                     <p className="text-xs text-muted-foreground truncate">{trophy.description}</p>

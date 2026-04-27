@@ -1,5 +1,6 @@
 import { graphql, useFragment } from "react-relay";
 import type { GroupSocialCard_group$key } from "@/__generated__/GroupSocialCard_group.graphql";
+import { PersonName } from "@/components/PersonName";
 import { Separator } from "@/components/ui/separator";
 
 const GroupSocialCardFragment = graphql`
@@ -9,6 +10,7 @@ const GroupSocialCardFragment = graphql`
         description
         decisionModel
         admin {
+            id
             firstName
             lastName
         }
@@ -19,6 +21,7 @@ const GroupSocialCardFragment = graphql`
 interface GroupSocialCardProps {
     group: GroupSocialCard_group$key;
     memberCount?: number;
+    currentUserId?: string | null;
 }
 
 function formatDate(iso: string) {
@@ -29,9 +32,8 @@ function formatDate(iso: string) {
     });
 }
 
-export function GroupSocialCard({ group, memberCount }: GroupSocialCardProps) {
+export function GroupSocialCard({ group, memberCount, currentUserId }: GroupSocialCardProps) {
     const data = useFragment(GroupSocialCardFragment, group);
-    const ownerName = data.admin ? `${data.admin.firstName} ${data.admin.lastName}` : "Unknown";
 
     return (
         <div className="surface-card space-y-4 p-6">
@@ -43,7 +45,17 @@ export function GroupSocialCard({ group, memberCount }: GroupSocialCardProps) {
             <dl className="space-y-2 text-sm">
                 <div className="flex justify-between">
                     <dt className="text-label-muted">Owner</dt>
-                    <dd className="font-medium">{ownerName}</dd>
+                    <dd className="font-medium">
+                        {data.admin ? (
+                            <PersonName
+                                firstName={data.admin.firstName}
+                                lastName={data.admin.lastName}
+                                isSelf={data.admin.id === currentUserId}
+                            />
+                        ) : (
+                            "Unknown"
+                        )}
+                    </dd>
                 </div>
                 <div className="flex justify-between">
                     <dt className="text-label-muted">Members</dt>

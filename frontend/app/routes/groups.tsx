@@ -1,4 +1,5 @@
 import { graphql, usePreloadedQuery, loadQuery } from "react-relay";
+import { ConnectionHandler } from "relay-runtime";
 import type { groupsPageQuery } from "@/__generated__/groupsPageQuery.graphql";
 import { getRelayEnvironment } from "@/relay/environment";
 import { GroupBox } from "@/components/GroupBox";
@@ -47,6 +48,9 @@ export default function Groups({ loaderData }: Route.ComponentProps) {
     const data = usePreloadedQuery(GroupsPageQuery, loaderData.queryRef);
     const edges = data.me?.groups?.edges ?? [];
     const [newGroupOpen, setNewGroupOpen] = useState(false);
+    const groupConnections = data.me
+        ? [ConnectionHandler.getConnectionID(data.me.id, "Groups_groups")]
+        : [];
 
     return (
         <main className="container mx-auto px-4 py-8">
@@ -74,7 +78,7 @@ export default function Groups({ loaderData }: Route.ComponentProps) {
             <NewGroupForm
                 open={newGroupOpen}
                 onOpenChange={setNewGroupOpen}
-                connectionOwner={data.me?.id ?? ""}
+                connections={groupConnections}
             />
         </main>
     );

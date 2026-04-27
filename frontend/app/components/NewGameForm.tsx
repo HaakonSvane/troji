@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ConnectionHandler, graphql, useMutation } from "react-relay";
+import { graphql, useMutation } from "react-relay";
 import type { NewGameFormMutation } from "@/__generated__/NewGameFormMutation.graphql";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,17 +7,24 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { DrawerDialog } from "@/components/DrawerDialog";
 import { EmojiPicker } from "@/components/EmojiPicker";
+import {
+    getMutationErrorMessage,
+    getMutationNetworkErrorMessage,
+} from "@/lib/relay/mutationErrors";
 import { validateCreateGameInput } from "@/lib/validation/forms";
 
 const CreateGameMutation = graphql`
-    mutation NewGameFormMutation($input: CreateGameInput!) {
+    mutation NewGameFormMutation($input: CreateGameInput!, $connections: [ID!]!) {
         createGame(input: $input) {
-            game {
+            game @prependNode(connections: $connections, edgeTypeName: "GamesEdge") {
                 id
                 ...GroupGamesTableRow_game
             }
             errors {
                 __typename
+                ... on Error {
+                    message
+                }
             }
         }
     }
@@ -25,7 +32,7 @@ const CreateGameMutation = graphql`
 
 interface NewGameFormProps {
     groupId: string;
-    connectionOwner?: string;
+    connections: string[];
     open: boolean;
     onOpenChange: (open: boolean) => void;
     onCreated?: (gameId: string) => void;
@@ -33,7 +40,7 @@ interface NewGameFormProps {
 
 export function NewGameForm({
     groupId,
-    connectionOwner,
+    connections,
     open,
     onOpenChange,
     onCreated,
@@ -69,27 +76,22 @@ export function NewGameForm({
         commitCreateGame({
             variables: {
                 input: validation.data,
+                connections,
             },
-            updater: (store) => {
-                if (!connectionOwner) return;
-
-                const payload = store.getRootField("createGame");
-                const newGame = payload?.getLinkedRecord("game");
-                if (!newGame) return;
-
-                const owner = store.get(connectionOwner);
-                if (!owner) return;
-
-                const connection = ConnectionHandler.getConnection(owner, "GroupDetail_games", {
-                    order: [{ createdDate: "DESC" }],
-                });
-                if (!connection) return;
-
-                const edge = ConnectionHandler.createEdge(store, connection, newGame, "GamesEdge");
-                ConnectionHandler.insertEdgeBefore(connection, edge);
+            optimisticResponse: {
+                createGame: {
+                    game: {
+                        __typename: "Game",
+                        id: `client:new-game:${groupId}:${validation.data.name}`,
+                        name: validation.data.name,
+                        symbol: validation.data.symbol,
+                        description: validation.data.description,
+                        trophies: [],
+                    },
+                    errors: [],
+                },
             },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            onCompleted: (response: any) => {
+            onCompleted: (response) => {
                 const payload = response.createGame;
                 if (payload?.game?.id) {
                     onOpenChange(false);
@@ -97,10 +99,20 @@ export function NewGameForm({
                     onCreated?.(payload.game.id);
                     return;
                 }
-                setFormError("Could not create game. Please try again.");
+                setFormError(
+                    getMutationErrorMessage(
+                        payload?.errors,
+                        "Could not create game. Please try again."
+                    )
+                );
             },
-            onError: () => {
-                setFormError("Could not create game. Please try again.");
+            onError: (error) => {
+                setFormError(
+                    getMutationNetworkErrorMessage(
+                        error,
+                        "Could not create game. Please try again."
+                    )
+                );
             },
         });
     };

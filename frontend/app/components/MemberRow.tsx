@@ -1,5 +1,6 @@
 import { graphql, useFragment } from "react-relay";
 import type { MemberRow_user$key } from "@/__generated__/MemberRow_user.graphql";
+import { PersonName, formatPersonName } from "@/components/PersonName";
 
 const MemberRowFragment = graphql`
     fragment MemberRow_user on User {
@@ -13,11 +14,12 @@ const MemberRowFragment = graphql`
 interface MemberRowProps {
     user: MemberRow_user$key;
     isAdmin?: boolean;
+    isSelf?: boolean;
 }
 
-export function MemberRow({ user, isAdmin = false }: MemberRowProps) {
+export function MemberRow({ user, isAdmin = false, isSelf = false }: MemberRowProps) {
     const data = useFragment(MemberRowFragment, user);
-    const fullName = [data.firstName, data.middleName, data.lastName].filter(Boolean).join(" ");
+    const fullName = formatPersonName(data);
     const initials = [data.firstName[0], data.lastName[0]].join("").toUpperCase();
 
     return (
@@ -25,7 +27,14 @@ export function MemberRow({ user, isAdmin = false }: MemberRowProps) {
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/20 text-xs font-semibold text-primary">
                 {initials}
             </div>
-            <span className="text-sm font-medium flex-1">{fullName}</span>
+            <PersonName
+                firstName={data.firstName}
+                middleName={data.middleName}
+                lastName={data.lastName}
+                isSelf={isSelf}
+                fallback={fullName}
+                className="text-sm font-medium flex-1"
+            />
             {isAdmin && (
                 <span className="rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground">
                     Owner

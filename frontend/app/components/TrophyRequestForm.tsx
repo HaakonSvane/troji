@@ -2,6 +2,7 @@ import { useState } from "react";
 import { graphql, useMutation } from "react-relay";
 import type { TrophyRequestFormMutation } from "@/__generated__/TrophyRequestFormMutation.graphql";
 import { Button } from "@/components/ui/button";
+import { PersonName, formatPersonName } from "@/components/PersonName";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -39,6 +40,7 @@ interface TrophyRequestFormProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     groupMembers: Member[];
+    currentUserId?: string | null;
     onRequested?: () => void;
 }
 
@@ -47,6 +49,7 @@ export function TrophyRequestForm({
     open,
     onOpenChange,
     groupMembers,
+    currentUserId,
     onRequested,
 }: TrophyRequestFormProps) {
     const [commitRequest, isSubmitting] = useMutation<TrophyRequestFormMutation>(
@@ -141,11 +144,19 @@ export function TrophyRequestForm({
                             </SelectTrigger>
                             <SelectContent>
                                 {groupMembers.map((m) => {
-                                    const label =
-                                        [m.firstName, m.lastName].filter(Boolean).join(" ") || m.id;
+                                    const label = formatPersonName({
+                                        firstName: m.firstName,
+                                        lastName: m.lastName,
+                                        fallback: m.id,
+                                    });
                                     return (
                                         <SelectItem key={m.id} value={m.id}>
-                                            {label}
+                                            <PersonName
+                                                firstName={m.firstName}
+                                                lastName={m.lastName}
+                                                fallback={label}
+                                                isSelf={m.id === currentUserId}
+                                            />
                                         </SelectItem>
                                     );
                                 })}

@@ -189,6 +189,7 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
                         lastName?: string | null;
                     }>
                 }
+                currentUserId={myId}
             />
         </main>
     );

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ConnectionHandler, graphql, useMutation } from "react-relay";
+import { graphql, useMutation } from "react-relay";
 import { useNavigate } from "react-router";
 import type { NewGroupFormMutation } from "@/__generated__/NewGroupFormMutation.graphql";
 import { Button } from "@/components/ui/button";
@@ -7,18 +7,25 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { DrawerDialog } from "@/components/DrawerDialog";
+import {
+    getMutationErrorMessage,
+    getMutationNetworkErrorMessage,
+} from "@/lib/relay/mutationErrors";
 import { validateCreateGroupInput } from "@/lib/validation/forms";
 
 const CreateGroupMutation = graphql`
-    mutation NewGroupFormMutation($input: CreateGroupInput!) {
+    mutation NewGroupFormMutation($input: CreateGroupInput!, $connections: [ID!]!) {
         createGroup(input: $input) {
-            group {
+            group @prependNode(connections: $connections, edgeTypeName: "GroupsEdge") {
                 id
                 name
                 ...GroupBox_group
             }
             errors {
                 __typename
+                ... on Error {
+                    message
+                }
             }
         }
     }
@@ -27,18 +34,12 @@ const CreateGroupMutation = graphql`
 interface NewGroupFormProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    /** Relay store ID of the connection owner (the viewer/me record) */
-    connectionOwner: string;
+    connections: string[];
     /** Called with the new group id on success */
     onCreated?: (id: string) => void;
 }
 
-export function NewGroupForm({
-    open,
-    onOpenChange,
-    connectionOwner,
-    onCreated,
-}: NewGroupFormProps) {
+export function NewGroupForm({ open, onOpenChange, connections, onCreated }: NewGroupFormProps) {
     const navigate = useNavigate();
     const [commitCreateGroup, isSubmitting] =
         useMutation<NewGroupFormMutation>(CreateGroupMutation);
@@ -68,23 +69,21 @@ export function NewGroupForm({
         commitCreateGroup({
             variables: {
                 input: validation.data,
+                connections,
             },
-            updater: (store) => {
-                const payload = store.getRootField("createGroup");
-                const newGroup = payload?.getLinkedRecord("group");
-                if (!newGroup) return;
-
-                const owner = store.get(connectionOwner);
-                if (!owner) return;
-
-                const conn = ConnectionHandler.getConnection(owner, "Groups_groups");
-                if (!conn) return;
-
-                const edge = ConnectionHandler.createEdge(store, conn, newGroup, "GroupsEdge");
-                ConnectionHandler.insertEdgeBefore(conn, edge);
+            optimisticResponse: {
+                createGroup: {
+                    group: {
+                        __typename: "Group",
+                        id: `client:new-group:${validation.data.name}`,
+                        name: validation.data.name,
+                        description: validation.data.description,
+                        decisionModel: "OPEN",
+                    },
+                    errors: [],
+                },
             },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            onCompleted: (response: any) => {
+            onCompleted: (response) => {
                 const payload = response.createGroup;
                 if (payload?.group?.id) {
                     onOpenChange(false);
@@ -96,10 +95,20 @@ export function NewGroupForm({
                     }
                     return;
                 }
-                setFormError("Could not create group. Please try again.");
+                setFormError(
+                    getMutationErrorMessage(
+                        payload?.errors,
+                        "Could not create group. Please try again."
+                    )
+                );
             },
-            onError: () => {
-                setFormError("Could not create group. Please try again.");
+            onError: (error) => {
+                setFormError(
+                    getMutationNetworkErrorMessage(
+                        error,
+                        "Could not create group. Please try again."
+                    )
+                );
             },
         });
     };
