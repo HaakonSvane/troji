@@ -1,8 +1,8 @@
 import { graphql, useFragment } from "react-relay";
-import { ChevronRight, Gift } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Link } from "react-router";
 import type { GroupGamesTableRow_game$key } from "@/__generated__/GroupGamesTableRow_game.graphql";
-import { Button, type ButtonDisabledProp } from "@/components/ui/button";
+import { AwardTrophyButton } from "@/components/AwardTrophyButton";
 import { MedalBadge } from "@/components/MedalBadge";
 
 const GroupGamesTableRowFragment = graphql`
@@ -20,13 +20,19 @@ const GroupGamesTableRowFragment = graphql`
 interface GroupGamesTableRowProps {
     groupId: string;
     game: GroupGamesTableRow_game$key;
-    onAwardTrophy?: (gameId: string) => void;
-    awardDisabled?: ButtonDisabledProp;
+    groupMembers: Array<{ id: string; firstName?: string | null; lastName?: string | null }>;
+    currentUserId?: string | null;
 }
 
-export function GroupGamesTableRow({ groupId, game, onAwardTrophy, awardDisabled }: GroupGamesTableRowProps) {
+export function GroupGamesTableRow({
+    groupId,
+    game,
+    groupMembers,
+    currentUserId,
+}: GroupGamesTableRowProps) {
     const data = useFragment(GroupGamesTableRowFragment, game);
-    const trophyLabel = data.trophies.length === 1 ? "1 trophy" : `${data.trophies.length} trophies`;
+    const trophyLabel =
+        data.trophies.length === 1 ? "1 trophy" : `${data.trophies.length} trophies`;
 
     return (
         <div className="surface-card flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
@@ -40,7 +46,9 @@ export function GroupGamesTableRow({ groupId, game, onAwardTrophy, awardDisabled
                     {data.description ? (
                         <p className="text-supporting line-clamp-2">{data.description}</p>
                     ) : (
-                        <p className="text-supporting">Open this game to inspect its rewards and history.</p>
+                        <p className="text-supporting">
+                            Open this game to inspect its rewards and history.
+                        </p>
                     )}
                 </div>
                 <div className="hidden items-center gap-2 sm:flex">
@@ -50,15 +58,14 @@ export function GroupGamesTableRow({ groupId, game, onAwardTrophy, awardDisabled
             </Link>
             <div className="flex items-center justify-between gap-3 sm:justify-end">
                 <span className="pill-muted sm:hidden">{trophyLabel}</span>
-                <Button
+                <AwardTrophyButton
+                    preselectedGameId={data.id}
+                    availableGames={[{ id: data.id, name: data.name, symbol: data.symbol }]}
+                    groupMembers={groupMembers}
+                    currentUserId={currentUserId}
                     variant="outline"
                     size="sm"
-                    leadingIcon={<Gift />}
-                    disabled={awardDisabled}
-                    onClick={() => onAwardTrophy?.(data.id)}
-                >
-                    Award trophy
-                </Button>
+                />
             </div>
         </div>
     );

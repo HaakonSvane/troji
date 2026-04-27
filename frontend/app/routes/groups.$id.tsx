@@ -2,7 +2,7 @@ import { useState } from "react";
 import { graphql, usePreloadedQuery, loadQuery } from "react-relay";
 import { ConnectionHandler } from "relay-runtime";
 import { useNavigate } from "react-router";
-import { Gamepad2, Gift, Plus, Trophy, UserPlus, Users } from "lucide-react";
+import { Gamepad2, Plus, Trophy, UserPlus, Users } from "lucide-react";
 import type { groupsDetailQuery } from "@/__generated__/groupsDetailQuery.graphql";
 import { getRelayEnvironment } from "@/relay/environment";
 import { GroupSocialCard } from "@/components/GroupSocialCard";
@@ -10,7 +10,7 @@ import { MemberRow } from "@/components/MemberRow";
 import { GroupGamesTableRow } from "@/components/GroupGamesTableRow";
 import { NewGameForm } from "@/components/NewGameForm";
 import { GroupInviteManager } from "@/components/GroupInviteManager";
-import { TrophyRequestForm } from "@/components/TrophyRequestForm";
+import { AwardTrophyButton } from "@/components/AwardTrophyButton";
 import { TrophyApprovalPanel } from "@/components/TrophyApprovalPanel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -107,8 +107,6 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
     const [newGameOpen, setNewGameOpen] = useState(false);
     const [activeTab, setActiveTab] = useState("games");
     const [inviteOpen, setInviteOpen] = useState(false);
-    const [requestTrophyOpen, setRequestTrophyOpen] = useState(false);
-    const [requestTrophyGameId, setRequestTrophyGameId] = useState<string | null>(null);
 
     if (!group) {
         return (
@@ -124,18 +122,6 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
     const games = group.games?.edges?.map((e) => e?.node).filter(Boolean) ?? [];
     const members = group.members?.edges?.map((e) => e?.node).filter(Boolean) ?? [];
     const isAdmin = myId != null && group.admin?.id === myId;
-
-    // Disabled states for award-trophy actions with contextual hints.
-    const awardTrophyDisabled =
-        members.length < 2
-            ? { isDisabled: true, reason: "You need at least one other member to award a trophy." }
-            : false;
-    const newTrophyDisabled =
-        members.length < 2
-            ? { isDisabled: true, reason: "You need at least one other member to award a trophy." }
-            : games.length === 0
-              ? { isDisabled: true, reason: "Create a game first before awarding trophies." }
-              : false;
 
     const trophyGameOptions = games.map((game) => ({
         id: game!.id,
@@ -172,21 +158,21 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                     <TabsList className="h-11 rounded-xl p-1">
                         <TabsTrigger
                             value="games"
-                            className="px-4 data-[state=active]:scale-110 hover:text-current"
+                            className="px-4 data-[state=active]:scale-110 hover:text-current data-[state=active]:[&_svg]:fill-current"
                         >
                             <Gamepad2 className="size-4" />
                             Games
                         </TabsTrigger>
                         <TabsTrigger
                             value="members"
-                            className="px-4 data-[state=active]:scale-110 hover:text-current"
+                            className="px-4 data-[state=active]:scale-110 hover:text-current data-[state=active]:[&_svg]:fill-current"
                         >
                             <Users className="size-4" />
                             Members
                         </TabsTrigger>
                         <TabsTrigger
                             value="trophies"
-                            className="px-4 data-[state=active]:scale-110 hover:text-current"
+                            className="px-4 data-[state=active]:scale-110 hover:text-current data-[state=active]:[&_svg]:fill-current"
                         >
                             <Trophy className="size-4" />
                             Trophies
@@ -216,11 +202,8 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                                         key={game!.id}
                                         groupId={group.id}
                                         game={game!}
-                                        awardDisabled={awardTrophyDisabled}
-                                        onAwardTrophy={(gameId) => {
-                                            setRequestTrophyGameId(gameId);
-                                            setRequestTrophyOpen(true);
-                                        }}
+                                        groupMembers={members as Array<{ id: string; firstName?: string | null; lastName?: string | null }>}
+                                        currentUserId={myId}
                                     />
                                 ))}
                             </div>
@@ -258,18 +241,15 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                     <TabsContent value="trophies" className="mt-4">
                         <div className="mb-3 flex items-center justify-between">
                             <h2 className="heading-section">Trophies</h2>
-                            <Button
-                                size="sm"
+                            <AwardTrophyButton
+                                preselectedGameId={null}
+                                availableGames={trophyGameOptions}
+                                groupMembers={members as Array<{ id: string; firstName?: string | null; lastName?: string | null }>}
+                                currentUserId={myId}
+                                label="New trophy"
                                 variant="outline"
-                                leadingIcon={<Gift />}
-                                disabled={newTrophyDisabled}
-                                onClick={() => {
-                                    setRequestTrophyGameId(null);
-                                    setRequestTrophyOpen(true);
-                                }}
-                            >
-                                New trophy
-                            </Button>
+                                size="sm"
+                            />
                         </div>
                         <TrophyApprovalPanel
                             trophies={
@@ -295,25 +275,6 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                 onOpenChange={setInviteOpen}
                 groupId={group.id}
                 invite={group.invite ?? null}
-            />
-            <TrophyRequestForm
-                gameId={requestTrophyGameId}
-                availableGames={trophyGameOptions}
-                open={requestTrophyOpen}
-                onOpenChange={(open) => {
-                    setRequestTrophyOpen(open);
-                    if (!open) {
-                        setRequestTrophyGameId(null);
-                    }
-                }}
-                groupMembers={
-                    members as Array<{
-                        id: string;
-                        firstName?: string | null;
-                        lastName?: string | null;
-                    }>
-                }
-                currentUserId={myId}
             />
         </main>
     );

@@ -1,11 +1,9 @@
-import { useState } from "react";
 import { graphql, loadQuery, usePreloadedQuery } from "react-relay";
 import { useNavigate } from "react-router";
-import { Gift } from "lucide-react";
 import type { groupsGameDetailQuery } from "@/__generated__/groupsGameDetailQuery.graphql";
 import { MedalBadge } from "@/components/MedalBadge";
 import { TrophyApprovalPanel } from "@/components/TrophyApprovalPanel";
-import { TrophyRequestForm } from "@/components/TrophyRequestForm";
+import { AwardTrophyButton } from "@/components/AwardTrophyButton";
 import { Button } from "@/components/ui/button";
 import { getRelayEnvironment } from "@/relay/environment";
 import type { Route } from "./+types/groups.$id.games.$gameId";
@@ -91,8 +89,6 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
     const group = data.groupById;
     const game = data.gameById;
     const myId = data.me?.id;
-    const [awardOpen, setAwardOpen] = useState(false);
-
     if (!group || !game || game.group?.id !== group.id) {
         return (
             <main className="container mx-auto px-4 py-8">
@@ -106,11 +102,6 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
 
     const members = group.members?.edges?.map((edge) => edge?.node).filter(Boolean) ?? [];
     const trophies = game.trophies ?? [];
-
-    const awardTrophyDisabled =
-        members.length < 2
-            ? { isDisabled: true, reason: "You need at least one other member to award a trophy." }
-            : false;
 
     return (
         <main className="container mx-auto px-4 py-8">
@@ -147,9 +138,12 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
                                 ? "1 trophy awarded"
                                 : `${trophies.length} trophies awarded`}
                         </span>
-                        <Button leadingIcon={<Gift />} disabled={awardTrophyDisabled} onClick={() => setAwardOpen(true)}>
-                            Award trophy
-                        </Button>
+                        <AwardTrophyButton
+                            preselectedGameId={game.id}
+                            availableGames={[{ id: game.id, name: game.name, symbol: game.symbol }]}
+                            groupMembers={members as Array<{ id: string; firstName?: string | null; lastName?: string | null }>}
+                            currentUserId={myId}
+                        />
                     </div>
                 </div>
 
@@ -186,20 +180,6 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
                 />
             </section>
 
-            <TrophyRequestForm
-                gameId={game.id}
-                availableGames={[{ id: game.id, name: game.name, symbol: game.symbol }]}
-                open={awardOpen}
-                onOpenChange={setAwardOpen}
-                groupMembers={
-                    members as Array<{
-                        id: string;
-                        firstName?: string | null;
-                        lastName?: string | null;
-                    }>
-                }
-                currentUserId={myId}
-            />
         </main>
     );
 }
