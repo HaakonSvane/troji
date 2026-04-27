@@ -107,6 +107,11 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
     const members = group.members?.edges?.map((edge) => edge?.node).filter(Boolean) ?? [];
     const trophies = game.trophies ?? [];
 
+    const awardTrophyDisabled =
+        members.length < 2
+            ? { isDisabled: true, reason: "You need at least one other member to award a trophy." }
+            : false;
+
     return (
         <main className="container mx-auto px-4 py-8">
             <Button
@@ -142,7 +147,7 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
                                 ? "1 trophy awarded"
                                 : `${trophies.length} trophies awarded`}
                         </span>
-                        <Button leadingIcon={<Gift />} onClick={() => setAwardOpen(true)}>
+                        <Button leadingIcon={<Gift />} disabled={awardTrophyDisabled} onClick={() => setAwardOpen(true)}>
                             Award trophy
                         </Button>
                     </div>

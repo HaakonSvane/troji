@@ -2,7 +2,7 @@ import { graphql, useFragment } from "react-relay";
 import { ChevronRight, Gift } from "lucide-react";
 import { Link } from "react-router";
 import type { GroupGamesTableRow_game$key } from "@/__generated__/GroupGamesTableRow_game.graphql";
-import { Button } from "@/components/ui/button";
+import { Button, type ButtonDisabledProp } from "@/components/ui/button";
 import { MedalBadge } from "@/components/MedalBadge";
 
 const GroupGamesTableRowFragment = graphql`
@@ -21,9 +21,10 @@ interface GroupGamesTableRowProps {
     groupId: string;
     game: GroupGamesTableRow_game$key;
     onAwardTrophy?: (gameId: string) => void;
+    awardDisabled?: ButtonDisabledProp;
 }
 
-export function GroupGamesTableRow({ groupId, game, onAwardTrophy }: GroupGamesTableRowProps) {
+export function GroupGamesTableRow({ groupId, game, onAwardTrophy, awardDisabled }: GroupGamesTableRowProps) {
     const data = useFragment(GroupGamesTableRowFragment, game);
     const trophyLabel = data.trophies.length === 1 ? "1 trophy" : `${data.trophies.length} trophies`;
 
@@ -53,6 +54,7 @@ export function GroupGamesTableRow({ groupId, game, onAwardTrophy }: GroupGamesT
                     variant="outline"
                     size="sm"
                     leadingIcon={<Gift />}
+                    disabled={awardDisabled}
                     onClick={() => onAwardTrophy?.(data.id)}
                 >
                     Award trophy

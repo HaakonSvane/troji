@@ -124,6 +124,19 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
     const games = group.games?.edges?.map((e) => e?.node).filter(Boolean) ?? [];
     const members = group.members?.edges?.map((e) => e?.node).filter(Boolean) ?? [];
     const isAdmin = myId != null && group.admin?.id === myId;
+
+    // Disabled states for award-trophy actions with contextual hints.
+    const awardTrophyDisabled =
+        members.length < 2
+            ? { isDisabled: true, reason: "You need at least one other member to award a trophy." }
+            : false;
+    const newTrophyDisabled =
+        members.length < 2
+            ? { isDisabled: true, reason: "You need at least one other member to award a trophy." }
+            : games.length === 0
+              ? { isDisabled: true, reason: "Create a game first before awarding trophies." }
+              : false;
+
     const trophyGameOptions = games.map((game) => ({
         id: game!.id,
         name: game!.name,
@@ -203,6 +216,7 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                                         key={game!.id}
                                         groupId={group.id}
                                         game={game!}
+                                        awardDisabled={awardTrophyDisabled}
                                         onAwardTrophy={(gameId) => {
                                             setRequestTrophyGameId(gameId);
                                             setRequestTrophyOpen(true);
@@ -248,6 +262,7 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                                 size="sm"
                                 variant="outline"
                                 leadingIcon={<Gift />}
+                                disabled={newTrophyDisabled}
                                 onClick={() => {
                                     setRequestTrophyGameId(null);
                                     setRequestTrophyOpen(true);

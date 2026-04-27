@@ -1,9 +1,14 @@
 import * as React from "react";
+import { useState } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { LoaderCircle } from "lucide-react";
 import { Slot } from "radix-ui";
 
 import { cn } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+/** Extend disabled with an optional reason that shows a hint on hover or tap. */
+export type ButtonDisabledProp = boolean | { isDisabled: boolean; reason: string };
 
 const buttonVariants = cva(
     "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
@@ -51,26 +56,49 @@ function Button({
     trailingIcon,
     busy = false,
     disabled,
+    onClick,
     ...props
-}: React.ComponentProps<"button"> &
+}: Omit<React.ComponentProps<"button">, "disabled"> &
     VariantProps<typeof buttonVariants> & {
         asChild?: boolean;
         leadingIcon?: React.ReactNode;
         trailingIcon?: React.ReactNode;
         busy?: boolean;
+        disabled?: ButtonDisabledProp;
     }) {
+    const [hintOpen, setHintOpen] = useState(false);
+
+    const isDisabledBool =
+        typeof disabled === "boolean" ? disabled : (disabled?.isDisabled ?? false);
+    const disabledReason = typeof disabled === "object" ? disabled.reason : undefined;
+    const hasHint = isDisabledBool && !!disabledReason;
+    const resolvedDisabled = isDisabledBool || busy;
+
     const Comp = asChild ? Slot.Root : "button";
     const startIcon = busy ? <LoaderCircle className="animate-spin" /> : leadingIcon;
-    const isDisabled = disabled || busy;
 
-    return (
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (hasHint) {
+            e.preventDefault();
+            setHintOpen(true);
+            return;
+        }
+        onClick?.(e);
+    };
+
+    const buttonEl = (
         <Comp
             data-slot="button"
             data-variant={variant}
             data-size={size}
             aria-busy={busy || undefined}
-            disabled={asChild ? undefined : isDisabled}
-            className={cn(buttonVariants({ variant, size, className }))}
+            aria-disabled={hasHint ? true : undefined}
+            disabled={asChild ? undefined : hasHint ? false : resolvedDisabled}
+            className={cn(
+                buttonVariants({ variant, size, className }),
+                hasHint && "opacity-50 cursor-not-allowed active:translate-y-0"
+            )}
+            onClick={handleClick}
             {...props}
         >
             {startIcon ? (
@@ -86,6 +114,19 @@ function Button({
             ) : null}
         </Comp>
     );
+
+    if (hasHint) {
+        return (
+            <TooltipProvider>
+                <Tooltip open={hintOpen} onOpenChange={setHintOpen}>
+                    <TooltipTrigger asChild>{buttonEl}</TooltipTrigger>
+                    <TooltipContent>{disabledReason}</TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
+        );
+    }
+
+    return buttonEl;
 }
 
 export { Button, buttonVariants };
