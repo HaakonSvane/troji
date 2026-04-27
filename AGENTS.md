@@ -33,3 +33,6 @@
 ## Committing Work
 
 After completing every chunk of work. Commit!
+
+## Code philosophy
+Less is more. For every feature and fix, refactoring for less complexity should always be considered. We don't add to our mudball, we continuously reshape what our system is to fit our new needs. Behaviour is the flow through a constrained structure, and we aim at making that structure as simple as possible. Breaking changes should be communicated, but always considered if it leaves the system in a better state.
