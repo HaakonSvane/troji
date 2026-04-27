@@ -8,7 +8,6 @@ const GroupSocialCardFragment = graphql`
         id
         name
         description
-        decisionModel
         admin {
             id
             firstName
@@ -60,10 +59,6 @@ export function GroupSocialCard({ group, memberCount, currentUserId }: GroupSoci
                 <div className="flex justify-between">
                     <dt className="text-label-muted">Members</dt>
                     <dd className="font-medium">{memberCount ?? "—"}</dd>
-                </div>
-                <div className="flex justify-between">
-                    <dt className="text-label-muted">Decision model</dt>
-                    <dd className="font-medium capitalize">Open</dd>
                 </div>
                 <div className="flex justify-between">
                     <dt className="text-label-muted">Created</dt>

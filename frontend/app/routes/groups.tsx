@@ -1,6 +1,6 @@
 import { graphql, usePreloadedQuery, loadQuery } from "react-relay";
 import { ConnectionHandler } from "relay-runtime";
-import { LogIn, Plus } from "lucide-react";
+import { ArrowRightEndOnRectangleIcon, PlusIcon } from "@heroicons/react/24/outline";
 import type { groupsPageQuery } from "@/__generated__/groupsPageQuery.graphql";
 import { getRelayEnvironment } from "@/relay/environment";
 import { GroupBox } from "@/components/GroupBox";
@@ -63,12 +63,12 @@ export default function Groups({ loaderData }: Route.ComponentProps) {
                 <div className="flex items-center gap-2">
                     <Button
                         variant="outline"
-                        leadingIcon={<LogIn />}
+                        leadingIcon={<ArrowRightEndOnRectangleIcon />}
                         onClick={() => setJoinGroupOpen(true)}
                     >
                         Join
                     </Button>
-                    <Button leadingIcon={<Plus />} onClick={() => setNewGroupOpen(true)}>
+                    <Button leadingIcon={<PlusIcon />} onClick={() => setNewGroupOpen(true)}>
                         New group
                     </Button>
                 </div>

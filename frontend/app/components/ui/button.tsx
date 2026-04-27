@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { LoaderCircle } from "lucide-react";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { Slot } from "radix-ui";
 
 import { cn } from "@/lib/utils";
@@ -75,7 +75,7 @@ function Button({
     const resolvedDisabled = isDisabledBool || busy;
 
     const Comp = asChild ? Slot.Root : "button";
-    const startIcon = busy ? <LoaderCircle className="animate-spin" /> : leadingIcon;
+    const startIcon = busy ? <ArrowPathIcon className="animate-spin" /> : leadingIcon;
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         if (hasHint) {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Gift } from "lucide-react";
+import { GiftIcon } from "@heroicons/react/24/outline";
 import { type VariantProps } from "class-variance-authority";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { TrophyRequestForm } from "@/components/TrophyRequestForm";
@@ -36,7 +36,7 @@ export function AwardTrophyButton({
             <Button
                 variant={variant}
                 size={size}
-                leadingIcon={<Gift />}
+                leadingIcon={<GiftIcon />}
                 disabled={disabled}
                 onClick={() => setOpen(true)}
             >

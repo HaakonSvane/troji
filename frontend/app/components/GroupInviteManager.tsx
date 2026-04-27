@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { graphql, useMutation } from "react-relay";
-import { Copy, RefreshCcw } from "lucide-react";
+import { ArrowPathIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outline";
 import type { GroupInviteManagerMutation } from "@/__generated__/GroupInviteManagerMutation.graphql";
 import { DrawerDialog } from "@/components/DrawerDialog";
 import { Button } from "@/components/ui/button";
@@ -108,7 +108,7 @@ export function GroupInviteManager({
                             <Button
                                 variant="outline"
                                 size="sm"
-                                leadingIcon={<Copy />}
+                                leadingIcon={<DocumentDuplicateIcon />}
                                 onClick={handleCopy}
                             >
                                 {copied ? "Copied!" : "Copy"}
@@ -121,7 +121,7 @@ export function GroupInviteManager({
                             variant="outline"
                             size="sm"
                             disabled={isCreating}
-                            leadingIcon={<RefreshCcw />}
+                            leadingIcon={<ArrowPathIcon />}
                             onClick={handleCreateInvite}
                         >
                             {isCreating ? "Regenerating..." : "Regenerate"}

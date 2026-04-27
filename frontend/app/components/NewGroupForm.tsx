@@ -78,7 +78,6 @@ export function NewGroupForm({ open, onOpenChange, connections, onCreated }: New
                         id: `client:new-group:${validation.data.name}`,
                         name: validation.data.name,
                         description: validation.data.description,
-                        decisionModel: "OPEN",
                     },
                     errors: [],
                 },
@@ -123,7 +122,7 @@ export function NewGroupForm({ open, onOpenChange, connections, onCreated }: New
                 }
             }}
             title="Create a group"
-            description="Give your group a name. Trophy gifting is open by default."
+            description="Give your group a name and get started."
         >
             <form className="space-y-4" onSubmit={handleSubmit}>
                 <div className="space-y-2">

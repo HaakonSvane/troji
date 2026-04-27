@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5d2cde0b69c5c37b363b72cabb7058e0>>
+ * @generated SignedSource<<2f30c66b83fab75a33aef0b43d621c99>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -35,15 +35,6 @@ export type groupsGameDetailQuery$data = {
         readonly firstName: string;
         readonly id: string;
         readonly lastName: string;
-      };
-      readonly request: {
-        readonly approvals: ReadonlyArray<{
-          readonly isApproved: boolean;
-          readonly user: {
-            readonly id: string;
-          };
-        }>;
-        readonly id: number;
       };
     }>;
   } | null | undefined;
@@ -254,46 +245,6 @@ v8 = [
             "plural": false,
             "selections": (v4/*: any*/),
             "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "TrophyRequest",
-            "kind": "LinkedField",
-            "name": "request",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "TrophyRequestApproval",
-                "kind": "LinkedField",
-                "name": "approvals",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "User",
-                    "kind": "LinkedField",
-                    "name": "user",
-                    "plural": false,
-                    "selections": (v5/*: any*/),
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "isApproved",
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
           }
         ],
         "storageKey": null
@@ -336,16 +287,16 @@ return {
     "selections": (v8/*: any*/)
   },
   "params": {
-    "cacheID": "a00851815b6eb6a9e25c4f00e0969881",
+    "cacheID": "80bbcaf0ba2f6854583ff1ae5295a771",
     "id": null,
     "metadata": {},
     "name": "groupsGameDetailQuery",
     "operationKind": "query",
-    "text": "query groupsGameDetailQuery(\n  $groupId: ID!\n  $gameId: ID!\n) {\n  groupById(id: $groupId) {\n    id\n    name\n    members(first: 50) {\n      edges {\n        node {\n          id\n          firstName\n          lastName\n        }\n      }\n    }\n  }\n  gameById(id: $gameId) {\n    id\n    group {\n      id\n    }\n    name\n    symbol\n    description\n    trophies {\n      id\n      isAwarded\n      description\n      game {\n        id\n        symbol\n        name\n      }\n      receiver {\n        id\n        firstName\n        lastName\n      }\n      request {\n        id\n        approvals {\n          user {\n            id\n          }\n          isApproved\n        }\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n"
+    "text": "query groupsGameDetailQuery(\n  $groupId: ID!\n  $gameId: ID!\n) {\n  groupById(id: $groupId) {\n    id\n    name\n    members(first: 50) {\n      edges {\n        node {\n          id\n          firstName\n          lastName\n        }\n      }\n    }\n  }\n  gameById(id: $gameId) {\n    id\n    group {\n      id\n    }\n    name\n    symbol\n    description\n    trophies {\n      id\n      isAwarded\n      description\n      game {\n        id\n        symbol\n        name\n      }\n      receiver {\n        id\n        firstName\n        lastName\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b40fd030f4b4357168d1007baa0c3a7e";
+(node as any).hash = "574b12a6ef893dd7b3073a30eeb9ca0d";
 
 export default node;

@@ -1,5 +1,5 @@
 import { graphql, useFragment } from "react-relay";
-import { ChevronRight } from "lucide-react";
+import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router";
 import type { GroupGamesTableRow_game$key } from "@/__generated__/GroupGamesTableRow_game.graphql";
 import { AwardTrophyButton } from "@/components/AwardTrophyButton";
@@ -53,7 +53,7 @@ export function GroupGamesTableRow({
                 </div>
                 <div className="hidden items-center gap-2 sm:flex">
                     <span className="pill-muted">{trophyLabel}</span>
-                    <ChevronRight className="size-4 text-muted-foreground" />
+                    <ChevronRightIcon className="size-4 text-muted-foreground" />
                 </div>
             </Link>
             <div className="flex items-center justify-between gap-3 sm:justify-end">

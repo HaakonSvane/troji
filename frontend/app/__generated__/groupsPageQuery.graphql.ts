@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6fc2b48b6370672e3c5128f89281b6b9>>
+ * @generated SignedSource<<ee304849fe977d2c03a877a056ba2246>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -209,13 +209,6 @@ return {
                         "name": "description",
                         "storageKey": null
                       },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "decisionModel",
-                        "storageKey": null
-                      },
                       (v1/*: any*/)
                     ],
                     "storageKey": null
@@ -243,7 +236,7 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7a46031d43a2be157f1235700a3df51a",
+    "cacheID": "eae898003a30e4675abf86dcf3af8451",
     "id": null,
     "metadata": {
       "connection": [
@@ -260,7 +253,7 @@ return {
     },
     "name": "groupsPageQuery",
     "operationKind": "query",
-    "text": "query groupsPageQuery {\n  me {\n    id\n    groups(first: 24, order: {createdDate: DESC}) {\n      edges {\n        node {\n          id\n          ...GroupBox_group\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n  }\n}\n\nfragment GroupBox_group on Group {\n  id\n  name\n  description\n  decisionModel\n}\n"
+    "text": "query groupsPageQuery {\n  me {\n    id\n    groups(first: 24, order: {createdDate: DESC}) {\n      edges {\n        node {\n          id\n          ...GroupBox_group\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n  }\n}\n\nfragment GroupBox_group on Group {\n  id\n  name\n  description\n}\n"
   }
 };
 })();

@@ -7,14 +7,14 @@ namespace api.Repository;
 
 public class GameRepository : IGameRepository
 {
-    
+
     private readonly TrophyDbContext _context;
-    
+
     public GameRepository(TrophyDbContext context)
     {
         _context = context;
     }
-    
+
     public async Task<ILookup<int, Game>> GetGamesByGroupIdsAsync(IReadOnlyList<int> groupIds, CancellationToken cancellationToken)
     {
         var games = await _context.Games
@@ -36,6 +36,7 @@ public class GameRepository : IGameRepository
     {
         var trophies = await _context.Trophies
             .Include(trophy => trophy.Game)
+            .Include(trophy => trophy.Receiver)
             .Where(trophy => groupIds.Contains(trophy.Game.ParentGroupId))
             .ToListAsync(cancellationToken);
         return trophies.ToLookup(trophy => trophy.Game.ParentGroupId, trophy => trophy);
@@ -44,6 +45,7 @@ public class GameRepository : IGameRepository
     public async Task<ILookup<int, Trophy>> GetTrophiesByGameIdsAsync(IReadOnlyList<int> gameIds, CancellationToken cancellationToken)
     {
         var trophies = await _context.Trophies
+            .Include(trophy => trophy.Receiver)
             .Where(trophy => gameIds.Contains(trophy.GameId))
             .ToListAsync(cancellationToken);
         return trophies.ToLookup(trophy => trophy.GameId, trophy => trophy);
@@ -52,6 +54,7 @@ public class GameRepository : IGameRepository
     public async Task<IReadOnlyDictionary<int, Trophy>> GetTrophiesByIdsAsync(IReadOnlyList<int> ids, CancellationToken cancellationToken)
     {
         return await _context.Trophies
+            .Include(trophy => trophy.Receiver)
             .Where(trophy => ids.Contains(trophy.Id))
             .ToDictionaryAsync(trophy => trophy.Id, cancellationToken);
     }
@@ -78,6 +81,7 @@ public class GameRepository : IGameRepository
         return await _context.TrophyRequests
             .Where(request => trophyIds.Contains(request.TrophyId))
             .Include(request => request.Approvals)
+            .ThenInclude(approval => approval.User)
             .ToDictionaryAsync(request => request.TrophyId, cancellationToken);
     }
 

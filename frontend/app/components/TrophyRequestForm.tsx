@@ -63,7 +63,6 @@ export function TrophyRequestForm({
     const [description, setDescription] = useState("");
     const [formError, setFormError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
-    const [awardedImmediately, setAwardedImmediately] = useState(false);
 
     const effectiveGameId = gameId ?? selectedGameId;
 
@@ -73,7 +72,6 @@ export function TrophyRequestForm({
         setDescription("");
         setFormError(null);
         setSuccess(false);
-        setAwardedImmediately(false);
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -102,7 +100,6 @@ export function TrophyRequestForm({
             onCompleted: (response: any) => {
                 const payload = response.createTrophyRequest;
                 if (payload?.trophy?.id) {
-                    setAwardedImmediately(Boolean(payload.trophy.isAwarded));
                     setSuccess(true);
                     onRequested?.();
                     return;
@@ -127,11 +124,7 @@ export function TrophyRequestForm({
         >
             {success ? (
                 <div className="space-y-4 py-2">
-                    <p className="text-supporting">
-                        {awardedImmediately
-                            ? "Trophy awarded right away. Open groups do not require additional approval."
-                            : "Trophy request submitted successfully."}
-                    </p>
+                    <p className="text-supporting">Trophy request submitted successfully.</p>
                     <div className="flex justify-end">
                         <Button
                             onClick={() => {

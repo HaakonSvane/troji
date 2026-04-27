@@ -6,7 +6,6 @@ const GroupBoxFragment = graphql`
         id
         name
         description
-        decisionModel
     }
 `;
 
@@ -18,10 +17,7 @@ export function GroupBox({ group }: GroupBoxProps) {
     const data = useFragment(GroupBoxFragment, group);
     return (
         <div className="surface-card surface-card-interactive flex flex-col gap-2 p-5">
-            <div className="flex items-start justify-between gap-2">
-                <h3 className="heading-card text-lg">{data.name}</h3>
-                <span className="pill-muted shrink-0 capitalize">Open</span>
-            </div>
+            <h3 className="heading-card text-lg">{data.name}</h3>
             {data.description && <p className="text-supporting line-clamp-2">{data.description}</p>}
         </div>
     );

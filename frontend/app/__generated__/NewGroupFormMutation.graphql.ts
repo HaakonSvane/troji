@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3e5506ee8d5f24c4224b3d8c44be8ef3>>
+ * @generated SignedSource<<50f127d5aeaf4ad81e266e2d058724ad>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -177,13 +177,6 @@ return {
                 "kind": "ScalarField",
                 "name": "description",
                 "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "decisionModel",
-                "storageKey": null
               }
             ],
             "storageKey": null
@@ -216,12 +209,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4448155fb88915f72696ee2e05b766d5",
+    "cacheID": "8fc046a67344759a16f48e688a35ec4b",
     "id": null,
     "metadata": {},
     "name": "NewGroupFormMutation",
     "operationKind": "mutation",
-    "text": "mutation NewGroupFormMutation(\n  $input: CreateGroupInput!\n) {\n  createGroup(input: $input) {\n    group {\n      id\n      name\n      ...GroupBox_group\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n\nfragment GroupBox_group on Group {\n  id\n  name\n  description\n  decisionModel\n}\n"
+    "text": "mutation NewGroupFormMutation(\n  $input: CreateGroupInput!\n) {\n  createGroup(input: $input) {\n    group {\n      id\n      name\n      ...GroupBox_group\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n\nfragment GroupBox_group on Group {\n  id\n  name\n  description\n}\n"
   }
 };
 })();

@@ -2,7 +2,18 @@ import { useState } from "react";
 import { graphql, usePreloadedQuery, loadQuery } from "react-relay";
 import { ConnectionHandler } from "relay-runtime";
 import { useNavigate } from "react-router";
-import { Gamepad2, Plus, Trophy, UserPlus, Users } from "lucide-react";
+import {
+    PlusIcon,
+    PuzzlePieceIcon as PuzzlePieceOutlineIcon,
+    TrophyIcon as TrophyOutlineIcon,
+    UserPlusIcon,
+    UsersIcon as UsersOutlineIcon,
+} from "@heroicons/react/24/outline";
+import {
+    PuzzlePieceIcon as PuzzlePieceSolidIcon,
+    TrophyIcon as TrophySolidIcon,
+    UsersIcon as UsersSolidIcon,
+} from "@heroicons/react/24/solid";
 import type { groupsDetailQuery } from "@/__generated__/groupsDetailQuery.graphql";
 import { getRelayEnvironment } from "@/relay/environment";
 import { GroupSocialCard } from "@/components/GroupSocialCard";
@@ -11,7 +22,6 @@ import { GroupGamesTableRow } from "@/components/GroupGamesTableRow";
 import { NewGameForm } from "@/components/NewGameForm";
 import { GroupInviteManager } from "@/components/GroupInviteManager";
 import { AwardTrophyButton } from "@/components/AwardTrophyButton";
-import { TrophyApprovalPanel } from "@/components/TrophyApprovalPanel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import type { Route } from "./+types/groups.$id";
@@ -62,15 +72,6 @@ const GroupPageQuery = graphql`
                     id
                     firstName
                     lastName
-                }
-                request {
-                    id
-                    approvals {
-                        user {
-                            id
-                        }
-                        isApproved
-                    }
                 }
             }
         }
@@ -158,23 +159,35 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                     <TabsList className="h-11 rounded-xl p-1">
                         <TabsTrigger
                             value="games"
-                            className="px-4 data-[state=active]:scale-110 hover:text-current data-[state=active]:[&_svg]:fill-current"
+                            className="px-4 data-[state=active]:scale-110 hover:text-current"
                         >
-                            <Gamepad2 className="size-4" />
+                            {activeTab === "games" ? (
+                                <PuzzlePieceSolidIcon className="size-4" />
+                            ) : (
+                                <PuzzlePieceOutlineIcon className="size-4" />
+                            )}
                             Games
                         </TabsTrigger>
                         <TabsTrigger
                             value="members"
-                            className="px-4 data-[state=active]:scale-110 hover:text-current data-[state=active]:[&_svg]:fill-current"
+                            className="px-4 data-[state=active]:scale-110 hover:text-current"
                         >
-                            <Users className="size-4" />
+                            {activeTab === "members" ? (
+                                <UsersSolidIcon className="size-4" />
+                            ) : (
+                                <UsersOutlineIcon className="size-4" />
+                            )}
                             Members
                         </TabsTrigger>
                         <TabsTrigger
                             value="trophies"
-                            className="px-4 data-[state=active]:scale-110 hover:text-current data-[state=active]:[&_svg]:fill-current"
+                            className="px-4 data-[state=active]:scale-110 hover:text-current"
                         >
-                            <Trophy className="size-4" />
+                            {activeTab === "trophies" ? (
+                                <TrophySolidIcon className="size-4" />
+                            ) : (
+                                <TrophyOutlineIcon className="size-4" />
+                            )}
                             Trophies
                         </TabsTrigger>
                     </TabsList>
@@ -186,7 +199,7 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                             {isAdmin && (
                                 <Button
                                     size="sm"
-                                    leadingIcon={<Plus />}
+                                    leadingIcon={<PlusIcon />}
                                     onClick={() => setNewGameOpen(true)}
                                 >
                                     New game
@@ -224,7 +237,7 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                                 <Button
                                     size="sm"
                                     variant="outline"
-                                    leadingIcon={<UserPlus />}
+                                    leadingIcon={<UserPlusIcon />}
                                     onClick={() => setInviteOpen(true)}
                                 >
                                     Invite
@@ -263,14 +276,24 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                                 size="sm"
                             />
                         </div>
-                        <TrophyApprovalPanel
-                            trophies={
-                                group.trophies as Parameters<
-                                    typeof TrophyApprovalPanel
-                                >[0]["trophies"]
-                            }
-                            myId={myId}
-                        />
+                        <div className="space-y-2">
+                            {group.trophies && group.trophies.length > 0 ? (
+                                group.trophies.map((trophy) => (
+                                    <div key={trophy.id} className="surface-card flex items-center gap-4 p-4">
+                                        <div className="text-2xl">{trophy.game?.symbol}</div>
+                                        <div className="flex-1">
+                                            <p className="font-medium">{trophy.game?.name}</p>
+                                            {trophy.description && <p className="text-sm text-supporting">{trophy.description}</p>}
+                                            <p className="mt-1 text-xs text-muted-foreground">
+                                                Awarded to {trophy.receiver?.firstName} {trophy.receiver?.lastName}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="text-supporting">No trophies awarded yet.</p>
+                            )}
+                        </div>
                     </TabsContent>
                 </Tabs>
             </div>

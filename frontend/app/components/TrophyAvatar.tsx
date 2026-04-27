@@ -5,7 +5,6 @@ import { MedalBadge } from "@/components/MedalBadge";
 const TrophyAvatarFragment = graphql`
     fragment TrophyAvatar_trophy on Trophy {
         id
-        isAwarded
         game {
             symbol
             name
@@ -25,7 +24,6 @@ export function TrophyAvatar({ trophy, size = "md" }: TrophyAvatarProps) {
         <MedalBadge
             emoji={data.game.symbol}
             size={size}
-            awarded={data.isAwarded}
             title={data.game.name}
         />
     );

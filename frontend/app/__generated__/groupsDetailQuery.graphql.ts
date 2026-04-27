@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<874154231ffbb4b8dcb9a71883604f44>>
+ * @generated SignedSource<<1856a91a3b483c895ff32d8a9c72ce96>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -56,15 +56,6 @@ export type groupsDetailQuery$data = {
         readonly firstName: string;
         readonly id: string;
         readonly lastName: string;
-      };
-      readonly request: {
-        readonly approvals: ReadonlyArray<{
-          readonly isApproved: boolean;
-          readonly user: {
-            readonly id: string;
-          };
-        }>;
-        readonly id: number;
       };
     }>;
     readonly " $fragmentSpreads": FragmentRefs<"GroupSocialCard_group">;
@@ -262,46 +253,6 @@ v17 = {
       "plural": false,
       "selections": (v16/*: any*/),
       "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "TrophyRequest",
-      "kind": "LinkedField",
-      "name": "request",
-      "plural": false,
-      "selections": [
-        (v2/*: any*/),
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "TrophyRequestApproval",
-          "kind": "LinkedField",
-          "name": "approvals",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "User",
-              "kind": "LinkedField",
-              "name": "user",
-              "plural": false,
-              "selections": (v3/*: any*/),
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "isApproved",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
     }
   ],
   "storageKey": null
@@ -479,13 +430,6 @@ return {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "decisionModel",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
             "name": "createdDate",
             "storageKey": null
           },
@@ -602,7 +546,7 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d598417a032e63e02f96c165f2c4b2dd",
+    "cacheID": "fc0ffae2647a032e47804f34b55d808a",
     "id": null,
     "metadata": {
       "connection": [
@@ -619,11 +563,11 @@ return {
     },
     "name": "groupsDetailQuery",
     "operationKind": "query",
-    "text": "query groupsDetailQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    admin {\n      id\n    }\n    ...GroupSocialCard_group\n    games(first: 50, order: {createdDate: DESC}) {\n      edges {\n        node {\n          id\n          name\n          symbol\n          ...GroupGamesTableRow_game\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    members(first: 50) {\n      edges {\n        node {\n          id\n          firstName\n          lastName\n          ...MemberRow_user\n        }\n      }\n    }\n    invite {\n      inviteCode\n      expirationDate\n    }\n    trophies {\n      id\n      isAwarded\n      description\n      game {\n        id\n        symbol\n        name\n      }\n      receiver {\n        id\n        firstName\n        lastName\n      }\n      request {\n        id\n        approvals {\n          user {\n            id\n          }\n          isApproved\n        }\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n\nfragment GroupGamesTableRow_game on Game {\n  id\n  name\n  symbol\n  description\n  trophies {\n    id\n  }\n}\n\nfragment GroupSocialCard_group on Group {\n  id\n  name\n  description\n  decisionModel\n  admin {\n    id\n    firstName\n    lastName\n  }\n  createdDate\n}\n\nfragment MemberRow_user on User {\n  id\n  firstName\n  middleName\n  lastName\n}\n"
+    "text": "query groupsDetailQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    admin {\n      id\n    }\n    ...GroupSocialCard_group\n    games(first: 50, order: {createdDate: DESC}) {\n      edges {\n        node {\n          id\n          name\n          symbol\n          ...GroupGamesTableRow_game\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    members(first: 50) {\n      edges {\n        node {\n          id\n          firstName\n          lastName\n          ...MemberRow_user\n        }\n      }\n    }\n    invite {\n      inviteCode\n      expirationDate\n    }\n    trophies {\n      id\n      isAwarded\n      description\n      game {\n        id\n        symbol\n        name\n      }\n      receiver {\n        id\n        firstName\n        lastName\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n\nfragment GroupGamesTableRow_game on Game {\n  id\n  name\n  symbol\n  description\n  trophies {\n    id\n  }\n}\n\nfragment GroupSocialCard_group on Group {\n  id\n  name\n  description\n  admin {\n    id\n    firstName\n    lastName\n  }\n  createdDate\n}\n\nfragment MemberRow_user on User {\n  id\n  firstName\n  middleName\n  lastName\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6c3c212dc134c050974fcfad3b1df38b";
+(node as any).hash = "e956bd68575b6fa25ba9b04fee3aa0b5";
 
 export default node;

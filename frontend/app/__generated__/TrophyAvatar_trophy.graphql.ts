@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<77ac939e5493cb3805a63cb6d5b4abb7>>
+ * @generated SignedSource<<29e914e67fb9f640373000e0ebff8f83>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,6 @@ export type TrophyAvatar_trophy$data = {
     readonly symbol: string;
   };
   readonly id: string;
-  readonly isAwarded: boolean;
   readonly " $fragmentType": "TrophyAvatar_trophy";
 };
 export type TrophyAvatar_trophy$key = {
@@ -35,13 +34,6 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "ScalarField",
       "name": "id",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "isAwarded",
       "storageKey": null
     },
     {
@@ -74,6 +66,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "5d96c8766fca09b8a7fa1480fe9ba464";
+(node as any).hash = "d3f3b042411784ec2d4866c6bab77496";
 
 export default node;

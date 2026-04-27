@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<999d6f40fce5e21cfed20f91724ce8df>>
+ * @generated SignedSource<<0d7837cb44ef8998aff23180b939bf3e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,6 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type RuleType = "OPEN" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type GroupSocialCard_group$data = {
   readonly admin: {
@@ -18,7 +17,6 @@ export type GroupSocialCard_group$data = {
     readonly lastName: string;
   } | null | undefined;
   readonly createdDate: any;
-  readonly decisionModel: RuleType;
   readonly description: string | null | undefined;
   readonly id: string;
   readonly name: string;
@@ -61,13 +59,6 @@ return {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "decisionModel",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
       "concreteType": "User",
       "kind": "LinkedField",
       "name": "admin",
@@ -104,6 +95,6 @@ return {
 };
 })();
 
-(node as any).hash = "3c8ec6ddb7745b3056a41138cc8b2fe9";
+(node as any).hash = "96f2143c91a870d3e194ca371c04a669";
 
 export default node;

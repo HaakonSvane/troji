@@ -2,7 +2,6 @@ import { graphql, loadQuery, usePreloadedQuery } from "react-relay";
 import { useNavigate } from "react-router";
 import type { groupsGameDetailQuery } from "@/__generated__/groupsGameDetailQuery.graphql";
 import { MedalBadge } from "@/components/MedalBadge";
-import { TrophyApprovalPanel } from "@/components/TrophyApprovalPanel";
 import { AwardTrophyButton } from "@/components/AwardTrophyButton";
 import { Button } from "@/components/ui/button";
 import { getRelayEnvironment } from "@/relay/environment";
@@ -44,15 +43,6 @@ const GroupGameDetailQuery = graphql`
                     id
                     firstName
                     lastName
-                }
-                request {
-                    id
-                    approvals {
-                        user {
-                            id
-                        }
-                        isApproved
-                    }
                 }
             }
         }
@@ -180,10 +170,24 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
 
             <section className="mt-6 space-y-3">
                 <h2 className="heading-section">Reward history</h2>
-                <TrophyApprovalPanel
-                    trophies={trophies as Parameters<typeof TrophyApprovalPanel>[0]["trophies"]}
-                    myId={myId}
-                />
+                <div className="space-y-2">
+                    {trophies && trophies.length > 0 ? (
+                        trophies.map((trophy) => (
+                            <div key={trophy.id} className="surface-card flex items-center gap-4 p-4">
+                                <div className="text-2xl">{trophy.game?.symbol}</div>
+                                <div className="flex-1">
+                                    <p className="font-medium">{trophy.game?.name}</p>
+                                    {trophy.description && <p className="text-sm text-supporting">{trophy.description}</p>}
+                                    <p className="mt-1 text-xs text-muted-foreground">
+                                        Awarded to {trophy.receiver?.firstName} {trophy.receiver?.lastName}
+                                    </p>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <p className="text-supporting">No trophies awarded yet.</p>
+                    )}
+                </div>
             </section>
         </main>
     );
