@@ -96,7 +96,7 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
         return (
             <main className="container mx-auto px-4 py-8">
                 <p className="text-supporting">Game not found.</p>
-                <Button variant="link" className="mt-2 px-0" onClick={() => navigate("/groups") }>
+                <Button variant="link" className="mt-2 px-0" onClick={() => navigate("/groups")}>
                     ← Back to groups
                 </Button>
             </main>
@@ -118,20 +118,28 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
             <section className="surface-card space-y-6 p-6">
                 <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                     <div className="flex items-start gap-4">
-                        <MedalBadge emoji={game.symbol} size="md" title={game.name} className="md:size-14" />
+                        <MedalBadge
+                            emoji={game.symbol}
+                            size="md"
+                            title={game.name}
+                            className="md:size-14"
+                        />
                         <div className="space-y-2">
                             <p className="heading-section">Game</p>
                             <div>
                                 <h1 className="heading-page text-2xl">{game.name}</h1>
                                 <p className="mt-2 text-supporting">
-                                    {game.description || "Use this reward to celebrate standout moments in the group."}
+                                    {game.description ||
+                                        "Use this reward to celebrate standout moments in the group."}
                                 </p>
                             </div>
                         </div>
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
                         <span className="pill-muted">
-                            {trophies.length === 1 ? "1 trophy awarded" : `${trophies.length} trophies awarded`}
+                            {trophies.length === 1
+                                ? "1 trophy awarded"
+                                : `${trophies.length} trophies awarded`}
                         </span>
                         <Button onClick={() => setAwardOpen(true)}>Award trophy</Button>
                     </div>
@@ -141,7 +149,9 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
                     <div className="surface-card bg-surface p-4 shadow-none">
                         <p className="heading-section">Recipients</p>
                         <p className="mt-3 text-2xl font-semibold">{members.length}</p>
-                        <p className="mt-1 text-supporting">Eligible group members for quick handouts.</p>
+                        <p className="mt-1 text-supporting">
+                            Eligible group members for quick handouts.
+                        </p>
                     </div>
                     <div className="surface-card bg-surface p-4 shadow-none">
                         <p className="heading-section">Awards</p>
@@ -173,7 +183,11 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
                 open={awardOpen}
                 onOpenChange={setAwardOpen}
                 groupMembers={
-                    members as Array<{ id: string; firstName?: string | null; lastName?: string | null }>
+                    members as Array<{
+                        id: string;
+                        firstName?: string | null;
+                        lastName?: string | null;
+                    }>
                 }
             />
         </main>

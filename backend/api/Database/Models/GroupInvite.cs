@@ -13,14 +13,14 @@ public class GroupInvite
     [Key]
     [ForeignKey("Group")]
     public int GroupId { get; set; }
-    
+
     public Group Group { get; set; }
 
     [StringLength(ShortIdOptions.IdLength)]
     public required string InviteCode { get; set; }
-    
+
     public required DateTimeOffset ExpirationDate { get; set; }
-    
+
     [GraphQLIgnore]
     public required DateTimeOffset NextAllowedResetDate { get; set; }
 }

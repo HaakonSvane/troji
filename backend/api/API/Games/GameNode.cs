@@ -22,7 +22,7 @@ public static class GameNode
     {
         return await dataLoader.LoadAsync(game.Id, cancellationToken);
     }
-    
+
     [UsePaging(DefaultPageSize = 3)]
     public static async Task<IReadOnlyCollection<User>> GetTopPlayersAsync(
         [Parent] Game game,
@@ -37,7 +37,7 @@ public static class GameNode
             .Select(item => item.User)
             .ToList();
     }
-    
+
     [DataLoader]
     internal static Task<ILookup<int, User>> GetUsersByGameIdsAsync(
         IReadOnlyList<int> groupIds,

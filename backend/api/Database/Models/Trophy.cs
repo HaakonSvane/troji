@@ -7,9 +7,9 @@ namespace api.Database.Models;
 [Index(nameof(GameId))]
 public class Trophy
 {
-    [Key] 
+    [Key]
     public int Id { get; set; }
-    
+
     [GraphQLIgnore]
     public int GameId { get; set; }
 
@@ -21,11 +21,11 @@ public class Trophy
 
     [ForeignKey("ReceiverId")]
     public User Receiver { get; set; }
-    
-    
+
+
     public TrophyRequest Request { get; set; }
-    
+
     public string? Description { get; set; }
-    
+
     public DateTimeOffset? AwardedDate { get; set; }
 }
