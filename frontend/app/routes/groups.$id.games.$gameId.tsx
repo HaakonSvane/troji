@@ -141,7 +141,13 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
                         <AwardTrophyButton
                             preselectedGameId={game.id}
                             availableGames={[{ id: game.id, name: game.name, symbol: game.symbol }]}
-                            groupMembers={members as Array<{ id: string; firstName?: string | null; lastName?: string | null }>}
+                            groupMembers={
+                                members as Array<{
+                                    id: string;
+                                    firstName?: string | null;
+                                    lastName?: string | null;
+                                }>
+                            }
                             currentUserId={myId}
                         />
                     </div>
@@ -179,7 +185,6 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
                     myId={myId}
                 />
             </section>
-
         </main>
     );
 }

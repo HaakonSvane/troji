@@ -202,7 +202,13 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                                         key={game!.id}
                                         groupId={group.id}
                                         game={game!}
-                                        groupMembers={members as Array<{ id: string; firstName?: string | null; lastName?: string | null }>}
+                                        groupMembers={
+                                            members as Array<{
+                                                id: string;
+                                                firstName?: string | null;
+                                                lastName?: string | null;
+                                            }>
+                                        }
                                         currentUserId={myId}
                                     />
                                 ))}
@@ -244,7 +250,13 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                             <AwardTrophyButton
                                 preselectedGameId={null}
                                 availableGames={trophyGameOptions}
-                                groupMembers={members as Array<{ id: string; firstName?: string | null; lastName?: string | null }>}
+                                groupMembers={
+                                    members as Array<{
+                                        id: string;
+                                        firstName?: string | null;
+                                        lastName?: string | null;
+                                    }>
+                                }
                                 currentUserId={myId}
                                 label="New trophy"
                                 variant="outline"

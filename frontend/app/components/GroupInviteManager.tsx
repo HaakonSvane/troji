@@ -52,9 +52,8 @@ export function GroupInviteManager({
     const [inviteError, setInviteError] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
 
-    const [commitCreate, isCreating] = useMutation<GroupInviteManagerMutation>(
-        CreateGroupInviteMutation
-    );
+    const [commitCreate, isCreating] =
+        useMutation<GroupInviteManagerMutation>(CreateGroupInviteMutation);
 
     const handleCreateInvite = () => {
         setInviteError(null);
@@ -71,7 +70,9 @@ export function GroupInviteManager({
                     (error) => error?.__typename === "InviteResetTooSoonError"
                 );
                 if (tooSoon?.__typename === "InviteResetTooSoonError") {
-                    setInviteError(`Wait ${tooSoon.secondsToWait}s before generating a new invite.`);
+                    setInviteError(
+                        `Wait ${tooSoon.secondsToWait}s before generating a new invite.`
+                    );
                     return;
                 }
 

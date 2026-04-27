@@ -57,9 +57,7 @@ export function JoinGroupForm({ onJoined }: JoinGroupFormProps) {
                     (error) => error?.__typename === "InviteExpiredError"
                 );
                 setJoinError(
-                    expired
-                        ? "This invite has expired."
-                        : "Could not join group. Check the code."
+                    expired ? "This invite has expired." : "Could not join group. Check the code."
                 );
             },
             onError: () => setJoinError("Could not join group. Please try again."),
