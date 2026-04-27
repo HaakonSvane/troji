@@ -42,6 +42,7 @@ public sealed class GroupRepository : IGroupRepository
     {
         return await _context.Groups
             .Where(group => ids.Contains(group.Id))
+            .Include(group => group.Admin)
             .ToDictionaryAsync(group => group.Id, cancellationToken);
     }
 
