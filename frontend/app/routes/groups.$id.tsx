@@ -2,13 +2,14 @@ import { useState } from "react";
 import { graphql, usePreloadedQuery, loadQuery } from "react-relay";
 import { ConnectionHandler } from "relay-runtime";
 import { useNavigate } from "react-router";
+import { Gamepad2, Gift, Plus, Trophy, UserPlus, Users } from "lucide-react";
 import type { groupsDetailQuery } from "@/__generated__/groupsDetailQuery.graphql";
 import { getRelayEnvironment } from "@/relay/environment";
 import { GroupSocialCard } from "@/components/GroupSocialCard";
 import { MemberRow } from "@/components/MemberRow";
 import { GroupGamesTableRow } from "@/components/GroupGamesTableRow";
 import { NewGameForm } from "@/components/NewGameForm";
-import { GroupInvitePanel } from "@/components/GroupInvitePanel";
+import { GroupInviteManager } from "@/components/GroupInviteManager";
 import { TrophyRequestForm } from "@/components/TrophyRequestForm";
 import { TrophyApprovalPanel } from "@/components/TrophyApprovalPanel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -28,6 +29,8 @@ const GroupPageQuery = graphql`
                 edges {
                     node {
                         id
+                        name
+                        symbol
                         ...GroupGamesTableRow_game
                     }
                 }
@@ -102,6 +105,9 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
     const myId = data.me?.id;
 
     const [newGameOpen, setNewGameOpen] = useState(false);
+    const [activeTab, setActiveTab] = useState("games");
+    const [inviteOpen, setInviteOpen] = useState(false);
+    const [requestTrophyOpen, setRequestTrophyOpen] = useState(false);
     const [requestTrophyGameId, setRequestTrophyGameId] = useState<string | null>(null);
 
     if (!group) {
@@ -118,6 +124,11 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
     const games = group.games?.edges?.map((e) => e?.node).filter(Boolean) ?? [];
     const members = group.members?.edges?.map((e) => e?.node).filter(Boolean) ?? [];
     const isAdmin = myId != null && group.admin?.id === myId;
+    const trophyGameOptions = games.map((game) => ({
+        id: game!.id,
+        name: game!.name,
+        symbol: game!.symbol,
+    }));
     const gameConnections = [
         ConnectionHandler.getConnectionID(group.id, "GroupDetail_games", {
             order: { createdDate: "DESC" },
@@ -144,12 +155,29 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                 </div>
 
                 {/* Tabs */}
-                <Tabs defaultValue="games">
-                    <TabsList>
-                        <TabsTrigger value="games">Games</TabsTrigger>
-                        <TabsTrigger value="members">Members</TabsTrigger>
-                        <TabsTrigger value="trophies">Trophies</TabsTrigger>
-                        <TabsTrigger value="invite">Invite</TabsTrigger>
+                <Tabs value={activeTab} onValueChange={setActiveTab}>
+                    <TabsList className="h-11 rounded-xl p-1">
+                        <TabsTrigger
+                            value="games"
+                            className="px-4 data-[state=active]:scale-110 hover:text-current"
+                        >
+                            <Gamepad2 className="size-4" />
+                            Games
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="members"
+                            className="px-4 data-[state=active]:scale-110 hover:text-current"
+                        >
+                            <Users className="size-4" />
+                            Members
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="trophies"
+                            className="px-4 data-[state=active]:scale-110 hover:text-current"
+                        >
+                            <Trophy className="size-4" />
+                            Trophies
+                        </TabsTrigger>
                     </TabsList>
 
                     {/* Games tab */}
@@ -157,7 +185,11 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                         <div className="mb-3 flex items-center justify-between">
                             <h2 className="heading-section">Games</h2>
                             {isAdmin && (
-                                <Button size="sm" onClick={() => setNewGameOpen(true)}>
+                                <Button
+                                    size="sm"
+                                    leadingIcon={<Plus />}
+                                    onClick={() => setNewGameOpen(true)}
+                                >
                                     New game
                                 </Button>
                             )}
@@ -171,7 +203,10 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                                         key={game!.id}
                                         groupId={group.id}
                                         game={game!}
-                                        onAwardTrophy={(gameId) => setRequestTrophyGameId(gameId)}
+                                        onAwardTrophy={(gameId) => {
+                                            setRequestTrophyGameId(gameId);
+                                            setRequestTrophyOpen(true);
+                                        }}
                                     />
                                 ))}
                             </div>
@@ -180,9 +215,19 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
 
                     {/* Members tab */}
                     <TabsContent value="members" className="mt-4">
-                        <h2 className="mb-3 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-                            Members
-                        </h2>
+                        <div className="mb-3 flex items-center justify-between">
+                            <h2 className="heading-section">Members</h2>
+                            {isAdmin && (
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    leadingIcon={<UserPlus />}
+                                    onClick={() => setInviteOpen(true)}
+                                >
+                                    Invite
+                                </Button>
+                            )}
+                        </div>
                         <div className="divide-y divide-border rounded-xl border border-border px-4">
                             {members.map((member) => (
                                 <MemberRow
@@ -195,17 +240,22 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                         </div>
                     </TabsContent>
 
-                    {/* Invite tab */}
-                    <TabsContent value="invite" className="mt-4">
-                        <GroupInvitePanel
-                            groupId={group.id}
-                            invite={group.invite ?? null}
-                            isAdmin={isAdmin}
-                        />
-                    </TabsContent>
-
                     {/* Trophies tab */}
                     <TabsContent value="trophies" className="mt-4">
+                        <div className="mb-3 flex items-center justify-between">
+                            <h2 className="heading-section">Trophies</h2>
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                leadingIcon={<Gift />}
+                                onClick={() => {
+                                    setRequestTrophyGameId(null);
+                                    setRequestTrophyOpen(true);
+                                }}
+                            >
+                                New trophy
+                            </Button>
+                        </div>
                         <TrophyApprovalPanel
                             trophies={
                                 group.trophies as Parameters<
@@ -225,11 +275,21 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                 open={newGameOpen}
                 onOpenChange={setNewGameOpen}
             />
+            <GroupInviteManager
+                open={inviteOpen}
+                onOpenChange={setInviteOpen}
+                groupId={group.id}
+                invite={group.invite ?? null}
+            />
             <TrophyRequestForm
                 gameId={requestTrophyGameId}
-                open={requestTrophyGameId !== null}
+                availableGames={trophyGameOptions}
+                open={requestTrophyOpen}
                 onOpenChange={(open) => {
-                    if (!open) setRequestTrophyGameId(null);
+                    setRequestTrophyOpen(open);
+                    if (!open) {
+                        setRequestTrophyGameId(null);
+                    }
                 }}
                 groupMembers={
                     members as Array<{

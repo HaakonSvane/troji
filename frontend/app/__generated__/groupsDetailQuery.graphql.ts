@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ab19bb5d0f887c787fab17fba8874e89>>
+ * @generated SignedSource<<874154231ffbb4b8dcb9a71883604f44>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,6 +22,8 @@ export type groupsDetailQuery$data = {
       readonly edges: ReadonlyArray<{
         readonly node: {
           readonly id: string;
+          readonly name: string;
+          readonly symbol: string;
           readonly " $fragmentSpreads": FragmentRefs<"GroupGamesTableRow_game">;
         };
       }> | null | undefined;
@@ -112,17 +114,31 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "__typename",
+  "name": "name",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "cursor",
+  "name": "symbol",
   "storageKey": null
 },
 v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "cursor",
+  "storageKey": null
+},
+v9 = {
   "alias": null,
   "args": null,
   "concreteType": "PageInfo",
@@ -147,29 +163,29 @@ v7 = {
   ],
   "storageKey": null
 },
-v8 = {
+v10 = {
   "kind": "Literal",
   "name": "first",
   "value": 50
 },
-v9 = [
-  (v8/*: any*/)
+v11 = [
+  (v10/*: any*/)
 ],
-v10 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "firstName",
   "storageKey": null
 },
-v11 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "lastName",
   "storageKey": null
 },
-v12 = {
+v14 = {
   "alias": null,
   "args": null,
   "concreteType": "Invite",
@@ -194,31 +210,17 @@ v12 = {
   ],
   "storageKey": null
 },
-v13 = {
+v15 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "description",
   "storageKey": null
 },
-v14 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "symbol",
-  "storageKey": null
-},
-v15 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
 v16 = [
   (v2/*: any*/),
-  (v10/*: any*/),
-  (v11/*: any*/)
+  (v12/*: any*/),
+  (v13/*: any*/)
 ],
 v17 = {
   "alias": null,
@@ -236,7 +238,7 @@ v17 = {
       "name": "isAwarded",
       "storageKey": null
     },
-    (v13/*: any*/),
+    (v15/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -246,8 +248,8 @@ v17 = {
       "plural": false,
       "selections": [
         (v2/*: any*/),
-        (v14/*: any*/),
-        (v15/*: any*/)
+        (v6/*: any*/),
+        (v5/*: any*/)
       ],
       "storageKey": null
     },
@@ -315,7 +317,7 @@ v18 = {
   "storageKey": null
 },
 v19 = [
-  (v8/*: any*/),
+  (v10/*: any*/),
   (v4/*: any*/)
 ];
 return {
@@ -376,26 +378,28 @@ return {
                     "plural": false,
                     "selections": [
                       (v2/*: any*/),
+                      (v5/*: any*/),
+                      (v6/*: any*/),
                       {
                         "args": null,
                         "kind": "FragmentSpread",
                         "name": "GroupGamesTableRow_game"
                       },
-                      (v5/*: any*/)
+                      (v7/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v6/*: any*/)
+                  (v8/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v7/*: any*/)
+              (v9/*: any*/)
             ],
             "storageKey": "__GroupDetail_games_connection(order:{\"createdDate\":\"DESC\"})"
           },
           {
             "alias": null,
-            "args": (v9/*: any*/),
+            "args": (v11/*: any*/),
             "concreteType": "MembersConnection",
             "kind": "LinkedField",
             "name": "members",
@@ -418,8 +422,8 @@ return {
                     "plural": false,
                     "selections": [
                       (v2/*: any*/),
-                      (v10/*: any*/),
-                      (v11/*: any*/),
+                      (v12/*: any*/),
+                      (v13/*: any*/),
                       {
                         "args": null,
                         "kind": "FragmentSpread",
@@ -434,7 +438,7 @@ return {
             ],
             "storageKey": "members(first:50)"
           },
-          (v12/*: any*/),
+          (v14/*: any*/),
           (v17/*: any*/)
         ],
         "storageKey": null
@@ -469,8 +473,8 @@ return {
             "selections": (v16/*: any*/),
             "storageKey": null
           },
+          (v5/*: any*/),
           (v15/*: any*/),
-          (v13/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -510,9 +514,9 @@ return {
                     "plural": false,
                     "selections": [
                       (v2/*: any*/),
+                      (v5/*: any*/),
+                      (v6/*: any*/),
                       (v15/*: any*/),
-                      (v14/*: any*/),
-                      (v13/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -523,15 +527,15 @@ return {
                         "selections": (v3/*: any*/),
                         "storageKey": null
                       },
-                      (v5/*: any*/)
+                      (v7/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v6/*: any*/)
+                  (v8/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v7/*: any*/)
+              (v9/*: any*/)
             ],
             "storageKey": "games(first:50,order:{\"createdDate\":\"DESC\"})"
           },
@@ -548,7 +552,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v9/*: any*/),
+            "args": (v11/*: any*/),
             "concreteType": "MembersConnection",
             "kind": "LinkedField",
             "name": "members",
@@ -571,8 +575,8 @@ return {
                     "plural": false,
                     "selections": [
                       (v2/*: any*/),
-                      (v10/*: any*/),
-                      (v11/*: any*/),
+                      (v12/*: any*/),
+                      (v13/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -589,7 +593,7 @@ return {
             ],
             "storageKey": "members(first:50)"
           },
-          (v12/*: any*/),
+          (v14/*: any*/),
           (v17/*: any*/)
         ],
         "storageKey": null
@@ -598,7 +602,7 @@ return {
     ]
   },
   "params": {
-    "cacheID": "cd0394294ee6a80624273ccb305d43ca",
+    "cacheID": "d598417a032e63e02f96c165f2c4b2dd",
     "id": null,
     "metadata": {
       "connection": [
@@ -615,11 +619,11 @@ return {
     },
     "name": "groupsDetailQuery",
     "operationKind": "query",
-    "text": "query groupsDetailQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    admin {\n      id\n    }\n    ...GroupSocialCard_group\n    games(first: 50, order: {createdDate: DESC}) {\n      edges {\n        node {\n          id\n          ...GroupGamesTableRow_game\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    members(first: 50) {\n      edges {\n        node {\n          id\n          firstName\n          lastName\n          ...MemberRow_user\n        }\n      }\n    }\n    invite {\n      inviteCode\n      expirationDate\n    }\n    trophies {\n      id\n      isAwarded\n      description\n      game {\n        id\n        symbol\n        name\n      }\n      receiver {\n        id\n        firstName\n        lastName\n      }\n      request {\n        id\n        approvals {\n          user {\n            id\n          }\n          isApproved\n        }\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n\nfragment GroupGamesTableRow_game on Game {\n  id\n  name\n  symbol\n  description\n  trophies {\n    id\n  }\n}\n\nfragment GroupSocialCard_group on Group {\n  id\n  name\n  description\n  decisionModel\n  admin {\n    id\n    firstName\n    lastName\n  }\n  createdDate\n}\n\nfragment MemberRow_user on User {\n  id\n  firstName\n  middleName\n  lastName\n}\n"
+    "text": "query groupsDetailQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    admin {\n      id\n    }\n    ...GroupSocialCard_group\n    games(first: 50, order: {createdDate: DESC}) {\n      edges {\n        node {\n          id\n          name\n          symbol\n          ...GroupGamesTableRow_game\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    members(first: 50) {\n      edges {\n        node {\n          id\n          firstName\n          lastName\n          ...MemberRow_user\n        }\n      }\n    }\n    invite {\n      inviteCode\n      expirationDate\n    }\n    trophies {\n      id\n      isAwarded\n      description\n      game {\n        id\n        symbol\n        name\n      }\n      receiver {\n        id\n        firstName\n        lastName\n      }\n      request {\n        id\n        approvals {\n          user {\n            id\n          }\n          isApproved\n        }\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n\nfragment GroupGamesTableRow_game on Game {\n  id\n  name\n  symbol\n  description\n  trophies {\n    id\n  }\n}\n\nfragment GroupSocialCard_group on Group {\n  id\n  name\n  description\n  decisionModel\n  admin {\n    id\n    firstName\n    lastName\n  }\n  createdDate\n}\n\nfragment MemberRow_user on User {\n  id\n  firstName\n  middleName\n  lastName\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8a3cf42048ac3e7210b14e8ff6437e4f";
+(node as any).hash = "6c3c212dc134c050974fcfad3b1df38b";
 
 export default node;

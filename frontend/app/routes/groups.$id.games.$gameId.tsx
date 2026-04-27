@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { graphql, loadQuery, usePreloadedQuery } from "react-relay";
 import { useNavigate } from "react-router";
+import { Gift } from "lucide-react";
 import type { groupsGameDetailQuery } from "@/__generated__/groupsGameDetailQuery.graphql";
 import { MedalBadge } from "@/components/MedalBadge";
 import { TrophyApprovalPanel } from "@/components/TrophyApprovalPanel";
@@ -141,7 +142,9 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
                                 ? "1 trophy awarded"
                                 : `${trophies.length} trophies awarded`}
                         </span>
-                        <Button onClick={() => setAwardOpen(true)}>Award trophy</Button>
+                        <Button leadingIcon={<Gift />} onClick={() => setAwardOpen(true)}>
+                            Award trophy
+                        </Button>
                     </div>
                 </div>
 
@@ -180,6 +183,7 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
 
             <TrophyRequestForm
                 gameId={game.id}
+                availableGames={[{ id: game.id, name: game.name, symbol: game.symbol }]}
                 open={awardOpen}
                 onOpenChange={setAwardOpen}
                 groupMembers={

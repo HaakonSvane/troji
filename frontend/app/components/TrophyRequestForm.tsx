@@ -37,6 +37,7 @@ interface Member {
 
 interface TrophyRequestFormProps {
     gameId: string | null;
+    availableGames: Array<{ id: string; name: string; symbol: string }>;
     open: boolean;
     onOpenChange: (open: boolean) => void;
     groupMembers: Member[];
@@ -46,6 +47,7 @@ interface TrophyRequestFormProps {
 
 export function TrophyRequestForm({
     gameId,
+    availableGames,
     open,
     onOpenChange,
     groupMembers,
@@ -56,13 +58,17 @@ export function TrophyRequestForm({
         CreateTrophyRequestMutation
     );
 
+    const [selectedGameId, setSelectedGameId] = useState(gameId ?? "");
     const [userId, setUserId] = useState("");
     const [description, setDescription] = useState("");
     const [formError, setFormError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
     const [awardedImmediately, setAwardedImmediately] = useState(false);
 
+    const effectiveGameId = gameId ?? selectedGameId;
+
     const reset = () => {
+        setSelectedGameId(gameId ?? "");
         setUserId("");
         setDescription("");
         setFormError(null);
@@ -73,10 +79,13 @@ export function TrophyRequestForm({
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setFormError(null);
-        if (!gameId) return;
+        if (!effectiveGameId) {
+            setFormError("Select a game.");
+            return;
+        }
 
         const validation = validateCreateTrophyRequestInput({
-            gameId,
+            gameId: effectiveGameId,
             userId,
             description,
         });
@@ -136,6 +145,27 @@ export function TrophyRequestForm({
                 </div>
             ) : (
                 <form className="space-y-4" onSubmit={handleSubmit}>
+                    {!gameId && (
+                        <div className="space-y-2">
+                            <Label htmlFor="trophy-game">Game</Label>
+                            <Select
+                                value={selectedGameId}
+                                onValueChange={setSelectedGameId}
+                                disabled={isSubmitting}
+                            >
+                                <SelectTrigger id="trophy-game">
+                                    <SelectValue placeholder="Select a game..." />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {availableGames.map((game) => (
+                                        <SelectItem key={game.id} value={game.id}>
+                                            {game.symbol} {game.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    )}
                     <div className="space-y-2">
                         <Label htmlFor="trophy-recipient">Recipient</Label>
                         <Select value={userId} onValueChange={setUserId} disabled={isSubmitting}>

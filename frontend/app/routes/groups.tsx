@@ -1,8 +1,11 @@
 import { graphql, usePreloadedQuery, loadQuery } from "react-relay";
 import { ConnectionHandler } from "relay-runtime";
+import { LogIn, Plus } from "lucide-react";
 import type { groupsPageQuery } from "@/__generated__/groupsPageQuery.graphql";
 import { getRelayEnvironment } from "@/relay/environment";
 import { GroupBox } from "@/components/GroupBox";
+import { DrawerDialog } from "@/components/DrawerDialog";
+import { JoinGroupForm } from "@/components/JoinGroupForm";
 import { NewGroupForm } from "@/components/NewGroupForm";
 import type { Route } from "./+types/groups";
 import { useState } from "react";
@@ -47,6 +50,7 @@ export function meta() {
 export default function Groups({ loaderData }: Route.ComponentProps) {
     const data = usePreloadedQuery(GroupsPageQuery, loaderData.queryRef);
     const edges = data.me?.groups?.edges ?? [];
+    const [joinGroupOpen, setJoinGroupOpen] = useState(false);
     const [newGroupOpen, setNewGroupOpen] = useState(false);
     const groupConnections = data.me
         ? [ConnectionHandler.getConnectionID(data.me.id, "Groups_groups")]
@@ -56,7 +60,18 @@ export default function Groups({ loaderData }: Route.ComponentProps) {
         <main className="container mx-auto px-4 py-8">
             <div className="mb-6 flex items-center justify-between">
                 <h1 className="heading-page">Groups</h1>
-                <Button onClick={() => setNewGroupOpen(true)}>New group</Button>
+                <div className="flex items-center gap-2">
+                    <Button
+                        variant="outline"
+                        leadingIcon={<LogIn />}
+                        onClick={() => setJoinGroupOpen(true)}
+                    >
+                        Join
+                    </Button>
+                    <Button leadingIcon={<Plus />} onClick={() => setNewGroupOpen(true)}>
+                        New group
+                    </Button>
+                </div>
             </div>
             {edges.length === 0 ? (
                 <p className="text-supporting">
@@ -75,6 +90,14 @@ export default function Groups({ loaderData }: Route.ComponentProps) {
                     })}
                 </div>
             )}
+            <DrawerDialog
+                open={joinGroupOpen}
+                onOpenChange={setJoinGroupOpen}
+                title="Join a group"
+                description="Enter an invite code to join an existing group."
+            >
+                <JoinGroupForm onJoined={() => setJoinGroupOpen(false)} />
+            </DrawerDialog>
             <NewGroupForm
                 open={newGroupOpen}
                 onOpenChange={setNewGroupOpen}
