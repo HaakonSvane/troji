@@ -129,34 +129,47 @@ export function NewGameForm({
             title="Create a game"
             description="Define what a win means in this game."
         >
-            <form className="space-y-4" onSubmit={handleSubmit}>
-                <div className="space-y-2">
-                    <Label>Symbol</Label>
-                    <EmojiPicker value={symbol} onChange={setSymbol} disabled={isSubmitting} />
+            <form onSubmit={handleSubmit}>
+                <div className="grid gap-6 md:grid-cols-[auto_1fr]">
+                    {/* Large emoji picker column */}
+                    <div className="flex flex-col items-center justify-start gap-2">
+                        <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Symbol</div>
+                        <EmojiPicker 
+                            value={symbol} 
+                            onChange={setSymbol} 
+                            disabled={isSubmitting}
+                            size="lg"
+                        />
+                    </div>
+
+                    {/* Form fields column */}
+                    <div className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="game-name">Name</Label>
+                            <Input
+                                id="game-name"
+                                placeholder="Best clutch play"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                disabled={isSubmitting}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="game-description">Description</Label>
+                            <Textarea
+                                id="game-description"
+                                placeholder="What does it mean to win this game?"
+                                rows={3}
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                disabled={isSubmitting}
+                            />
+                        </div>
+                    </div>
                 </div>
-                <div className="space-y-2">
-                    <Label htmlFor="game-name">Name</Label>
-                    <Input
-                        id="game-name"
-                        placeholder="Best clutch play"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        disabled={isSubmitting}
-                    />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="game-description">Description</Label>
-                    <Textarea
-                        id="game-description"
-                        placeholder="What does it mean to win this game?"
-                        rows={3}
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        disabled={isSubmitting}
-                    />
-                </div>
-                {formError && <p className="text-sm text-destructive">{formError}</p>}
-                <div className="flex justify-end gap-2 pt-2">
+
+                {formError && <p className="mt-4 text-sm text-destructive">{formError}</p>}
+                <div className="mt-6 flex justify-end gap-2">
                     <Button
                         type="button"
                         variant="outline"

@@ -279,13 +279,21 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                         <div className="space-y-2">
                             {group.trophies && group.trophies.length > 0 ? (
                                 group.trophies.map((trophy) => (
-                                    <div key={trophy.id} className="surface-card flex items-center gap-4 p-4">
+                                    <div
+                                        key={trophy.id}
+                                        className="surface-card flex items-center gap-4 p-4"
+                                    >
                                         <div className="text-2xl">{trophy.game?.symbol}</div>
                                         <div className="flex-1">
                                             <p className="font-medium">{trophy.game?.name}</p>
-                                            {trophy.description && <p className="text-sm text-supporting">{trophy.description}</p>}
+                                            {trophy.description && (
+                                                <p className="text-sm text-supporting">
+                                                    {trophy.description}
+                                                </p>
+                                            )}
                                             <p className="mt-1 text-xs text-muted-foreground">
-                                                Awarded to {trophy.receiver?.firstName} {trophy.receiver?.lastName}
+                                                Awarded to {trophy.receiver?.firstName}{" "}
+                                                {trophy.receiver?.lastName}
                                             </p>
                                         </div>
                                     </div>

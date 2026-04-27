@@ -20,11 +20,5 @@ interface TrophyAvatarProps {
 export function TrophyAvatar({ trophy, size = "md" }: TrophyAvatarProps) {
     const data = useFragment(TrophyAvatarFragment, trophy);
 
-    return (
-        <MedalBadge
-            emoji={data.game.symbol}
-            size={size}
-            title={data.game.name}
-        />
-    );
+    return <MedalBadge emoji={data.game.symbol} size={size} title={data.game.name} />;
 }

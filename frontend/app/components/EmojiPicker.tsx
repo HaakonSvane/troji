@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import emojilib from "emojilib";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -16,9 +16,16 @@ interface EmojiPickerProps {
     value: string;
     onChange: (emoji: string) => void;
     disabled?: boolean;
+    size?: "sm" | "md" | "lg";
 }
 
-export function EmojiPicker({ value, onChange, disabled = false }: EmojiPickerProps) {
+const sizeConfig = {
+    sm: { button: "h-10 w-14 text-xl", textSize: "text-xl" },
+    md: { button: "h-12 w-16 text-2xl", textSize: "text-2xl" },
+    lg: { button: "h-32 w-32 text-5xl", textSize: "text-5xl" },
+} as const;
+
+export function EmojiPicker({ value, onChange, disabled = false, size = "md" }: EmojiPickerProps) {
     const [open, setOpen] = useState(false);
     const [search, setSearch] = useState("");
     const parentRef = useRef<HTMLDivElement>(null);
@@ -45,6 +52,11 @@ export function EmojiPicker({ value, onChange, disabled = false }: EmojiPickerPr
         overscan: 5,
     });
 
+    // Force virtualizer to measure when filtered content changes
+    useEffect(() => {
+        rowVirtualizer.measure();
+    }, [filtered, rowVirtualizer]);
+
     const handleSelect = useCallback(
         (emoji: string) => {
             onChange(emoji);
@@ -60,7 +72,7 @@ export function EmojiPicker({ value, onChange, disabled = false }: EmojiPickerPr
                 <button
                     type="button"
                     disabled={disabled}
-                    className="flex h-10 w-14 items-center justify-center rounded-md border border-input bg-background text-xl shadow-sm transition-colors hover:bg-accent disabled:opacity-50"
+                    className={`flex items-center justify-center rounded-md border border-input bg-background shadow-sm transition-colors hover:bg-accent disabled:opacity-50 ${sizeConfig[size].button}`}
                     aria-label="Pick emoji"
                 >
                     {value || "🏆"}
