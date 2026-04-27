@@ -54,7 +54,7 @@ export function EmojiPicker({ value, onChange, disabled = false, size = "md" }: 
                     {value || "🏆"}
                 </button>
             </PopoverTrigger>
-            <PopoverContent className="w-[300px] p-2" align="start">
+            <PopoverContent className="w-[300px] p-2" align="start" usePortal={false}>
                 <Input
                     placeholder="Search emoji…"
                     value={search}
