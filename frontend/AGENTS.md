@@ -40,3 +40,9 @@
 
 - Read `backend/AGENTS.md` before changing backend-facing GraphQL assumptions.
 - Read `REWRITE_PLAN.md` for the intended React Router + Relay architecture and rewrite context.
+
+## Server-Only Secrets
+
+- `GITHUB_FEEDBACK_TOKEN` — fine-grained PAT with `Contents: write` on `HaakonSvane/troji`. Never prefix with `VITE_`; must stay server-side only. Expires yearly — rotate before it lapses.
+- `GITHUB_FEEDBACK_REPO` — target repo in `owner/repo` form (e.g. `HaakonSvane/troji`).
+- These are consumed by `app/routes/feedback.ts` (server action) and `app/lib/server/github-dispatch.ts`. Neither file should be imported from any client-side module.

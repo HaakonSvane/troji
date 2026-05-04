@@ -3,31 +3,45 @@ on:
     types: [ submit_feedback ]
 
 permissions:
-  contents: read
   issues: write
+
+concurrency:
+  group: feedback-${{ github.event.client_payload.userId || github.run_id }}
+  cancel-in-progress: false
 
 jobs:
   create-issue:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Create issue
-        uses: actions/github-script@v7
+      - uses: actions/github-script@v8
         with:
           script: |
+            const p = context.payload.client_payload || {};
+            // Neutralise GitHub @mentions by inserting a zero-width space after
+            // any @ that follows a word boundary so no user is notified.
+            const sanitize = (s, max) =>
+              String(s ?? "").replace(/(^|\s)@/g, "$1@\u200b").slice(0, max);
+            const title = sanitize(p.title ?? "", 120).trim() || "(no title)";
+            const bodyLines = sanitize(p.body ?? "", 4000)
+              .split("\n")
+              .map(l => `> ${l}`);
+            const body = [
+              "## Feedback",
+              "",
+              ...bodyLines,
+              "",
+              "## Submitted by",
+              `- **Name:** ${sanitize(p.name ?? "Unknown", 200)}`,
+              `- **Email:** ${sanitize(p.email ?? "Unknown", 200)}`,
+              p.userId
+                ? `- **Clerk user:** \`${String(p.userId).replace(/`/g, "")}\``
+                : null,
+            ].filter(Boolean).join("\n");
+
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: "Automated issue: build failed",
-              body: "The workflow failed. Check logs.",
-              labels: ["bug", "automated"]
-            })
-      - uses: dblock/create-a-github-issue@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TITLE: ${{ github.event.client_payload.title }}
-          NAME: ${{ github.event.client_payload.name }}
-          EMAIL: ${{ github.event.client_payload.email }}
-          BODY: ${{ github.event.client_payload.body }}
-        with:
-          filename: .github/feedback-issue-template.md
+              title: `[FB] ${title}`,
+              body,
+              labels: ["feedback", "from-app"],
+            });

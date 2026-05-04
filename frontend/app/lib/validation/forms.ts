@@ -75,3 +75,28 @@ export function validateCreateTrophyRequestInput(values: {
         "Could not validate trophy request details."
     );
 }
+
+const feedbackInputSchema = z.object({
+    title: z
+        .string()
+        .trim()
+        .min(5, "Title must be at least 5 characters.")
+        .max(120, "Title must be at most 120 characters."),
+    body: z
+        .string()
+        .trim()
+        .min(20, "Feedback must be at least 20 characters.")
+        .max(4000, "Feedback must be at most 4000 characters."),
+});
+
+export type FeedbackInput = z.infer<typeof feedbackInputSchema>;
+
+export function validateFeedbackInput(values: {
+    title: string;
+    body: string;
+}): ValidationResult<FeedbackInput> {
+    return toValidationResult<FeedbackInput>(
+        feedbackInputSchema.safeParse(values),
+        "Could not validate feedback."
+    );
+}
