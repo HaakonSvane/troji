@@ -9,12 +9,12 @@
 ## Commands
 
 - Prefer repo-root `just` recipes for normal app workflows:
-  - `just dev-frontend`
-  - `just build-frontend`
-  - `just relay`
+    - `just dev-frontend`
+    - `just build-frontend`
+    - `just relay`
 - Use frontend-local scripts for frontend-only checks:
-  - `npm run typecheck --prefix frontend`
-  - `npm run dev --prefix frontend`
+    - `npm run typecheck --prefix frontend`
+    - `npm run dev --prefix frontend`
 
 ## Routing And Data Loading
 

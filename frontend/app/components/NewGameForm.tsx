@@ -133,10 +133,12 @@ export function NewGameForm({
                 <div className="grid gap-6 md:grid-cols-[auto_1fr]">
                     {/* Large emoji picker column */}
                     <div className="flex flex-col items-center justify-start gap-2">
-                        <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Symbol</div>
-                        <EmojiPicker 
-                            value={symbol} 
-                            onChange={setSymbol} 
+                        <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                            Symbol
+                        </div>
+                        <EmojiPicker
+                            value={symbol}
+                            onChange={setSymbol}
                             disabled={isSubmitting}
                             size="lg"
                         />
