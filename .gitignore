@@ -52,3 +52,9 @@ frontend/app/__generated__/
 .env
 .env.local
 .env.*.local
+
+
+.vscode/
+.idea/
+
+.playwright-mcp/

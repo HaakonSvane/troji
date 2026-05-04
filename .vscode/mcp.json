@@ -3,7 +3,28 @@
 		"clerk": {
 			"url": "https://mcp.clerk.dev/mcp",
 			"type": "http"
+		},
+		"playwright": {
+			"type": "stdio",
+			"sandboxEnabled": false,
+			"command": "npx",
+			"cwd": "${input:cwd}",
+			"args": [
+				"@playwright/mcp@0.0.73"
+			],
+			"dev": {
+				"watch": "src/**/*.ts",
+				"debug": {
+					"type": "node"
+				}
+			}
 		}
 	},
-	"inputs": []
+	"inputs": [
+		{
+			"id": "cwd",
+			"type": "promptString",
+			"description": "Current Working Directory"
+		}
+	]
 }
