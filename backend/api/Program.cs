@@ -15,7 +15,7 @@ namespace api;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var isSchemaExport = args.Length > 0 && args[0] == "schema";
 
@@ -126,7 +126,7 @@ public class Program
 
         if (isSchemaExport)
         {
-            app.RunWithGraphQLCommandsAsync(args);
+            await app.RunWithGraphQLCommandsAsync(args);
             return;
         }
 
