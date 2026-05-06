@@ -23,7 +23,7 @@ Read this when working anywhere under `backend/`.
 
 - .NET SDK is pinned in `backend/global.json` to `10.0.5`.
 - Local DB is PostgreSQL via `backend/api/docker-compose.yml`.
-- `backend/api/.env` is gitignored and must provide `Database__User`, `Database__Password`, and `COMPOSE_PROJECT_NAME` for local DB work.
+- `backend/api/.env` is gitignored and must provide `Database__User` and `Database__Password` for local DB work.
 
 ## GraphQL And Auth
 
