@@ -1,5 +1,3 @@
-name: troji
-
 services:
   db:
     image: postgres:alpine3.18
@@ -31,7 +29,7 @@ services:
       Database__User: ${Database__User}
       Database__Password: ${Database__Password}
       Auth__Authority: ${Auth__Authority}
-      Cors__Origins: ${Cors__Origins:-http://localhost:3000}
+      Cors__Origins: http://localhost:3000
 
   frontend:
     build:
