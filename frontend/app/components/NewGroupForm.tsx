@@ -74,7 +74,6 @@ export function NewGroupForm({ open, onOpenChange, connections, onCreated }: New
             optimisticResponse: {
                 createGroup: {
                     group: {
-                        __typename: "Group",
                         id: `client:new-group:${validation.data.name}`,
                         name: validation.data.name,
                         description: validation.data.description,

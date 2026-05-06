@@ -81,7 +81,6 @@ export function NewGameForm({
             optimisticResponse: {
                 createGame: {
                     game: {
-                        __typename: "Game",
                         id: `client:new-game:${groupId}:${validation.data.name}`,
                         name: validation.data.name,
                         symbol: validation.data.symbol,
