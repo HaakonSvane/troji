@@ -33,13 +33,15 @@ function RouteError({ error }: { error: unknown }) {
 
 export default function ProtectedLayout() {
     return (
-        <>
+        <div className="flex h-screen flex-col overflow-hidden">
             <Header />
-            <Suspense fallback={<FullPageSpinner />}>
-                <ErrorBoundary FallbackComponent={RouteError}>
-                    <Outlet />
-                </ErrorBoundary>
-            </Suspense>
-        </>
+            <div className="flex-1 overflow-y-auto">
+                <Suspense fallback={<FullPageSpinner />}>
+                    <ErrorBoundary FallbackComponent={RouteError}>
+                        <Outlet />
+                    </ErrorBoundary>
+                </Suspense>
+            </div>
+        </div>
     );
 }

@@ -15,7 +15,7 @@ export function Header() {
     const [feedbackOpen, setFeedbackOpen] = useState(false);
 
     return (
-        <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header className="z-40 w-full border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container mx-auto flex h-14 items-center justify-between px-4">
                 <nav className="flex items-center gap-1">
                     {navLinks.map(({ to, label }) => (
