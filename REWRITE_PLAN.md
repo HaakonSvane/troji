@@ -1,7 +1,7 @@
 # Trophy Tracker — Rewrite Plan
 
 > Created: 2026-04-13
-> Status: Phase 4 complete, Phase 5 in progress
+> Status: Phase 6 complete, Phase 7 in progress
 
 ---
 
@@ -368,15 +368,15 @@ within a phase can be parallelized where dependencies allow.
   - [x] 5.8 Create game (mutation + emoji picker form)
   - [x] 5.9 Group invite (mutation + invite code display)
   - [x] 5.10 Trophy request and approval (mutations)
-- [ ] **Phase 6 — Port UI Components**
-  - [ ] 6.1 Custom shadcn extensions (DrawerDialog, EmojiPicker, extended Button)
-  - [ ] 6.2 Header and navigation (adapt for Clerk `<UserButton />`)
-  - [ ] 6.3 Domain components (TrophyAvatar, TrophyStack, GroupBox, MemberRow, etc.)
-  - [ ] 6.4 Zod validation schemas
-  - [ ] 6.5 Theme and styling (CSS variables, gradients, dark mode)
+- [x] **Phase 6 — Port UI Components**
+  - [x] 6.1 Custom shadcn extensions (DrawerDialog, EmojiPicker, extended Button)
+  - [x] 6.2 Header and navigation (adapt for Clerk `<UserButton />`)
+  - [x] 6.3 Domain components (TrophyAvatar, TrophyStack, GroupBox, MemberRow, etc.)
+  - [x] 6.4 Zod validation schemas
+  - [x] 6.5 Theme and styling (CSS variables, Geist font, dark mode)
 - [ ] **Phase 7 — Polish & DevOps**
-  - [ ] 7.1 Frontend Dockerfile
-  - [ ] 7.2 Full-stack Docker Compose (postgres + backend + frontend)
-  - [ ] 7.3 Finalize and document `justfile`
-  - [ ] 7.4 Update `AGENTS.md` for new architecture
+  - [x] 7.1 Frontend Dockerfile
+  - [x] 7.2 Full-stack Docker Compose (postgres + backend + frontend)
+  - [x] 7.3 Finalize and document `justfile`
+  - [x] 7.4 Update `AGENTS.md` for new architecture
   - [ ] 7.5 End-to-end verification of full user flow

@@ -53,8 +53,10 @@ public class Program
         {
             options.AddDefaultPolicy(policy =>
             {
+                var origins = (config["Cors:Origins"] ?? "http://localhost:5173")
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                 policy
-                    .WithOrigins("http://localhost:5173")
+                    .WithOrigins(origins)
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials();
