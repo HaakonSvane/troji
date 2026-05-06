@@ -39,7 +39,6 @@
 ## References
 
 - Read `backend/AGENTS.md` before changing backend-facing GraphQL assumptions.
-- Read `REWRITE_PLAN.md` for the intended React Router + Relay architecture and rewrite context.
 
 ## Server-Only Secrets
 

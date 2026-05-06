@@ -42,4 +42,6 @@ Read this when working anywhere under `backend/`.
 ## References
 
 - Read `backend/tests/AGENTS.md` before changing schema tests or snapshots.
-- Read `REWRITE_PLAN.md` for migration context and broader architecture decisions.
+
+
+## Design ae

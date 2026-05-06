@@ -9,5 +9,5 @@
 
 ## Status
 
-The project is mid-rewrite. Core infrastructure, backend, and frontend architecture are complete. Feature pages (groups, games, invites, trophy requests) are currently in progress.
+The project is feature-complete. All core features — groups, games, invites, and trophy requests — are implemented and running.
 

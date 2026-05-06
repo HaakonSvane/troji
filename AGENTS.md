@@ -5,7 +5,6 @@
 - `backend/` contains the .NET 10 GraphQL API and backend tests.
 - `frontend/` contains the React Router 7 + React 19 client.
 - `apis/` is metadata only, not an app runtime.
-- `REWRITE_PLAN.md` is the architecture and migration document; use it for intent, not for day-to-day command truth.
 
 ## Navigate Quickly
 
