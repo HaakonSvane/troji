@@ -12,11 +12,67 @@ name: release-please
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    outputs:
+      backend_released: ${{ steps.release.outputs['backend/api--release_created'] }}
+      backend_version: ${{ steps.release.outputs['backend/api--version'] }}
+      frontend_released: ${{ steps.release.outputs['frontend--release_created'] }}
+      frontend_version: ${{ steps.release.outputs['frontend--version'] }}
     steps:
       - name: Run release please
         uses: google-github-actions/release-please-action@v4
         id: release
 
-      - name: Build and push images
-        uses: ./.github/workflows/build-images.yml
-        if: ${{ steps.release.outputs.release_created }}
+  build-backend:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.backend_released == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend/api
+          push: true
+          tags: |
+            haakonsvane/troji:backend-${{ needs.release-please.outputs.backend_version }}
+            haakonsvane/troji:backend-latest
+
+  build-frontend:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.frontend_released == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          build-args: |
+            VITE_CLERK_PUBLISHABLE_KEY=${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
+            VITE_GRAPHQL_URL=${{ vars.VITE_GRAPHQL_URL }}
+          tags: |
+            haakonsvane/troji:frontend-${{ needs.release-please.outputs.frontend_version }}
+            haakonsvane/troji:frontend-latest
