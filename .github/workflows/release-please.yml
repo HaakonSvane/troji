@@ -98,14 +98,14 @@ jobs:
           ssh-keyscan -H "${{ secrets.DROPLET_HOST }}" >> ~/.ssh/known_hosts
 
       - name: Ensure remote directory structure exists
-        run: ssh ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }} "mkdir -p ~/troji/caddy"
+        run: ssh -i ~/.ssh/id_rsa ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }} "mkdir -p ~/troji/caddy"
 
       - name: Copy compose file and Caddyfile to droplet
         run: |
-          scp docker-compose.yml ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}:~/troji/docker-compose.yml
-          scp caddy/Caddyfile ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}:~/troji/caddy/Caddyfile
+          scp -i ~/.ssh/id_rsa docker-compose.yml ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}:~/troji/docker-compose.yml
+          scp -i ~/.ssh/id_rsa caddy/Caddyfile ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}:~/troji/caddy/Caddyfile
 
       - name: Pull released images and restart services
         run: |
-          ssh ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }} \
+          ssh -i ~/.ssh/id_rsa ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }} \
             "cd ~/troji && docker compose pull && docker compose up -d --remove-orphans --no-build"
