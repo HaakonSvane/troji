@@ -6,16 +6,17 @@ troji.me {
 
 		# Content Security Policy
 		# - default-src 'self': baseline; nothing from external origins unless listed below
-		# - script-src 'self': React Router bundles are content-addressed files, no inline scripts needed
+		# - script-src: FAPI host (clerk.troji.me) + Cloudflare bot protection (challenges.cloudflare.com) required by Clerk
 		# - style-src 'self' 'unsafe-inline': Clerk injects inline styles in its hosted UI components
 		# - connect-src 'self' *.clerk.com clerk.troji.me wss://troji.me: GraphQL (same-origin) + Clerk API + Clerk WebSocket/token refresh
-		# - img-src 'self' data: *.clerk.com: avatars from Clerk may be served from their CDN
-		# - frame-src *.clerk.com: Clerk renders auth flows in iframes
+		# - img-src 'self' data: img.clerk.com: user avatars served from Clerk's CDN
+		# - worker-src 'self' blob:: required by Clerk for its internal web workers
+		# - frame-src: Clerk auth iframes + Cloudflare bot protection challenge frames
 		# - frame-ancestors 'none': prevents this site being embedded in foreign iframes (clickjacking)
 		# - form-action 'self': redirects after Clerk sign-in/out go to this domain only
 		# - object-src 'none': disallow Flash/plugins entirely
 		# - base-uri 'self': prevent base-tag injection
-		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.clerk.com https://clerk.troji.me wss://troji.me; img-src 'self' data: https://*.clerk.com; frame-src https://*.clerk.com; frame-ancestors 'none'; form-action 'self'; object-src 'none'; base-uri 'self'"
+		Content-Security-Policy "default-src 'self'; script-src 'self' https://clerk.troji.me https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.clerk.com https://clerk.troji.me wss://troji.me; img-src 'self' data: https://img.clerk.com; worker-src 'self' blob:; frame-src https://*.clerk.com https://challenges.cloudflare.com; frame-ancestors 'none'; form-action 'self'; object-src 'none'; base-uri 'self'"
 
 		# Prevents MIME-type sniffing
 		X-Content-Type-Options "nosniff"
