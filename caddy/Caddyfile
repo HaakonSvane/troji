@@ -1,0 +1,48 @@
+troji.me {
+	# --- Security headers ---
+	header {
+		# Strict Transport Security — 2 years, include subdomains, preload-ready
+		Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+
+		# Content Security Policy
+		# - default-src 'self': baseline; nothing from external origins unless listed below
+		# - script-src 'self': React Router bundles are content-addressed files, no inline scripts needed
+		# - style-src 'self' 'unsafe-inline': Clerk injects inline styles in its hosted UI components
+		# - connect-src 'self' *.clerk.com clerk.troji.me wss://troji.me: GraphQL (same-origin) + Clerk API + Clerk WebSocket/token refresh
+		# - img-src 'self' data: *.clerk.com: avatars from Clerk may be served from their CDN
+		# - frame-src *.clerk.com: Clerk renders auth flows in iframes
+		# - frame-ancestors 'none': prevents this site being embedded in foreign iframes (clickjacking)
+		# - form-action 'self': redirects after Clerk sign-in/out go to this domain only
+		# - object-src 'none': disallow Flash/plugins entirely
+		# - base-uri 'self': prevent base-tag injection
+		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.clerk.com https://clerk.troji.me wss://troji.me; img-src 'self' data: https://*.clerk.com; frame-src https://*.clerk.com; frame-ancestors 'none'; form-action 'self'; object-src 'none'; base-uri 'self'"
+
+		# Prevents MIME-type sniffing
+		X-Content-Type-Options "nosniff"
+
+		# No referrer sent to external origins
+		Referrer-Policy "strict-origin-when-cross-origin"
+
+		# Restricts browser feature access
+		Permissions-Policy "geolocation=(), camera=(), microphone=(), payment=()"
+
+		# Remove server identification
+		-Server
+	}
+
+	# --- GraphQL API ---
+	handle /graphql* {
+		reverse_proxy backend:8080
+	}
+
+	# --- Frontend (React Router SSR) ---
+	handle {
+		reverse_proxy frontend:3000
+	}
+}
+
+# Redirect bare HTTP to HTTPS (Caddy handles this automatically for named sites,
+# but explicit redirect for www catches the common typo)
+www.troji.me {
+	redir https://troji.me{uri} permanent
+}

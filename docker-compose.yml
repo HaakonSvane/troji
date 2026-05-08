@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: ${Database__Password}
     # No host port exposure — only reachable by backend on the internal network
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready" ]
+      test: ["CMD-SHELL", "pg_isready"]
       interval: 1s
       timeout: 5s
       retries: 10
