@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 0.1.2, released 2026-05-08
+
+
+### Bug fixes
+
+* **backend:** use useradd instead of adduser in Dockerfile ([bee63b2](https://github.com/HaakonSvane/troji/commit/bee63b2845cf97c4c122a8b5b6b2454d87b28453))
+
 ## Version 0.1.1, released 2026-05-08
 
 
