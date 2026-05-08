@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 0.1.1, released 2026-05-08
+
+
+### Bug fixes
+
+* remove unecessary file ([2f88c9f](https://github.com/HaakonSvane/troji/commit/2f88c9f15ea02c2ad9d9deeb69f6e6bf5c29f780))
+
 ## Version 0.1.0, released 2026-05-08
 
 
