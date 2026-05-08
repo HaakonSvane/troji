@@ -5,8 +5,7 @@ services:
     environment:
       POSTGRES_USER: ${Database__User}
       POSTGRES_PASSWORD: ${Database__Password}
-    ports:
-      - "5432:5432"
+    # No host port exposure — only reachable by backend on the internal network
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready" ]
       interval: 1s
@@ -18,8 +17,8 @@ services:
     build:
       context: ./backend/api
       dockerfile: Dockerfile
-    ports:
-      - "5063:8080"
+    # No host port exposure — Caddy proxies /graphql internally
+    restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
@@ -29,8 +28,7 @@ services:
       Database__Port: "5432"
       Database__User: ${Database__User}
       Database__Password: ${Database__Password}
-      Auth__Authority: ${Auth__Authority}
-      Cors__Origins: http://localhost:3000
+      Cors__Origins: ${Cors__Origins:-https://troji.me}
 
   frontend:
     image: haakonsvane/troji:frontend-${FRONTEND_VERSION:-latest}
@@ -39,12 +37,36 @@ services:
       dockerfile: Dockerfile
       args:
         VITE_CLERK_PUBLISHABLE_KEY: ${VITE_CLERK_PUBLISHABLE_KEY}
-        # Browser-side code reaches the backend via the exposed host port.
-        VITE_GRAPHQL_URL: ${VITE_GRAPHQL_URL:-http://localhost:5063/graphql}
-    ports:
-      - "3000:3000"
+        # Browser-side code reaches the backend via the public URL (baked in at build time by Vite)
+        VITE_GRAPHQL_URL: ${VITE_GRAPHQL_URL:-https://troji.me/graphql}
+    # No host port exposure — Caddy proxies all traffic internally
+    restart: unless-stopped
     depends_on:
       - backend
     environment:
+      CLERK_PUBLISHABLE_KEY: ${VITE_CLERK_PUBLISHABLE_KEY}
+      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY}
+      CLERK_SIGN_IN_URL: ${CLERK_SIGN_IN_URL:-/sign-in}
+      CLERK_SIGN_IN_FALLBACK_REDIRECT_URL: ${CLERK_SIGN_IN_FALLBACK_REDIRECT_URL:-/dashboard}
+      CLERK_SIGN_UP_FALLBACK_REDIRECT_URL: ${CLERK_SIGN_UP_FALLBACK_REDIRECT_URL:-/dashboard}
       GITHUB_FEEDBACK_TOKEN: ${GITHUB_FEEDBACK_TOKEN}
       GITHUB_FEEDBACK_REPO: ${GITHUB_FEEDBACK_REPO}
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp" # HTTP/3 (QUIC)
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data # TLS certificates — persisted across restarts
+      - caddy_config:/config # Caddy runtime config
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  caddy_data:
+  caddy_config:
