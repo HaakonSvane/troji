@@ -41,9 +41,3 @@ troji.me {
 		reverse_proxy frontend:3000
 	}
 }
-
-# Redirect bare HTTP to HTTPS (Caddy handles this automatically for named sites,
-# but explicit redirect for www catches the common typo)
-www.troji.me {
-	redir https://troji.me{uri} permanent
-}
