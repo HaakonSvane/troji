@@ -19,7 +19,7 @@ jobs:
       frontend_version: ${{ steps.release.outputs['frontend--version'] }}
     steps:
       - name: Run release please
-        uses: google-github-actions/release-please-action@v4
+        uses: googleapis/release-please-action@v5
         id: release
 
   build-backend:
