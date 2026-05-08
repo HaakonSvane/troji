@@ -44,4 +44,3 @@ Read this when working anywhere under `backend/`.
 - Read `backend/tests/AGENTS.md` before changing schema tests or snapshots.
 
 
-## Design ae
