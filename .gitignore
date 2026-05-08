@@ -46,7 +46,6 @@ dist/
 build/
 .vite/
 frontend/.react-router/
-frontend/app/__generated__/
 
 ### Env files ###
 .env
