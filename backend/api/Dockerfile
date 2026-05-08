@@ -14,6 +14,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends libgssapi-krb5-
 WORKDIR /App
 COPY --from=build-env /App/out .
 ENV DOTNET_EnableDiagnostics=0
-RUN adduser --disabled-password --gecos "" appuser && chown -R appuser /App
+RUN useradd -r -s /bin/false appuser && chown -R appuser /App
 USER appuser
 ENTRYPOINT ["dotnet", "api.dll"]
