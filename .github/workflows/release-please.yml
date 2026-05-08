@@ -76,3 +76,36 @@ jobs:
           tags: |
             haakonsvane/troji:frontend-${{ needs.release-please.outputs.frontend_version }}
             haakonsvane/troji:frontend-latest
+
+  deploy:
+    needs: [release-please, build-backend, build-frontend]
+    # Run if at least one component was released and no build job failed.
+    # always() is required so skipped build jobs don't automatically cancel this job.
+    if: |
+      always() &&
+      !failure() &&
+      !cancelled() &&
+      (needs.release-please.outputs.backend_released == 'true' || needs.release-please.outputs.frontend_released == 'true')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Set up SSH key
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.DROPLET_SSH_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H "${{ secrets.DROPLET_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Ensure remote directory structure exists
+        run: ssh ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }} "mkdir -p ~/troji/caddy"
+
+      - name: Copy compose file and Caddyfile to droplet
+        run: |
+          scp docker-compose.yml ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}:~/troji/docker-compose.yml
+          scp caddy/Caddyfile ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}:~/troji/caddy/Caddyfile
+
+      - name: Pull released images and restart services
+        run: |
+          ssh ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }} \
+            "cd ~/troji && docker compose pull && docker compose up -d --remove-orphans --no-build"
