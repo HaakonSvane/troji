@@ -6,8 +6,9 @@ troji.me {
 
 		# Content Security Policy
 		# - default-src 'self': baseline; nothing from external origins unless listed below
-		# - script-src: FAPI host (clerk.troji.me) + Cloudflare bot protection (challenges.cloudflare.com) required by Clerk
-		# - style-src 'self' 'unsafe-inline': Clerk injects inline styles in its hosted UI components
+		# - script-src: 'unsafe-inline' required for React Router SSR hydration scripts; FAPI host + Cloudflare bot protection required by Clerk
+		# - style-src 'self' 'unsafe-inline': Clerk injects inline styles; fonts.googleapis.com for Google Fonts
+		# - font-src: actual font files served from fonts.gstatic.com
 		# - connect-src 'self' *.clerk.com clerk.troji.me wss://troji.me: GraphQL (same-origin) + Clerk API + Clerk WebSocket/token refresh
 		# - img-src 'self' data: img.clerk.com: user avatars served from Clerk's CDN
 		# - worker-src 'self' blob:: required by Clerk for its internal web workers
@@ -16,7 +17,7 @@ troji.me {
 		# - form-action 'self': redirects after Clerk sign-in/out go to this domain only
 		# - object-src 'none': disallow Flash/plugins entirely
 		# - base-uri 'self': prevent base-tag injection
-		Content-Security-Policy "default-src 'self'; script-src 'self' https://clerk.troji.me https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.clerk.com https://clerk.troji.me wss://troji.me; img-src 'self' data: https://img.clerk.com; worker-src 'self' blob:; frame-src https://*.clerk.com https://challenges.cloudflare.com; frame-ancestors 'none'; form-action 'self'; object-src 'none'; base-uri 'self'"
+		Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://clerk.troji.me https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.clerk.com https://clerk.troji.me wss://troji.me; img-src 'self' data: https://img.clerk.com; worker-src 'self' blob:; frame-src https://*.clerk.com https://challenges.cloudflare.com; frame-ancestors 'none'; form-action 'self'; object-src 'none'; base-uri 'self'"
 
 		# Prevents MIME-type sniffing
 		X-Content-Type-Options "nosniff"
