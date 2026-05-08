@@ -71,8 +71,8 @@ jobs:
           context: ./frontend
           push: true
           build-args: |
-            VITE_CLERK_PUBLISHABLE_KEY=${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
-            VITE_GRAPHQL_URL=${{ vars.VITE_GRAPHQL_URL }}
+            CLERK_PUBLISHABLE_KEY=${{ vars.CLERK_PUBLISHABLE_KEY }}
+            GRAPHQL_URL=${{ vars.GRAPHQL_URL }}
           tags: |
             haakonsvane/troji:frontend-${{ needs.release-please.outputs.frontend_version }}
             haakonsvane/troji:frontend-latest
