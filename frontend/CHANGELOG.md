@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/HaakonSvane/troji/compare/frontend-v0.2.0...frontend-v0.3.0) (2026-05-08)
+
+
+### Features
+
+* **frontend:** commit Relay generated artifacts ([1e88339](https://github.com/HaakonSvane/troji/commit/1e88339035e45a91263559128f45bcd27f48adb8))
+
 ## [0.2.0](https://github.com/HaakonSvane/troji/compare/frontend-v0.1.0...frontend-v0.2.0) (2026-05-08)
 
 
