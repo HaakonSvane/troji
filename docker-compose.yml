@@ -5,7 +5,8 @@ services:
     environment:
       POSTGRES_USER: ${Database__User}
       POSTGRES_PASSWORD: ${Database__Password}
-    # No host port exposure — only reachable by backend on the internal network
+    ports:
+      - "5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
       interval: 1s
