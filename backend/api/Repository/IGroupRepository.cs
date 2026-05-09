@@ -6,7 +6,7 @@ public interface IGroupRepository
 {
     public Task<ILookup<string, Group>> GetGroupsForUsersIdsAsync(IReadOnlyList<string> ids,
         CancellationToken cancellationToken);
-    
+
     public Task<IReadOnlyDictionary<int, Group>> GetGroupsByIdsAsync(IReadOnlyList<int> ids,
         CancellationToken cancellationToken);
 

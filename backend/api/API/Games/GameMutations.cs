@@ -49,7 +49,7 @@ public static class GameMutations
             Description = description,
             CreatedDate = DateTimeOffset.UtcNow,
         };
-        
+
         return await gameRepository.CreateGameAsync(newGame, group, cancellationToken);
     }
 }

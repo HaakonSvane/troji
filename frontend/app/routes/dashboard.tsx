@@ -39,12 +39,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
         <main className="flex flex-col container mx-auto px-4 py-8">
             <h1 className="text-3xl font-semibold">Dashboard</h1>
             <p className="mt-2 text-muted-foreground">
-                Welcome back,{" "}
-                <PersonName
-                    firstName={data.me?.firstName}
-                    fallback="there"
-                />
-                .
+                Welcome back, <PersonName firstName={data.me?.firstName} fallback="there" />.
             </p>
         </main>
     );

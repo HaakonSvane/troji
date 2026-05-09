@@ -65,7 +65,7 @@ public sealed class GroupRepository : IGroupRepository
             UserId = adminUserId,
             JoinedAt = DateTimeOffset.UtcNow
         };
-        
+
         await _context.Groups.AddAsync(group, cancellationToken);
         await _context.UserGroups.AddAsync(userGroup, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
@@ -79,7 +79,7 @@ public sealed class GroupRepository : IGroupRepository
         var oldInvite = await _context.GroupInvites
             .Where(invite => invite.GroupId == group.Id)
             .FirstOrDefaultAsync(cancellationToken);
-        
+
         if (oldInvite is null)
         {
             var newInvite = new GroupInvite()
@@ -88,13 +88,13 @@ public sealed class GroupRepository : IGroupRepository
                 InviteCode = ShortId.Generate(ShortIdOptions.Config),
                 GroupId = group.Id,
                 NextAllowedResetDate = DateTimeOffset.UtcNow.AddMinutes(1)
-                
+
             };
             await _context.GroupInvites.AddAsync(newInvite, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
             return newInvite;
         }
-        
+
         if (oldInvite.NextAllowedResetDate > DateTimeOffset.UtcNow)
         {
             throw new InviteResetTooSoonException(oldInvite.NextAllowedResetDate - DateTimeOffset.UtcNow);
@@ -116,7 +116,7 @@ public sealed class GroupRepository : IGroupRepository
     }
 
     public async Task<IReadOnlyDictionary<string, GroupInvite>> GetInvitesForInviteCodesAsync(
-        IReadOnlyList<string> codes, 
+        IReadOnlyList<string> codes,
         CancellationToken cancellationToken)
     {
         return await _context.GroupInvites

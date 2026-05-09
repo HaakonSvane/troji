@@ -15,5 +15,5 @@ public interface IGameRepository
     Task<IReadOnlyDictionary<int, TrophyRequest>> GetTrophyRequestsByTrophyIdsAsync(IReadOnlyList<int> trophyIds, CancellationToken cancellationToken);
     Task<TrophyRequest> UpdateTrophyRequest(TrophyRequest request, CancellationToken cancellationToken);
     Task<Trophy> UpdateTrophy(Trophy trophy, CancellationToken cancellationToken);
-    
+
 }

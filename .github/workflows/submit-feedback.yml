@@ -1,6 +1,6 @@
 on:
   repository_dispatch:
-    types: [ submit_feedback ]
+    types: [submit_feedback]
 
 permissions:
   issues: write
