@@ -10,6 +10,17 @@ namespace api.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            // Remove duplicate games that share the same emoji within a group,
+            // keeping the oldest entry (lowest Id) for each (ParentGroupId, Emoji) pair.
+            migrationBuilder.Sql("""
+                DELETE FROM "Games"
+                WHERE "Id" NOT IN (
+                    SELECT MIN("Id")
+                    FROM "Games"
+                    GROUP BY "ParentGroupId", "Emoji"
+                );
+                """);
+
             migrationBuilder.DropIndex(
                 name: "IX_Games_ParentGroupId",
                 table: "Games");
