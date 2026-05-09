@@ -65,6 +65,10 @@ migrate name:
 db-update:
     dotnet ef database update --project backend/api
 
+# Seed the dev database with realistic test data (usage: just db-seed user_xxxx)
+db-seed user-id:
+    dotnet run --project backend/api -- seed {{user-id}}
+
 # ── Full stack ───────────────────────────────────────────
 
 # Start everything for local development
