@@ -5,6 +5,7 @@ namespace api.Repository;
 public interface IGameRepository
 {
     Task<int> GetGameCountForGroupAsync(int groupId, CancellationToken cancellationToken);
+    Task<bool> GameEmojiExistsInGroupAsync(int groupId, string emoji, CancellationToken cancellationToken);
     Task<ILookup<int, Game>> GetGamesByGroupIdsAsync(IReadOnlyList<int> groupIds, CancellationToken cancellationToken);
     Task<Game> CreateGameAsync(Game game, Group group, CancellationToken cancellationToken);
     Task<ILookup<int, Trophy>> GetTrophiesByGroupIdsAsync(IReadOnlyList<int> groupIds, CancellationToken cancellationToken);

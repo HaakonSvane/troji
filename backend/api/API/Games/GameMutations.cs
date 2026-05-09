@@ -12,6 +12,7 @@ public static class GameMutations
 {
     [Error<NoUserException>]
     [Error<GroupNotFoundException>]
+    [Error<DuplicateGameEmojiException>]
     [Error<GameLimitExceededException>]
     public static async Task<Game> CreateGameAsync(
         [TokenUser] TokenUser? tokenUser,
@@ -34,6 +35,11 @@ public static class GameMutations
         {
             var serializedId = serializer.Format("Group", groupId);
             throw new GroupNotFoundException(serializedId);
+        }
+
+        if (await gameRepository.GameEmojiExistsInGroupAsync(groupId, symbol, cancellationToken))
+        {
+            throw new DuplicateGameEmojiException();
         }
 
         var gameCount = await gameRepository.GetGameCountForGroupAsync(groupId, cancellationToken);

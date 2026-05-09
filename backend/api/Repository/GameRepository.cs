@@ -28,6 +28,11 @@ public class GameRepository : IGameRepository
         return _context.Games.CountAsync(g => g.ParentGroupId == groupId, cancellationToken);
     }
 
+    public Task<bool> GameEmojiExistsInGroupAsync(int groupId, string emoji, CancellationToken cancellationToken)
+    {
+        return _context.Games.AnyAsync(g => g.ParentGroupId == groupId && g.Emoji == emoji, cancellationToken);
+    }
+
     public async Task<Game> CreateGameAsync(Game game, Group group, CancellationToken cancellationToken)
     {
         game.ParentGroup = null;
