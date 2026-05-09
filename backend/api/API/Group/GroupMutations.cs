@@ -2,8 +2,6 @@ using api.API.Errors;
 using api.Database.Models;
 using api.Repository;
 using api.Transport;
-using GreenDonut;
-using HotChocolate.Types.Relay;
 
 namespace api.API.Group;
 
