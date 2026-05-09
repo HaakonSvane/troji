@@ -48,13 +48,8 @@ export async function action(args: ActionFunctionArgs) {
         };
     }
 
-    const email = user.emailAddresses[0]?.emailAddress ?? "unknown";
-    const name = [user.firstName, user.lastName].filter(Boolean).join(" ") || "Unknown";
-
     await dispatchFeedback({
         title: sanitiseForGitHub(validation.data.title, 120),
-        name: sanitiseForGitHub(name, 200),
-        email: sanitiseForGitHub(email, 200),
         body: sanitiseForGitHub(validation.data.body, 4000),
         userId,
     });

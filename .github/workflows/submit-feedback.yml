@@ -31,10 +31,8 @@ jobs:
               ...bodyLines,
               "",
               "## Submitted by",
-              `- **Name:** ${sanitize(p.name ?? "Unknown", 200)}`,
-              `- **Email:** ${sanitize(p.email ?? "Unknown", 200)}`,
               p.userId
-                ? `- **Clerk user:** \`${String(p.userId).replace(/`/g, "")}\``
+                ? `- **User ID:** \`${String(p.userId).replace(/`/g, "")}\``
                 : null,
             ].filter(Boolean).join("\n");
 

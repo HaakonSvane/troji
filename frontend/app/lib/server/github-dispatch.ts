@@ -1,7 +1,5 @@
 export interface FeedbackPayload {
     title: string;
-    name: string;
-    email: string;
     body: string;
     userId: string;
 }
