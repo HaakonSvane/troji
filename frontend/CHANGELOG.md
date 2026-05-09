@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://github.com/HaakonSvane/troji/compare/frontend-v0.3.0...frontend-v0.4.0) (2026-05-09)
+
+
+### Features
+
+* **frontend:** update welcome page layout and typography, remove unused logos ([e37df18](https://github.com/HaakonSvane/troji/commit/e37df18b64fc29b79df3da262db433699bf9640b))
+
+
+### Bug Fixes
+
+* **frontend:** align dashboard padding with group page and remove welcome (you) label ([73e3c98](https://github.com/HaakonSvane/troji/commit/73e3c98067abd2225afe5f8183c597ff5c30b634))
+
 ## [0.3.0](https://github.com/HaakonSvane/troji/compare/frontend-v0.2.0...frontend-v0.3.0) (2026-05-08)
 
 
