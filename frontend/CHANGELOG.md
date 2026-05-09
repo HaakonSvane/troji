@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/HaakonSvane/troji/compare/frontend-v0.4.1...frontend-v0.5.0) (2026-05-09)
+
+
+### Features
+
+* **frontend:** formalize design language and unify chrome ([1a0a591](https://github.com/HaakonSvane/troji/commit/1a0a591441662fd942eb19afc557098e6026a610))
+
 ## [0.4.1](https://github.com/HaakonSvane/troji/compare/frontend-v0.4.0...frontend-v0.4.1) (2026-05-09)
 
 

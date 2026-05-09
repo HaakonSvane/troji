@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 0.3.0, released 2026-05-09
+
+
+### New features
+
+* **backend:** expose /server-info for the version chip ([4991afd](https://github.com/HaakonSvane/troji/commit/4991afd82d24ba28d282a88765ec9c68aacf6a56))
+
 ## Version 0.2.1, released 2026-05-09
 
 
