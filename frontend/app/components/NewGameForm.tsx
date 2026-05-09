@@ -127,8 +127,31 @@ export function NewGameForm({
             }}
             title="Create a game"
             description="Define what a win means in this game."
+            footer={
+                <div className="flex justify-end gap-2">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        disabled={isSubmitting}
+                        onClick={() => {
+                            onOpenChange(false);
+                            reset();
+                        }}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        type="submit"
+                        form="new-game-form"
+                        busy={isSubmitting}
+                        disabled={isSubmitting}
+                    >
+                        Create game
+                    </Button>
+                </div>
+            }
         >
-            <form onSubmit={handleSubmit}>
+            <form id="new-game-form" onSubmit={handleSubmit}>
                 <div className="grid gap-6 md:grid-cols-[auto_1fr]">
                     {/* Large emoji picker column */}
                     <div className="flex flex-col items-center justify-start gap-2">
@@ -170,22 +193,6 @@ export function NewGameForm({
                 </div>
 
                 {formError && <p className="mt-4 text-sm text-destructive">{formError}</p>}
-                <div className="mt-6 flex justify-end gap-2">
-                    <Button
-                        type="button"
-                        variant="outline"
-                        disabled={isSubmitting}
-                        onClick={() => {
-                            onOpenChange(false);
-                            reset();
-                        }}
-                    >
-                        Cancel
-                    </Button>
-                    <Button type="submit" busy={isSubmitting} disabled={isSubmitting}>
-                        Create game
-                    </Button>
-                </div>
             </form>
         </DrawerDialog>
     );
