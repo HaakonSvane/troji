@@ -1,5 +1,19 @@
 # Changelog
 
+## Version 0.2.0, released 2026-05-09
+
+
+### New features
+
+* **backend:** enforce game emoji uniqueness per group at the DB level ([cd14e3e](https://github.com/HaakonSvane/troji/commit/cd14e3e05090b592c22ec80678954bce25b5b0eb))
+* **backend:** enforce unique game emoji per group ([4220e06](https://github.com/HaakonSvane/troji/commit/4220e06e38065951e6e670d6c5454722a8e0f786))
+* **backend:** limit users to 5 groups and 5 games per group ([fded79f](https://github.com/HaakonSvane/troji/commit/fded79f6c638c72ec8a374d4755f0161db9a7500))
+
+
+### Bug fixes
+
+* **backend:** deduplicate existing games before applying unique emoji index ([c676ddc](https://github.com/HaakonSvane/troji/commit/c676ddc656f5732817bb290bfff5fa7cbc346d2a))
+
 ## Version 0.1.2, released 2026-05-08
 
 
