@@ -55,6 +55,7 @@ public class GameRepository : IGameRepository
     public async Task<ILookup<int, Trophy>> GetTrophiesByGameIdsAsync(IReadOnlyList<int> gameIds, CancellationToken cancellationToken)
     {
         var trophies = await _context.Trophies
+            .Include(trophy => trophy.Game)
             .Include(trophy => trophy.Receiver)
             .Where(trophy => gameIds.Contains(trophy.GameId))
             .ToListAsync(cancellationToken);
@@ -64,6 +65,7 @@ public class GameRepository : IGameRepository
     public async Task<IReadOnlyDictionary<int, Trophy>> GetTrophiesByIdsAsync(IReadOnlyList<int> ids, CancellationToken cancellationToken)
     {
         return await _context.Trophies
+            .Include(trophy => trophy.Game)
             .Include(trophy => trophy.Receiver)
             .Where(trophy => ids.Contains(trophy.Id))
             .ToDictionaryAsync(trophy => trophy.Id, cancellationToken);

@@ -16,6 +16,7 @@ Read this when working anywhere under `backend/`.
   - `just db-up`
   - `just db-down`
   - `just db-update`
+  - `just db-seed <clerk-sub>` — seed dev DB with test data; pass your Clerk `sub` claim as the argument (e.g. `just db-seed user_xxxx`). Idempotent — safe to run multiple times. For a clean reseed: `just db-down && just db-up && just db-seed <clerk-sub>`.
 - `just` auto-loads `backend/api/.env`; plain `dotnet` commands do not.
 - `dotnet ef` must target `--project backend/api`. Running it from the solution root without that flag fails because the `DbContext` is not defined at solution level.
 

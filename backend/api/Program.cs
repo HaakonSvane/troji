@@ -18,6 +18,7 @@ public class Program
     public static async Task Main(string[] args)
     {
         var isSchemaExport = args.Length > 0 && args[0] == "schema";
+        var isSeed = args.Length > 0 && args[0] == "seed";
 
         var builder = WebApplication.CreateBuilder(args);
 
@@ -132,8 +133,19 @@ public class Program
 
         using (var scope = app.Services.CreateScope())
         {
-            await scope.ServiceProvider.GetRequiredService<TrophyDbContext>()
-                .Database.MigrateAsync();
+            var db = scope.ServiceProvider.GetRequiredService<TrophyDbContext>();
+            await db.Database.MigrateAsync();
+
+            if (isSeed)
+            {
+                if (args.Length < 2 || string.IsNullOrWhiteSpace(args[1]))
+                {
+                    Console.Error.WriteLine("Usage: seed <user-id>");
+                    return;
+                }
+                await Seeder.SeedAsync(db, args[1]);
+                return;
+            }
         }
 
         app.Run();
