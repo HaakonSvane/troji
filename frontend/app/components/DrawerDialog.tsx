@@ -11,6 +11,7 @@ import {
     Drawer,
     DrawerContent,
     DrawerDescription,
+    DrawerFooter,
     DrawerHeader,
     DrawerTitle,
     DrawerTrigger,
@@ -35,6 +36,7 @@ interface DrawerDialogProps {
     title: string;
     description?: string;
     children: React.ReactNode;
+    footer?: React.ReactNode;
 }
 
 export function DrawerDialog({
@@ -44,6 +46,7 @@ export function DrawerDialog({
     title,
     description,
     children,
+    footer,
 }: DrawerDialogProps) {
     const isDesktop = useIsDesktop();
 
@@ -57,6 +60,7 @@ export function DrawerDialog({
                         {description && <DialogDescription>{description}</DialogDescription>}
                     </DialogHeader>
                     {children}
+                    {footer}
                 </DialogContent>
             </Dialog>
         );
@@ -70,7 +74,10 @@ export function DrawerDialog({
                     <DrawerTitle>{title}</DrawerTitle>
                     {description && <DrawerDescription>{description}</DrawerDescription>}
                 </DrawerHeader>
-                <div className="px-4 pb-8">{children}</div>
+                <div className={`flex-1 overflow-y-auto px-4 ${footer ? "pb-2" : "pb-8"}`}>
+                    {children}
+                </div>
+                {footer && <DrawerFooter>{footer}</DrawerFooter>}
             </DrawerContent>
         </Drawer>
     );

@@ -121,10 +121,8 @@ export function TrophyRequestForm({
             }}
             title="Award a trophy"
             description="Choose who should receive this reward and add a note if you want."
-        >
-            {success ? (
-                <div className="space-y-4 py-2">
-                    <p className="text-supporting">Trophy request submitted successfully.</p>
+            footer={
+                success ? (
                     <div className="flex justify-end">
                         <Button
                             onClick={() => {
@@ -135,9 +133,37 @@ export function TrophyRequestForm({
                             Done
                         </Button>
                     </div>
+                ) : (
+                    <div className="flex justify-end gap-2">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            disabled={isSubmitting}
+                            onClick={() => {
+                                onOpenChange(false);
+                                reset();
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            type="submit"
+                            form="trophy-request-form"
+                            busy={isSubmitting}
+                            disabled={isSubmitting}
+                        >
+                            Award trophy
+                        </Button>
+                    </div>
+                )
+            }
+        >
+            {success ? (
+                <div className="space-y-4 py-2">
+                    <p className="text-supporting">Trophy request submitted successfully.</p>
                 </div>
             ) : (
-                <form className="space-y-4" onSubmit={handleSubmit}>
+                <form id="trophy-request-form" className="space-y-4" onSubmit={handleSubmit}>
                     {!gameId && (
                         <div className="space-y-2">
                             <Label htmlFor="trophy-game">Game</Label>
@@ -198,22 +224,6 @@ export function TrophyRequestForm({
                         />
                     </div>
                     {formError && <p className="text-sm text-destructive">{formError}</p>}
-                    <div className="flex justify-end gap-2 pt-2">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            disabled={isSubmitting}
-                            onClick={() => {
-                                onOpenChange(false);
-                                reset();
-                            }}
-                        >
-                            Cancel
-                        </Button>
-                        <Button type="submit" busy={isSubmitting} disabled={isSubmitting}>
-                            Award trophy
-                        </Button>
-                    </div>
                 </form>
             )}
         </DrawerDialog>

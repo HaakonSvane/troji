@@ -31,8 +31,28 @@ export function FeedbackForm({ open, onOpenChange }: FeedbackFormProps) {
             }}
             title="Send feedback"
             description="Share your thoughts, report a bug, or suggest a feature."
+            footer={
+                <div className="flex justify-end gap-2">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        disabled={isSubmitting}
+                        onClick={() => onOpenChange(false)}
+                    >
+                        Cancel
+                    </Button>
+                    <Button type="submit" form="feedback-form" disabled={isSubmitting}>
+                        {isSubmitting ? "Sending…" : "Send feedback"}
+                    </Button>
+                </div>
+            }
         >
-            <fetcher.Form method="post" action="/feedback" className="space-y-4">
+            <fetcher.Form
+                id="feedback-form"
+                method="post"
+                action="/feedback"
+                className="space-y-4 pb-2"
+            >
                 <div className="space-y-2">
                     <Label htmlFor="feedback-title">Title</Label>
                     <Input
@@ -55,19 +75,6 @@ export function FeedbackForm({ open, onOpenChange }: FeedbackFormProps) {
                 {result?.ok === false && (
                     <p className="text-sm text-destructive">{result.message}</p>
                 )}
-                <div className="flex justify-end gap-2 pt-2">
-                    <Button
-                        type="button"
-                        variant="outline"
-                        disabled={isSubmitting}
-                        onClick={() => onOpenChange(false)}
-                    >
-                        Cancel
-                    </Button>
-                    <Button type="submit" disabled={isSubmitting}>
-                        {isSubmitting ? "Sending…" : "Send feedback"}
-                    </Button>
-                </div>
             </fetcher.Form>
         </DrawerDialog>
     );

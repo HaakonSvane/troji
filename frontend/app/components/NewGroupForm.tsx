@@ -122,8 +122,31 @@ export function NewGroupForm({ open, onOpenChange, connections, onCreated }: New
             }}
             title="Create a group"
             description="Give your group a name and get started."
+            footer={
+                <div className="flex justify-end gap-2">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        disabled={isSubmitting}
+                        onClick={() => {
+                            onOpenChange(false);
+                            reset();
+                        }}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        type="submit"
+                        form="new-group-form"
+                        busy={isSubmitting}
+                        disabled={isSubmitting}
+                    >
+                        Create group
+                    </Button>
+                </div>
+            }
         >
-            <form className="space-y-4" onSubmit={handleSubmit}>
+            <form id="new-group-form" className="space-y-4" onSubmit={handleSubmit}>
                 <div className="space-y-2">
                     <Label htmlFor="group-name">Name</Label>
                     <Input
@@ -146,22 +169,6 @@ export function NewGroupForm({ open, onOpenChange, connections, onCreated }: New
                     />
                 </div>
                 {formError && <p className="text-sm text-destructive">{formError}</p>}
-                <div className="flex justify-end gap-2 pt-2">
-                    <Button
-                        type="button"
-                        variant="outline"
-                        disabled={isSubmitting}
-                        onClick={() => {
-                            onOpenChange(false);
-                            reset();
-                        }}
-                    >
-                        Cancel
-                    </Button>
-                    <Button type="submit" busy={isSubmitting} disabled={isSubmitting}>
-                        Create group
-                    </Button>
-                </div>
             </form>
         </DrawerDialog>
     );
