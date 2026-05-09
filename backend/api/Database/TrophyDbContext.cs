@@ -29,5 +29,9 @@ public class TrophyDbContext : DbContext
             .Entity<TrophyRequestApproval>()
             .HasKey(approval => new { approval.UserId, approval.RequestId });
 
+        modelBuilder
+            .Entity<Game>()
+            .HasIndex(game => new { game.ParentGroupId, game.Emoji })
+            .IsUnique();
     }
 }
