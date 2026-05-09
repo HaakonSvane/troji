@@ -2,6 +2,7 @@ using api.API.Errors;
 using api.Database.Models;
 using api.Repository;
 using api.Transport;
+using GreenDonut;
 using HotChocolate.Types.Relay;
 
 namespace api.API.Group;
@@ -45,7 +46,7 @@ public static class GroupMutations
     [Error(typeof(InviteExpiredException))]
     [Error(typeof(GroupNotFoundException))]
     [Error(typeof(AlreadyMemberException))]
-    public static async Task<api.Database.Models.Group> JoinGroupAsync(
+    public static async Task<Database.Models.Group> JoinGroupAsync(
         [TokenUser] TokenUser? tokenUser,
         string inviteCode,
         IInvitesByInviteCodeDataLoader invitesDataLoader,
@@ -82,13 +83,18 @@ public static class GroupMutations
         {
             throw new AlreadyMemberException();
         }
-        return await groupRepository.AddUserToGroup(tokenUser.Id, group, cancellationToken);
+
+        var joinedGroup = await groupRepository.AddUserToGroup(tokenUser.Id, group, cancellationToken);
+        groupsByUserIdsDataLoader.RemoveCacheEntry(tokenUser.Id);
+        return joinedGroup;
+
+
     }
 
 
     [Error<NoUserException>]
     [Error<GroupLimitExceededException>]
-    public static async Task<api.Database.Models.Group> CreateGroupAsync(
+    public static async Task<Database.Models.Group> CreateGroupAsync(
         [TokenUser] TokenUser? tokenUser,
         string name,
         string? description,
