@@ -20,9 +20,14 @@ public class FakeAuthHandler : AuthenticationHandler<FakeAuthHandlerOptions>
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
+        // Allow per-request user ID override via header (used in integration tests).
+        var userId = Context.Request.Headers.TryGetValue("X-Test-User-Id", out var headerValues)
+            ? headerValues.FirstOrDefault() ?? "user_devlocalfakeuser001"
+            : "user_devlocalfakeuser001";
+
         var claims = new List<Claim>
         {
-            new(ClaimTypes.NameIdentifier, "user_devlocalfakeuser001"),
+            new(ClaimTypes.NameIdentifier, userId),
             new(ClaimTypes.Name, "Developer Dude"),
             new(ClaimTypes.Email, "dev@trophydev.com"),
             new(ClaimTypes.Role, "Admin")
