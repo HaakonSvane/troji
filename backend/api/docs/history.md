@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 0.2.1, released 2026-05-09
+
+
+### Bug fixes
+
+* **groups:** resolve crash and stale auth after joining a group ([#31](https://github.com/HaakonSvane/troji/issues/31)) ([b1408b8](https://github.com/HaakonSvane/troji/commit/b1408b8b151b83f96d7ddcc9ca41397f299d9d7b)), closes [#30](https://github.com/HaakonSvane/troji/issues/30)
+
 ## Version 0.2.0, released 2026-05-09
 
 
