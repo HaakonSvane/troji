@@ -12,6 +12,7 @@ public static class GameMutations
 {
     [Error<NoUserException>]
     [Error<GroupNotFoundException>]
+    [Error<GameLimitExceededException>]
     public static async Task<Game> CreateGameAsync(
         [TokenUser] TokenUser? tokenUser,
         [ID] int groupId,
@@ -33,6 +34,12 @@ public static class GameMutations
         {
             var serializedId = serializer.Format("Group", groupId);
             throw new GroupNotFoundException(serializedId);
+        }
+
+        var gameCount = await gameRepository.GetGameCountForGroupAsync(groupId, cancellationToken);
+        if (gameCount >= 5)
+        {
+            throw new GameLimitExceededException();
         }
 
         var newGame = new Game()

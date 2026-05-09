@@ -46,6 +46,11 @@ public sealed class GroupRepository : IGroupRepository
             .ToDictionaryAsync(group => group.Id, cancellationToken);
     }
 
+    public Task<int> GetAdminGroupCountAsync(string adminUserId, CancellationToken cancellationToken)
+    {
+        return _context.Groups.CountAsync(g => g.AdminId == adminUserId, cancellationToken);
+    }
+
     public async Task<Group> CreateGroupAsync(
         string adminUserId,
         Group group,

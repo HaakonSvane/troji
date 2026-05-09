@@ -10,6 +10,7 @@ public interface IGroupRepository
     public Task<IReadOnlyDictionary<int, Group>> GetGroupsByIdsAsync(IReadOnlyList<int> ids,
         CancellationToken cancellationToken);
 
+    public Task<int> GetAdminGroupCountAsync(string adminUserId, CancellationToken cancellationToken);
     public Task<Group> CreateGroupAsync(string adminUserId, Group group, CancellationToken cancellationToken);
     public Task<GroupInvite> UpsertGroupInviteAsync(Group group, CancellationToken cancellationToken);
     public Task<IReadOnlyDictionary<int, GroupInvite>> GetInvitesForGroupIdsAsync(IReadOnlyList<int> ids, CancellationToken cancellationToken);

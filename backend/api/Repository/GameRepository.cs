@@ -23,6 +23,11 @@ public class GameRepository : IGameRepository
         return games.ToLookup(game => game.ParentGroupId, game => game);
     }
 
+    public Task<int> GetGameCountForGroupAsync(int groupId, CancellationToken cancellationToken)
+    {
+        return _context.Games.CountAsync(g => g.ParentGroupId == groupId, cancellationToken);
+    }
+
     public async Task<Game> CreateGameAsync(Game game, Group group, CancellationToken cancellationToken)
     {
         game.ParentGroup = null;

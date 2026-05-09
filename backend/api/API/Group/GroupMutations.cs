@@ -87,6 +87,7 @@ public static class GroupMutations
 
 
     [Error<NoUserException>]
+    [Error<GroupLimitExceededException>]
     public static async Task<api.Database.Models.Group> CreateGroupAsync(
         [TokenUser] TokenUser? tokenUser,
         string name,
@@ -97,6 +98,12 @@ public static class GroupMutations
         if (tokenUser is null)
         {
             throw new NoUserException();
+        }
+
+        var groupCount = await groupRepository.GetAdminGroupCountAsync(tokenUser.Id, cancellationToken);
+        if (groupCount >= 5)
+        {
+            throw new GroupLimitExceededException();
         }
 
         var group = new api.Database.Models.Group()
