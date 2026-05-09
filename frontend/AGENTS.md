@@ -36,6 +36,13 @@
 - Do not hand-edit `app/__generated__/`.
 - Regenerate Relay artifacts after schema changes or query/mutation text changes.
 
+## Typography
+
+- Two font families are available via Tailwind utility classes, both defined in `app/app.css` under `@theme inline`:
+    - `font-heading` → `--font-heading` (Iowan Old Style, serif) — use on headings (`h1`–`h4`) and any emphasized display text.
+    - `font-sans` → `--font-sans` (Geist Variable, sans-serif) — use on body copy, labels, and UI text.
+- Serif for headings, sans-serif for readable text. Do not use system fonts or override these with arbitrary `font-family` styles.
+
 ## References
 
 - Read `backend/AGENTS.md` before changing backend-facing GraphQL assumptions.
