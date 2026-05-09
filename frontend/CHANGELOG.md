@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/HaakonSvane/troji/compare/frontend-v0.4.0...frontend-v0.4.1) (2026-05-09)
+
+
+### Bug Fixes
+
+* **frontend:** keep drawer action buttons visible when iOS keyboard opens ([#32](https://github.com/HaakonSvane/troji/issues/32)) ([bbf9ca9](https://github.com/HaakonSvane/troji/commit/bbf9ca9ceb27709c68621868b050cbb15aaa20fc)), closes [#29](https://github.com/HaakonSvane/troji/issues/29)
+
 ## [0.4.0](https://github.com/HaakonSvane/troji/compare/frontend-v0.3.0...frontend-v0.4.0) (2026-05-09)
 
 
