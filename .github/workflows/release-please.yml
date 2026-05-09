@@ -44,6 +44,8 @@ jobs:
         with:
           context: ./backend/api
           push: true
+          build-args: |
+            TROJI_VERSION=${{ needs.release-please.outputs.backend_version }}
           tags: |
             haakonsvane/troji:backend-${{ needs.release-please.outputs.backend_version }}
             haakonsvane/troji:backend-latest

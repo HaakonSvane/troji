@@ -122,6 +122,18 @@ public class Program
             app.MapGraphQLSchema("/graphql/schema.graphql");
         }
 
+        // Public, unauthenticated build-info endpoint. Surfaces the backend version in
+        // the frontend's chrome chip on every page (including welcome / sign-in, which
+        // run before the user has a Clerk JWT). TROJI_VERSION is set at build time by
+        // the release-please workflow; falls back to "dev" locally.
+        app.MapGet(
+            "/server-info",
+            () => Results.Ok(new
+            {
+                version = Environment.GetEnvironmentVariable("TROJI_VERSION") ?? "dev"
+            })
+        ).AllowAnonymous();
+
         app.MapGraphQLHttp().RequireAuthorization();
         app.MapGraphQLWebSocket();
 
