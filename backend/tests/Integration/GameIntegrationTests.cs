@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace tests.Integration;
 
 [TestFixture]
+[Category("Integration")]
 public class GameIntegrationTests
 {
     private TrophyWebAppFactory _factory = null!;

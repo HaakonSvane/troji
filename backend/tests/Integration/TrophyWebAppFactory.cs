@@ -25,9 +25,9 @@ public sealed class TrophyWebAppFactory : WebApplicationFactory<Program>
         await _postgres.StartAsync();
     }
 
-    public new async Task DisposeAsync()
+    public override async ValueTask DisposeAsync()
     {
-        await _postgres.StopAsync();
+        await _postgres.DisposeAsync();
         await base.DisposeAsync();
     }
 

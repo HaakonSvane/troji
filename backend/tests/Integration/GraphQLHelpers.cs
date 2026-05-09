@@ -15,7 +15,7 @@ public static class GraphQLHelpers
         request.Headers.Add("X-Test-User-Id", userId);
         request.Content = JsonContent.Create(new { query, variables });
 
-        var response = await client.SendAsync(request);
+        using var response = await client.SendAsync(request);
         response.EnsureSuccessStatusCode();
 
         var content = await response.Content.ReadAsStringAsync();

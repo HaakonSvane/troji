@@ -17,12 +17,14 @@ public static class Seeder
         var now = DateTimeOffset.UtcNow;
 
         // ── Users ─────────────────────────────────────────────────────────
-        var me = new User { Id = myUserId, FirstName = "Dev", LastName = "User" };
+        // The dev user may already exist if they have registered via Clerk before seeding.
+        var me = await db.Users.FindAsync(myUserId)
+                 ?? db.Users.Add(new User { Id = myUserId, FirstName = "Dev", LastName = "User" }).Entity;
         var alice = new User { Id = "user_seed_alice001", FirstName = "Alice", LastName = "Andersen" };
         var bob = new User { Id = "user_seed_bob001", FirstName = "Bob", LastName = "Bergström" };
         var carol = new User { Id = "user_seed_carol001", FirstName = "Carol", LastName = "Chen" };
 
-        db.Users.AddRange(me, alice, bob, carol);
+        db.Users.AddRange(alice, bob, carol);
         await db.SaveChangesAsync();
 
         // ── Groups ────────────────────────────────────────────────────────
