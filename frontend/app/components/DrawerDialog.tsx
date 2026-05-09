@@ -74,7 +74,9 @@ export function DrawerDialog({
                     <DrawerTitle>{title}</DrawerTitle>
                     {description && <DrawerDescription>{description}</DrawerDescription>}
                 </DrawerHeader>
-                <div className={`flex-1 overflow-y-auto px-4 ${footer ? "pb-2" : "pb-8"}`}>{children}</div>
+                <div className={`flex-1 overflow-y-auto px-4 ${footer ? "pb-2" : "pb-8"}`}>
+                    {children}
+                </div>
                 {footer && <DrawerFooter>{footer}</DrawerFooter>}
             </DrawerContent>
         </Drawer>
