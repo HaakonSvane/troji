@@ -1,5 +1,5 @@
 import { graphql, loadQuery, usePreloadedQuery } from "react-relay";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import type { groupsGameDetailQuery } from "@/__generated__/groupsGameDetailQuery.graphql";
 import { MedalBadge } from "@/components/MedalBadge";
 import { AwardTrophyButton } from "@/components/AwardTrophyButton";
@@ -63,14 +63,56 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 
 export function HydrateFallback() {
     return (
-        <div className="flex h-screen w-full items-center justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        <div className="flex h-full w-full items-center justify-center">
+            <div className="flex flex-col items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                <div className="size-6 animate-spin rounded-full border-2 border-medal-gold/40 border-t-medal-gold" />
+                <span>loading</span>
+            </div>
         </div>
     );
 }
 
 export function meta() {
     return [{ title: "Game — Troji" }];
+}
+
+function StatReadout({
+    label,
+    value,
+    description,
+    accented = false,
+}: {
+    label: string;
+    value: number | string;
+    description: string;
+    accented?: boolean;
+}) {
+    return (
+        <div
+            className={
+                "surface-card flex flex-col gap-2 p-5" +
+                (accented ? " border-medal-gold/45" : "")
+            }
+        >
+            <p
+                className={
+                    "font-mono text-[10px] uppercase tracking-[0.22em] " +
+                    (accented ? "text-medal-gold" : "text-muted-foreground")
+                }
+            >
+                {label}
+            </p>
+            <p
+                className={
+                    "font-heading text-4xl font-medium leading-none tracking-[0.015em] " +
+                    (accented ? "text-medal-gold" : "text-foreground")
+                }
+            >
+                {value}
+            </p>
+            <p className="text-xs leading-relaxed text-muted-foreground">{description}</p>
+        </div>
+    );
 }
 
 export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
@@ -81,10 +123,17 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
     const myId = data.me?.id;
     if (!group || !game || game.group?.id !== group.id) {
         return (
-            <main className="container mx-auto px-4 py-8">
-                <p className="text-supporting">Game not found.</p>
-                <Button variant="link" className="mt-2 px-0" onClick={() => navigate("/groups")}>
-                    ← Back to groups
+            <main className="container mx-auto flex flex-col items-start gap-3 px-4 py-10">
+                <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-destructive">
+                    <span aria-hidden className="mr-2">!</span>
+                    not found
+                </p>
+                <h1 className="font-heading text-3xl italic tracking-[0.015em]">
+                    No such game.
+                </h1>
+                <Button variant="outline" size="terminal" onClick={() => navigate("/groups")}>
+                    <span aria-hidden>‹</span>
+                    Back to circles
                 </Button>
             </main>
         );
@@ -92,108 +141,134 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
 
     const members = group.members?.edges?.map((edge) => edge?.node).filter(Boolean) ?? [];
     const trophies = game.trophies ?? [];
+    const awardedCount = trophies.filter((t) => t.isAwarded).length;
+    const pendingCount = trophies.filter((t) => !t.isAwarded).length;
 
     return (
-        <main className="container mx-auto px-4 py-8">
-            <Button
-                variant="link"
-                className="mb-4 px-0 text-muted-foreground"
-                onClick={() => navigate(`/groups/${group.id}`)}
-            >
-                ← {group.name}
-            </Button>
-            <section className="surface-card space-y-6 p-6">
-                <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <main className="container mx-auto px-4 py-10 sm:py-12">
+            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-muted-foreground">
+                <span className="text-medal-gold">$</span>
+                <Link to="/groups" className="ml-2 transition-colors hover:text-foreground">
+                    groups
+                </Link>
+                <span aria-hidden className="mx-2 text-border">
+                    /
+                </span>
+                <Link
+                    to={`/groups/${group.id}`}
+                    className="transition-colors hover:text-foreground"
+                >
+                    {group.name}
+                </Link>
+                <span aria-hidden className="mx-2 text-border">
+                    /
+                </span>
+                <span className="text-foreground/85">{game.name}</span>
+            </p>
+
+            <section className="mt-6 flex flex-col gap-6">
+                <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
                     <div className="flex items-start gap-4">
                         <MedalBadge
                             emoji={game.symbol}
                             size="md"
                             title={game.name}
-                            className="md:size-14"
+                            className="size-14"
                         />
-                        <div className="space-y-2">
-                            <p className="heading-section">Game</p>
-                            <div>
-                                <h1 className="heading-page text-2xl">{game.name}</h1>
-                                <p className="mt-2 text-supporting">
-                                    {game.description ||
-                                        "Use this reward to celebrate standout moments in the group."}
+                        <div className="flex flex-col gap-2">
+                            <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-medal-gold">
+                                <span aria-hidden className="mr-2">▸</span>
+                                game
+                            </p>
+                            <h1 className="font-heading text-3xl italic font-medium leading-tight tracking-[0.015em] text-foreground sm:text-4xl">
+                                {game.name}
+                            </h1>
+                            {game.description ? (
+                                <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
+                                    {game.description}
                                 </p>
-                            </div>
+                            ) : null}
                         </div>
                     </div>
-                    <div className="flex flex-wrap items-center gap-2">
-                        <span className="pill-muted">
-                            {trophies.length === 1
-                                ? "1 trophy awarded"
-                                : `${trophies.length} trophies awarded`}
-                        </span>
-                        <AwardTrophyButton
-                            preselectedGameId={game.id}
-                            availableGames={[{ id: game.id, name: game.name, symbol: game.symbol }]}
-                            groupMembers={
-                                members as Array<{
-                                    id: string;
-                                    firstName?: string | null;
-                                    lastName?: string | null;
-                                }>
-                            }
-                            currentUserId={myId}
-                        />
-                    </div>
+                    <AwardTrophyButton
+                        preselectedGameId={game.id}
+                        availableGames={[
+                            { id: game.id, name: game.name, symbol: game.symbol },
+                        ]}
+                        groupMembers={
+                            members as Array<{
+                                id: string;
+                                firstName?: string | null;
+                                lastName?: string | null;
+                            }>
+                        }
+                        currentUserId={myId}
+                        variant="gold"
+                        size="terminal"
+                        label="New trophy"
+                    />
                 </div>
 
-                <div className="grid gap-4 md:grid-cols-3">
-                    <div className="surface-card bg-surface p-4 shadow-none">
-                        <p className="heading-section">Recipients</p>
-                        <p className="mt-3 text-2xl font-semibold">{members.length}</p>
-                        <p className="mt-1 text-supporting">
-                            Eligible group members for quick handouts.
-                        </p>
-                    </div>
-                    <div className="surface-card bg-surface p-4 shadow-none">
-                        <p className="heading-section">Awards</p>
-                        <p className="mt-3 text-2xl font-semibold">
-                            {trophies.filter((trophy) => trophy.isAwarded).length}
-                        </p>
-                        <p className="mt-1 text-supporting">Completed rewards tied to this game.</p>
-                    </div>
-                    <div className="surface-card bg-surface p-4 shadow-none">
-                        <p className="heading-section">Pending</p>
-                        <p className="mt-3 text-2xl font-semibold">
-                            {trophies.filter((trophy) => !trophy.isAwarded).length}
-                        </p>
-                        <p className="mt-1 text-supporting">Requests still waiting to settle.</p>
-                    </div>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                    <StatReadout
+                        label="Awards"
+                        value={awardedCount}
+                        description="Trophies handed out."
+                        accented
+                    />
+                    <StatReadout
+                        label="Pending"
+                        value={pendingCount}
+                        description="Requests waiting to settle."
+                    />
+                    <StatReadout
+                        label="Recipients"
+                        value={members.length}
+                        description="Members eligible to receive."
+                    />
                 </div>
             </section>
 
-            <section className="mt-6 space-y-3">
-                <h2 className="heading-section">Reward history</h2>
-                <div className="space-y-2">
-                    {trophies && trophies.length > 0 ? (
+            <section className="mt-10 flex flex-col gap-4">
+                <h2 className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                    reward history
+                </h2>
+                <div className="flex flex-col gap-2">
+                    {trophies.length > 0 ? (
                         trophies.map((trophy) => (
                             <div
                                 key={trophy.id}
                                 className="surface-card flex items-center gap-4 p-4"
                             >
-                                <div className="text-2xl">{trophy.game?.symbol}</div>
+                                <div aria-hidden className="text-2xl">
+                                    {trophy.game?.symbol}
+                                </div>
                                 <div className="flex-1">
-                                    <p className="font-medium">{trophy.game?.name}</p>
-                                    {trophy.description && (
-                                        <p className="text-sm text-supporting">
+                                    <p className="font-heading text-base font-medium tracking-[0.015em]">
+                                        {trophy.game?.name}
+                                    </p>
+                                    {trophy.description ? (
+                                        <p className="text-sm text-muted-foreground">
                                             {trophy.description}
                                         </p>
-                                    )}
-                                    <p className="mt-1 text-xs text-muted-foreground">
-                                        Awarded to {trophy.receiver?.firstName}{" "}
+                                    ) : null}
+                                    <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.22em] text-medal-gold/85">
+                                        <span aria-hidden className="mr-2">▸</span>
+                                        awarded to {trophy.receiver?.firstName}{" "}
                                         {trophy.receiver?.lastName}
                                     </p>
                                 </div>
                             </div>
                         ))
                     ) : (
-                        <p className="text-supporting">No trophies awarded yet.</p>
+                        <div className="surface-card flex flex-col items-start gap-2 p-6 sm:p-8">
+                            <p className="font-heading text-xl italic tracking-[0.015em]">
+                                Nothing on the board.
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                                Hand out the first trophy and start the ledger.
+                            </p>
+                        </div>
                     )}
                 </div>
             </section>

@@ -35,18 +35,22 @@ export function GroupGamesTableRow({
         data.trophies.length === 1 ? "1 trophy" : `${data.trophies.length} trophies`;
 
     return (
-        <div className="surface-card flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="surface-card flex flex-col gap-3 p-4 transition-colors hover:border-medal-gold/40 sm:flex-row sm:items-center sm:justify-between">
             <Link
                 to={`/groups/${groupId}/games/${data.id}`}
-                className="flex min-w-0 flex-1 items-center gap-4 rounded-lg outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50"
+                className="flex min-w-0 flex-1 items-center gap-4 rounded-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-medal-gold/40"
             >
                 <MedalBadge emoji={data.symbol} size="md" title={data.name} />
                 <div className="min-w-0 flex-1">
-                    <p className="font-medium">{data.name}</p>
+                    <p className="font-heading text-base font-medium tracking-[0.015em] text-foreground">
+                        {data.name}
+                    </p>
                     {data.description ? (
-                        <p className="text-supporting line-clamp-2">{data.description}</p>
+                        <p className="line-clamp-2 text-sm text-muted-foreground">
+                            {data.description}
+                        </p>
                     ) : (
-                        <p className="text-supporting">
+                        <p className="text-sm text-muted-foreground">
                             Open this game to inspect its rewards and history.
                         </p>
                     )}

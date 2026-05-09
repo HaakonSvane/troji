@@ -3,11 +3,15 @@ import tailwindcss from "@tailwindcss/vite";
 import relay from "vite-plugin-relay";
 import { defineConfig } from "vite";
 import { relaySsrPlugin } from "./app/relay/vite-plugin-relay-ssr";
+import packageJson from "./package.json";
 
 export default defineConfig({
     plugins: [tailwindcss(), relay, relaySsrPlugin(), reactRouter()],
     resolve: {
         tsconfigPaths: true,
+    },
+    define: {
+        __APP_VERSION__: JSON.stringify(packageJson.version),
     },
     // Tell Vite not to externalize relay packages during SSR so they go through
     // the plugin pipeline where relaySsrPlugin() intercepts them.
@@ -33,7 +37,6 @@ export default defineConfig({
             "react",
             "react-dom",
             "react/jsx-runtime",
-            "next-themes",
         ],
     },
 });

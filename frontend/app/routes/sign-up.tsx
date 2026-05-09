@@ -1,9 +1,11 @@
 import { SignUp } from "@clerk/react-router";
+import { AuthShell } from "@/components/AuthShell";
+import { clerkAppearance } from "@/lib/clerk-appearance";
 
 export default function SignUpPage() {
     return (
-        <div className="flex h-screen w-full items-center justify-center">
-            <SignUp forceRedirectUrl="/register" />
-        </div>
+        <AuthShell prompt="create account" headline="Stake your name in the ledger.">
+            <SignUp forceRedirectUrl="/register" appearance={clerkAppearance} />
+        </AuthShell>
     );
 }

@@ -3,10 +3,11 @@ import { useUser } from "@clerk/react-router";
 import { useEffect, useState } from "react";
 import { graphql, useMutation } from "react-relay";
 import { useNavigate } from "react-router";
+import { AuthShell } from "@/components/AuthShell";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { TerminalCursor } from "@/components/TerminalCursor";
 
 const RegisterUserMutation = graphql`
     mutation registerUserMutation($input: RegisterUserInput!) {
@@ -101,69 +102,86 @@ export default function RegisterPage() {
     };
 
     return (
-        <main className="flex min-h-screen w-full items-center justify-center p-6">
-            <Card className="w-full max-w-md">
-                <CardHeader>
-                    <CardTitle>Complete your registration</CardTitle>
-                    <CardDescription>
-                        Add your name to create your profile in Trophy Tracker.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <form
-                        className="space-y-4"
-                        onSubmit={(event) => {
-                            event.preventDefault();
-                            onSubmit();
-                        }}
+        <AuthShell prompt="pick your handle" headline="What name goes on the trophy?">
+            <form
+                className="flex flex-col gap-5"
+                onSubmit={(event) => {
+                    event.preventDefault();
+                    onSubmit();
+                }}
+            >
+                <div className="flex flex-col gap-1.5">
+                    <Label
+                        htmlFor="firstName"
+                        className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground"
                     >
-                        <div className="space-y-2">
-                            <Label htmlFor="firstName">First name</Label>
-                            <Input
-                                id="firstName"
-                                name="firstName"
-                                value={firstName}
-                                onChange={(event) => setFirstName(event.target.value)}
-                                autoComplete="given-name"
-                                required
-                            />
-                        </div>
+                        First name
+                    </Label>
+                    <Input
+                        id="firstName"
+                        name="firstName"
+                        value={firstName}
+                        onChange={(event) => setFirstName(event.target.value)}
+                        autoComplete="given-name"
+                        required
+                    />
+                </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="middleName">Middle name (optional)</Label>
-                            <Input
-                                id="middleName"
-                                name="middleName"
-                                value={middleName}
-                                onChange={(event) => setMiddleName(event.target.value)}
-                                autoComplete="additional-name"
-                            />
-                        </div>
+                <div className="flex flex-col gap-1.5">
+                    <Label
+                        htmlFor="middleName"
+                        className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground"
+                    >
+                        Middle name <span className="lowercase tracking-normal">(optional)</span>
+                    </Label>
+                    <Input
+                        id="middleName"
+                        name="middleName"
+                        value={middleName}
+                        onChange={(event) => setMiddleName(event.target.value)}
+                        autoComplete="additional-name"
+                    />
+                </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="lastName">Last name</Label>
-                            <Input
-                                id="lastName"
-                                name="lastName"
-                                value={lastName}
-                                onChange={(event) => setLastName(event.target.value)}
-                                autoComplete="family-name"
-                                required
-                            />
-                        </div>
+                <div className="flex flex-col gap-1.5">
+                    <Label
+                        htmlFor="lastName"
+                        className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground"
+                    >
+                        Last name
+                    </Label>
+                    <Input
+                        id="lastName"
+                        name="lastName"
+                        value={lastName}
+                        onChange={(event) => setLastName(event.target.value)}
+                        autoComplete="family-name"
+                        required
+                    />
+                </div>
 
-                        {formError ? (
-                            <p className="text-sm text-destructive" role="alert">
-                                {formError}
-                            </p>
-                        ) : null}
+                {formError ? (
+                    <p
+                        className="font-mono text-[11px] uppercase tracking-[0.18em] text-destructive"
+                        role="alert"
+                    >
+                        <span aria-hidden className="mr-2">!</span>
+                        {formError}
+                    </p>
+                ) : null}
 
-                        <Button type="submit" className="w-full" disabled={isSubmitting}>
-                            {isSubmitting ? "Saving..." : "Create profile"}
-                        </Button>
-                    </form>
-                </CardContent>
-            </Card>
-        </main>
+                <Button
+                    type="submit"
+                    variant="gold"
+                    size="terminal"
+                    disabled={isSubmitting}
+                    className="mt-2"
+                >
+                    <span aria-hidden>▸</span>
+                    <span>{isSubmitting ? "saving" : "enter the arena"}</span>
+                    <TerminalCursor />
+                </Button>
+            </form>
+        </AuthShell>
     );
 }

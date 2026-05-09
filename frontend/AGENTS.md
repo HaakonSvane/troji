@@ -36,12 +36,19 @@
 - Do not hand-edit `app/__generated__/`.
 - Regenerate Relay artifacts after schema changes or query/mutation text changes.
 
+## Design
+
+- The full design language — palette, typography, recipes, voice, mobile rules, anti-patterns — lives in [`app/DESIGN.md`](app/DESIGN.md). Read it before styling any new surface.
+- Short version: dark-only, gold-as-reward (`--medal-gold`) is the only chromatic accent, IBM Plex Serif for display, Inter for body, Geist Mono for terminal-flavored chrome only. No gradients. No backdrop blur. No `rounded-xl`+. User-facing copy says "circle" instead of "group".
+- Auth/register pages use `app/components/AuthShell.tsx` for the brand chrome (status bar + dot grid + footer). Clerk widgets share a single `appearance` object exported from `app/lib/clerk-appearance.ts` — extend it there, don't redefine per route.
+
 ## Typography
 
-- Two font families are available via Tailwind utility classes, both defined in `app/app.css` under `@theme inline`:
-    - `font-heading` → `--font-heading` (Iowan Old Style, serif) — use on headings (`h1`–`h4`) and any emphasized display text.
-    - `font-sans` → `--font-sans` (Geist Variable, sans-serif) — use on body copy, labels, and UI text.
-- Serif for headings, sans-serif for readable text. Do not use system fonts or override these with arbitrary `font-family` styles.
+- Three font families are available via Tailwind utility classes, all defined in `app/app.css` under `@theme inline`:
+    - `font-heading` → `--font-heading` (IBM Plex Serif) — display only (h1–h2, marquee italic). `font-medium` 500, `tracking-[0.025em]` (or `[0.015em]` at body sizes).
+    - `font-sans` → `--font-sans` (Inter) — body, labels, table cells, form fields. Default for everything not explicitly chrome.
+    - `font-mono` → `--font-mono` (Geist Mono) — system chrome ONLY: status bars, version pills, prompt prefixes (`$`, `▸`, `›`), command-style CTA labels, breadcrumbs, mono pills. Always uppercase + tracked. Never on body paragraphs.
+- All three are loaded via Google Fonts in `app/root.tsx`. Do not use system fonts or override these with arbitrary `font-family` styles.
 
 ## References
 

@@ -120,8 +120,8 @@ export function NewGroupForm({ open, onOpenChange, connections, onCreated }: New
                     if (!next) reset();
                 }
             }}
-            title="Create a group"
-            description="Give your group a name and get started."
+            title="Create a circle"
+            description="Name your circle and rally the troops."
             footer={
                 <div className="flex justify-end gap-2">
                     <Button
@@ -141,7 +141,7 @@ export function NewGroupForm({ open, onOpenChange, connections, onCreated }: New
                         busy={isSubmitting}
                         disabled={isSubmitting}
                     >
-                        Create group
+                        Create circle
                     </Button>
                 </div>
             }

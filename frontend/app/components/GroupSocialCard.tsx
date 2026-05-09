@@ -1,7 +1,6 @@
 import { graphql, useFragment } from "react-relay";
 import type { GroupSocialCard_group$key } from "@/__generated__/GroupSocialCard_group.graphql";
 import { PersonName } from "@/components/PersonName";
-import { Separator } from "@/components/ui/separator";
 
 const GroupSocialCardFragment = graphql`
     fragment GroupSocialCard_group on Group {
@@ -31,39 +30,51 @@ function formatDate(iso: string) {
     });
 }
 
+function MetaRow({ label, children }: { label: string; children: React.ReactNode }) {
+    return (
+        <div className="flex items-center justify-between gap-3">
+            <dt className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                {label}
+            </dt>
+            <dd className="text-sm text-foreground/90">{children}</dd>
+        </div>
+    );
+}
+
 export function GroupSocialCard({ group, memberCount, currentUserId }: GroupSocialCardProps) {
     const data = useFragment(GroupSocialCardFragment, group);
 
     return (
-        <div className="surface-card space-y-4 p-6">
+        <div className="surface-card flex flex-col gap-5 p-6">
             <div>
-                <h2 className="heading-card">{data.name}</h2>
-                {data.description && <p className="mt-1 text-supporting">{data.description}</p>}
+                <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-medal-gold">
+                    <span aria-hidden className="mr-2">▸</span>
+                    circle
+                </p>
+                <h2 className="mt-3 font-heading text-2xl italic font-medium leading-tight tracking-[0.015em] text-foreground">
+                    {data.name}
+                </h2>
+                {data.description ? (
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                        {data.description}
+                    </p>
+                ) : null}
             </div>
-            <Separator />
-            <dl className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                    <dt className="text-label-muted">Owner</dt>
-                    <dd className="font-medium">
-                        {data.admin ? (
-                            <PersonName
-                                firstName={data.admin.firstName}
-                                lastName={data.admin.lastName}
-                                isSelf={data.admin.id === currentUserId}
-                            />
-                        ) : (
-                            "Unknown"
-                        )}
-                    </dd>
-                </div>
-                <div className="flex justify-between">
-                    <dt className="text-label-muted">Members</dt>
-                    <dd className="font-medium">{memberCount ?? "—"}</dd>
-                </div>
-                <div className="flex justify-between">
-                    <dt className="text-label-muted">Created</dt>
-                    <dd className="font-medium">{formatDate(data.createdDate)}</dd>
-                </div>
+            <div className="h-px bg-border" />
+            <dl className="flex flex-col gap-3">
+                <MetaRow label="Owner">
+                    {data.admin ? (
+                        <PersonName
+                            firstName={data.admin.firstName}
+                            lastName={data.admin.lastName}
+                            isSelf={data.admin.id === currentUserId}
+                        />
+                    ) : (
+                        "Unknown"
+                    )}
+                </MetaRow>
+                <MetaRow label="Members">{memberCount ?? "—"}</MetaRow>
+                <MetaRow label="Founded">{formatDate(data.createdDate)}</MetaRow>
             </dl>
         </div>
     );

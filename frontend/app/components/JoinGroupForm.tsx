@@ -57,10 +57,10 @@ export function JoinGroupForm({ onJoined }: JoinGroupFormProps) {
                     (error) => error?.__typename === "InviteExpiredError"
                 );
                 setJoinError(
-                    expired ? "This invite has expired." : "Could not join group. Check the code."
+                    expired ? "This invite has expired." : "Could not join circle. Check the code."
                 );
             },
-            onError: () => setJoinError("Could not join group. Please try again."),
+            onError: () => setJoinError("Could not join circle. Please try again."),
         });
     };
 
@@ -75,7 +75,7 @@ export function JoinGroupForm({ onJoined }: JoinGroupFormProps) {
             {joinError && <p className="text-sm text-destructive">{joinError}</p>}
             <div className="flex justify-end">
                 <Button type="submit" busy={isJoining} disabled={isJoining}>
-                    Join group
+                    Join circle
                 </Button>
             </div>
         </form>

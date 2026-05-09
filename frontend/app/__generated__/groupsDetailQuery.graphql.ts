@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1856a91a3b483c895ff32d8a9c72ce96>>
+ * @generated SignedSource<<3fa3b3263eda57ca9f582820d2ab3833>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -43,6 +43,7 @@ export type groupsDetailQuery$data = {
         };
       }> | null | undefined;
     } | null | undefined;
+    readonly name: string;
     readonly trophies: ReadonlyArray<{
       readonly description: string | null | undefined;
       readonly game: {
@@ -91,22 +92,22 @@ v2 = {
   "name": "id",
   "storageKey": null
 },
-v3 = [
-  (v2/*: any*/)
-],
-v4 = {
-  "kind": "Literal",
-  "name": "order",
-  "value": {
-    "createdDate": "DESC"
-  }
-},
-v5 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
+},
+v4 = [
+  (v2/*: any*/)
+],
+v5 = {
+  "kind": "Literal",
+  "name": "order",
+  "value": {
+    "createdDate": "DESC"
+  }
 },
 v6 = {
   "alias": null,
@@ -240,7 +241,7 @@ v17 = {
       "selections": [
         (v2/*: any*/),
         (v6/*: any*/),
-        (v5/*: any*/)
+        (v3/*: any*/)
       ],
       "storageKey": null
     },
@@ -264,12 +265,12 @@ v18 = {
   "kind": "LinkedField",
   "name": "me",
   "plural": false,
-  "selections": (v3/*: any*/),
+  "selections": (v4/*: any*/),
   "storageKey": null
 },
 v19 = [
   (v10/*: any*/),
-  (v4/*: any*/)
+  (v5/*: any*/)
 ];
 return {
   "fragment": {
@@ -287,6 +288,7 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -294,7 +296,7 @@ return {
             "kind": "LinkedField",
             "name": "admin",
             "plural": false,
-            "selections": (v3/*: any*/),
+            "selections": (v4/*: any*/),
             "storageKey": null
           },
           {
@@ -305,7 +307,7 @@ return {
           {
             "alias": "games",
             "args": [
-              (v4/*: any*/)
+              (v5/*: any*/)
             ],
             "concreteType": "GamesConnection",
             "kind": "LinkedField",
@@ -329,7 +331,7 @@ return {
                     "plural": false,
                     "selections": [
                       (v2/*: any*/),
-                      (v5/*: any*/),
+                      (v3/*: any*/),
                       (v6/*: any*/),
                       {
                         "args": null,
@@ -414,6 +416,7 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -424,7 +427,6 @@ return {
             "selections": (v16/*: any*/),
             "storageKey": null
           },
-          (v5/*: any*/),
           (v15/*: any*/),
           {
             "alias": null,
@@ -458,7 +460,7 @@ return {
                     "plural": false,
                     "selections": [
                       (v2/*: any*/),
-                      (v5/*: any*/),
+                      (v3/*: any*/),
                       (v6/*: any*/),
                       (v15/*: any*/),
                       {
@@ -468,7 +470,7 @@ return {
                         "kind": "LinkedField",
                         "name": "trophies",
                         "plural": true,
-                        "selections": (v3/*: any*/),
+                        "selections": (v4/*: any*/),
                         "storageKey": null
                       },
                       (v7/*: any*/)
@@ -546,7 +548,7 @@ return {
     ]
   },
   "params": {
-    "cacheID": "fc0ffae2647a032e47804f34b55d808a",
+    "cacheID": "3ba9f14c24c955dd3b7a957671db23ef",
     "id": null,
     "metadata": {
       "connection": [
@@ -563,11 +565,11 @@ return {
     },
     "name": "groupsDetailQuery",
     "operationKind": "query",
-    "text": "query groupsDetailQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    admin {\n      id\n    }\n    ...GroupSocialCard_group\n    games(first: 50, order: {createdDate: DESC}) {\n      edges {\n        node {\n          id\n          name\n          symbol\n          ...GroupGamesTableRow_game\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    members(first: 50) {\n      edges {\n        node {\n          id\n          firstName\n          lastName\n          ...MemberRow_user\n        }\n      }\n    }\n    invite {\n      inviteCode\n      expirationDate\n    }\n    trophies {\n      id\n      isAwarded\n      description\n      game {\n        id\n        symbol\n        name\n      }\n      receiver {\n        id\n        firstName\n        lastName\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n\nfragment GroupGamesTableRow_game on Game {\n  id\n  name\n  symbol\n  description\n  trophies {\n    id\n  }\n}\n\nfragment GroupSocialCard_group on Group {\n  id\n  name\n  description\n  admin {\n    id\n    firstName\n    lastName\n  }\n  createdDate\n}\n\nfragment MemberRow_user on User {\n  id\n  firstName\n  middleName\n  lastName\n}\n"
+    "text": "query groupsDetailQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    name\n    admin {\n      id\n    }\n    ...GroupSocialCard_group\n    games(first: 50, order: {createdDate: DESC}) {\n      edges {\n        node {\n          id\n          name\n          symbol\n          ...GroupGamesTableRow_game\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    members(first: 50) {\n      edges {\n        node {\n          id\n          firstName\n          lastName\n          ...MemberRow_user\n        }\n      }\n    }\n    invite {\n      inviteCode\n      expirationDate\n    }\n    trophies {\n      id\n      isAwarded\n      description\n      game {\n        id\n        symbol\n        name\n      }\n      receiver {\n        id\n        firstName\n        lastName\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n\nfragment GroupGamesTableRow_game on Game {\n  id\n  name\n  symbol\n  description\n  trophies {\n    id\n  }\n}\n\nfragment GroupSocialCard_group on Group {\n  id\n  name\n  description\n  admin {\n    id\n    firstName\n    lastName\n  }\n  createdDate\n}\n\nfragment MemberRow_user on User {\n  id\n  firstName\n  middleName\n  lastName\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e956bd68575b6fa25ba9b04fee3aa0b5";
+(node as any).hash = "446f90a4735cf22d8d12cc02cbe85be6";
 
 export default node;

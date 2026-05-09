@@ -1,19 +1,8 @@
 import { useState } from "react";
 import { graphql, usePreloadedQuery, loadQuery } from "react-relay";
 import { ConnectionHandler } from "relay-runtime";
-import { useNavigate } from "react-router";
-import {
-    PlusIcon,
-    PuzzlePieceIcon as PuzzlePieceOutlineIcon,
-    TrophyIcon as TrophyOutlineIcon,
-    UserPlusIcon,
-    UsersIcon as UsersOutlineIcon,
-} from "@heroicons/react/24/outline";
-import {
-    PuzzlePieceIcon as PuzzlePieceSolidIcon,
-    TrophyIcon as TrophySolidIcon,
-    UsersIcon as UsersSolidIcon,
-} from "@heroicons/react/24/solid";
+import { Link, useNavigate } from "react-router";
+import { PlusIcon, UserPlusIcon } from "@heroicons/react/24/outline";
 import type { groupsDetailQuery } from "@/__generated__/groupsDetailQuery.graphql";
 import { getRelayEnvironment } from "@/relay/environment";
 import { GroupSocialCard } from "@/components/GroupSocialCard";
@@ -30,6 +19,7 @@ const GroupPageQuery = graphql`
     query groupsDetailQuery($id: ID!) {
         groupById(id: $id) {
             id
+            name
             admin {
                 id
             }
@@ -89,14 +79,25 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 
 export function HydrateFallback() {
     return (
-        <div className="flex h-screen w-full items-center justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        <div className="flex h-full w-full items-center justify-center">
+            <div className="flex flex-col items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                <div className="size-6 animate-spin rounded-full border-2 border-medal-gold/40 border-t-medal-gold" />
+                <span>loading</span>
+            </div>
         </div>
     );
 }
 
 export function meta() {
     return [{ title: "Group — Troji" }];
+}
+
+function TabCount({ value }: { value: number }) {
+    return (
+        <span className="ml-2 rounded-sm border border-border px-1.5 py-0.5 font-mono text-[10px] tracking-wide text-muted-foreground">
+            {value}
+        </span>
+    );
 }
 
 export default function GroupDetail({ loaderData }: Route.ComponentProps) {
@@ -111,10 +112,17 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
 
     if (!group) {
         return (
-            <main className="container mx-auto px-4 py-8">
-                <p className="text-muted-foreground">Group not found.</p>
-                <Button variant="link" className="px-0 mt-2" onClick={() => navigate("/groups")}>
-                    ← Back to groups
+            <main className="container mx-auto flex flex-col items-start gap-3 px-4 py-10">
+                <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-destructive">
+                    <span aria-hidden className="mr-2">!</span>
+                    not found
+                </p>
+                <h1 className="font-heading text-3xl italic tracking-[0.015em]">
+                    That circle isn&apos;t here.
+                </h1>
+                <Button variant="outline" size="terminal" onClick={() => navigate("/groups")}>
+                    <span aria-hidden>‹</span>
+                    Back to circles
                 </Button>
             </main>
         );
@@ -136,16 +144,22 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
     ];
 
     return (
-        <main className="container mx-auto px-4 py-8">
-            <Button
-                variant="link"
-                className="px-0 mb-4 text-muted-foreground"
-                onClick={() => navigate("/groups")}
-            >
-                ← Groups
-            </Button>
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr]">
-                {/* Sidebar */}
+        <main className="container mx-auto px-4 py-10 sm:py-12">
+            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-muted-foreground">
+                <span className="text-medal-gold">$</span>
+                <Link
+                    to="/groups"
+                    className="ml-2 transition-colors hover:text-foreground"
+                >
+                    groups
+                </Link>
+                <span aria-hidden className="mx-2 text-border">
+                    /
+                </span>
+                <span className="text-foreground/85">{group.name}</span>
+            </p>
+
+            <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr]">
                 <div>
                     <GroupSocialCard
                         group={group}
@@ -154,49 +168,28 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                     />
                 </div>
 
-                {/* Tabs */}
                 <Tabs value={activeTab} onValueChange={setActiveTab}>
-                    <TabsList className="h-11 rounded-xl p-1">
-                        <TabsTrigger
-                            value="games"
-                            className="px-4 data-[state=active]:scale-110 hover:text-current"
-                        >
-                            {activeTab === "games" ? (
-                                <PuzzlePieceSolidIcon className="size-4" />
-                            ) : (
-                                <PuzzlePieceOutlineIcon className="size-4" />
-                            )}
+                    <TabsList>
+                        <TabsTrigger value="games">
                             Games
+                            <TabCount value={games.length} />
                         </TabsTrigger>
-                        <TabsTrigger
-                            value="members"
-                            className="px-4 data-[state=active]:scale-110 hover:text-current"
-                        >
-                            {activeTab === "members" ? (
-                                <UsersSolidIcon className="size-4" />
-                            ) : (
-                                <UsersOutlineIcon className="size-4" />
-                            )}
+                        <TabsTrigger value="members">
                             Members
+                            <TabCount value={members.length} />
                         </TabsTrigger>
-                        <TabsTrigger
-                            value="trophies"
-                            className="px-4 data-[state=active]:scale-110 hover:text-current"
-                        >
-                            {activeTab === "trophies" ? (
-                                <TrophySolidIcon className="size-4" />
-                            ) : (
-                                <TrophyOutlineIcon className="size-4" />
-                            )}
+                        <TabsTrigger value="trophies">
                             Trophies
+                            <TabCount value={group.trophies?.length ?? 0} />
                         </TabsTrigger>
                     </TabsList>
 
-                    {/* Games tab */}
-                    <TabsContent value="games" className="mt-4">
-                        <div className="mb-3 flex items-center justify-between">
-                            <h2 className="heading-section">Games</h2>
-                            {isAdmin && (
+                    <TabsContent value="games" className="mt-6">
+                        <div className="mb-4 flex items-center justify-between">
+                            <h2 className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                                games in this circle
+                            </h2>
+                            {isAdmin ? (
                                 <Button
                                     size="sm"
                                     leadingIcon={<PlusIcon />}
@@ -204,12 +197,21 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                                 >
                                     New game
                                 </Button>
-                            )}
+                            ) : null}
                         </div>
                         {games.length === 0 ? (
-                            <p className="text-supporting">No games yet.</p>
+                            <div className="surface-card flex flex-col items-start gap-3 p-6 sm:p-8">
+                                <p className="font-heading text-xl italic tracking-[0.015em]">
+                                    No games yet.
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                    {isAdmin
+                                        ? "Create one and start handing out trophies."
+                                        : "Wait for the owner to add a game."}
+                                </p>
+                            </div>
                         ) : (
-                            <div className="space-y-3">
+                            <div className="flex flex-col gap-3">
                                 {games.map((game) => (
                                     <GroupGamesTableRow
                                         key={game!.id}
@@ -229,11 +231,12 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                         )}
                     </TabsContent>
 
-                    {/* Members tab */}
-                    <TabsContent value="members" className="mt-4">
-                        <div className="mb-3 flex items-center justify-between">
-                            <h2 className="heading-section">Members</h2>
-                            {isAdmin && (
+                    <TabsContent value="members" className="mt-6">
+                        <div className="mb-4 flex items-center justify-between">
+                            <h2 className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                                people in this circle
+                            </h2>
+                            {isAdmin ? (
                                 <Button
                                     size="sm"
                                     variant="outline"
@@ -242,9 +245,9 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                                 >
                                     Invite
                                 </Button>
-                            )}
+                            ) : null}
                         </div>
-                        <div className="divide-y divide-border rounded-xl border border-border px-4">
+                        <div className="surface-card divide-y divide-border px-4">
                             {members.map((member) => (
                                 <MemberRow
                                     key={member!.id}
@@ -256,10 +259,11 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                         </div>
                     </TabsContent>
 
-                    {/* Trophies tab */}
-                    <TabsContent value="trophies" className="mt-4">
-                        <div className="mb-3 flex items-center justify-between">
-                            <h2 className="heading-section">Trophies</h2>
+                    <TabsContent value="trophies" className="mt-6">
+                        <div className="mb-4 flex items-center justify-between">
+                            <h2 className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                                rewards handed out
+                            </h2>
                             <AwardTrophyButton
                                 preselectedGameId={null}
                                 availableGames={trophyGameOptions}
@@ -276,37 +280,51 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                                 size="sm"
                             />
                         </div>
-                        <div className="space-y-2">
+                        <div className="flex flex-col gap-2">
                             {group.trophies && group.trophies.length > 0 ? (
                                 group.trophies.map((trophy) => (
                                     <div
                                         key={trophy.id}
                                         className="surface-card flex items-center gap-4 p-4"
                                     >
-                                        <div className="text-2xl">{trophy.game?.symbol}</div>
+                                        <div
+                                            aria-hidden
+                                            className="text-2xl"
+                                        >
+                                            {trophy.game?.symbol}
+                                        </div>
                                         <div className="flex-1">
-                                            <p className="font-medium">{trophy.game?.name}</p>
-                                            {trophy.description && (
-                                                <p className="text-sm text-supporting">
+                                            <p className="font-heading text-base font-medium tracking-[0.015em]">
+                                                {trophy.game?.name}
+                                            </p>
+                                            {trophy.description ? (
+                                                <p className="text-sm text-muted-foreground">
                                                     {trophy.description}
                                                 </p>
-                                            )}
-                                            <p className="mt-1 text-xs text-muted-foreground">
-                                                Awarded to {trophy.receiver?.firstName}{" "}
+                                            ) : null}
+                                            <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.22em] text-medal-gold/80">
+                                                <span aria-hidden className="mr-2">▸</span>
+                                                awarded to {trophy.receiver?.firstName}{" "}
                                                 {trophy.receiver?.lastName}
                                             </p>
                                         </div>
                                     </div>
                                 ))
                             ) : (
-                                <p className="text-supporting">No trophies awarded yet.</p>
+                                <div className="surface-card flex flex-col items-start gap-3 p-6 sm:p-8">
+                                    <p className="font-heading text-xl italic tracking-[0.015em]">
+                                        No trophies awarded yet.
+                                    </p>
+                                    <p className="text-sm text-muted-foreground">
+                                        Settle a rivalry. Crown a champion.
+                                    </p>
+                                </div>
                             )}
                         </div>
                     </TabsContent>
                 </Tabs>
             </div>
 
-            {/* Dialogs */}
             <NewGameForm
                 groupId={group.id}
                 connections={gameConnections}

@@ -15,8 +15,11 @@ export async function loader(args: Route.LoaderArgs) {
 
 function FullPageSpinner() {
     return (
-        <div className="flex h-screen w-full items-center justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        <div className="flex h-full w-full items-center justify-center">
+            <div className="flex flex-col items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                <div className="size-6 animate-spin rounded-full border-2 border-medal-gold/40 border-t-medal-gold" />
+                <span>loading</span>
+            </div>
         </div>
     );
 }
@@ -24,9 +27,15 @@ function FullPageSpinner() {
 function RouteError({ error }: { error: unknown }) {
     const message = error instanceof Error ? error.message : "An unexpected error occurred.";
     return (
-        <main className="flex h-screen w-full flex-col items-center justify-center gap-4 p-8">
-            <h1 className="text-2xl font-semibold">Something went wrong</h1>
-            <p className="text-muted-foreground">{message}</p>
+        <main className="flex h-full w-full flex-col items-center justify-center gap-3 p-8">
+            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-destructive">
+                <span aria-hidden className="mr-2">!</span>
+                error
+            </p>
+            <h1 className="font-heading text-3xl italic tracking-[0.015em] text-foreground">
+                Something broke.
+            </h1>
+            <p className="max-w-md text-center text-sm text-muted-foreground">{message}</p>
         </main>
     );
 }

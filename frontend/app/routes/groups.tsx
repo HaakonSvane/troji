@@ -1,6 +1,5 @@
 import { graphql, usePreloadedQuery, loadQuery } from "react-relay";
 import { ConnectionHandler } from "relay-runtime";
-import { ArrowRightEndOnRectangleIcon, PlusIcon } from "@heroicons/react/24/outline";
 import type { groupsPageQuery } from "@/__generated__/groupsPageQuery.graphql";
 import { getRelayEnvironment } from "@/relay/environment";
 import { GroupBox } from "@/components/GroupBox";
@@ -37,8 +36,11 @@ export async function clientLoader(_args: Route.ClientLoaderArgs) {
 
 export function HydrateFallback() {
     return (
-        <div className="flex h-screen w-full items-center justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        <div className="flex h-full w-full items-center justify-center">
+            <div className="flex flex-col items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                <div className="size-6 animate-spin rounded-full border-2 border-medal-gold/40 border-t-medal-gold" />
+                <span>loading</span>
+            </div>
         </div>
     );
 }
@@ -57,44 +59,93 @@ export default function Groups({ loaderData }: Route.ComponentProps) {
         : [];
 
     return (
-        <main className="container mx-auto px-4 py-8">
-            <div className="mb-6 flex items-center justify-between">
-                <h1 className="heading-page">Groups</h1>
-                <div className="flex items-center gap-2">
-                    <Button
-                        variant="outline"
-                        leadingIcon={<ArrowRightEndOnRectangleIcon />}
-                        onClick={() => setJoinGroupOpen(true)}
-                    >
-                        Join
-                    </Button>
-                    <Button leadingIcon={<PlusIcon />} onClick={() => setNewGroupOpen(true)}>
-                        New group
-                    </Button>
+        <main className="container mx-auto px-4 py-10 sm:py-14">
+            <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-3">
+                    <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-muted-foreground">
+                        <span className="text-medal-gold">$</span>
+                        <span className="ml-2">groups</span>
+                    </p>
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                        <h1 className="font-heading text-4xl italic font-medium tracking-[0.015em] text-foreground sm:text-5xl">
+                            Your circles.
+                        </h1>
+                        <div className="flex items-center gap-2">
+                            <Button
+                                variant="outline"
+                                size="terminal"
+                                onClick={() => setJoinGroupOpen(true)}
+                            >
+                                <span aria-hidden>›</span>
+                                Join with code
+                            </Button>
+                            <Button
+                                variant="gold"
+                                size="terminal"
+                                onClick={() => setNewGroupOpen(true)}
+                            >
+                                <span aria-hidden>▸</span>
+                                New circle
+                            </Button>
+                        </div>
+                    </div>
                 </div>
+
+                {edges.length === 0 ? (
+                    <div className="surface-card flex flex-col items-start gap-4 p-8 sm:p-10">
+                        <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-medal-gold">
+                            <span aria-hidden className="mr-2">▸</span>
+                            ledger empty
+                        </p>
+                        <p className="font-heading text-2xl italic tracking-[0.015em] text-foreground sm:text-3xl">
+                            No circles yet — go assemble one.
+                        </p>
+                        <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
+                            A circle is your private competition. Create one and invite your
+                            people, or jump into an existing one with a code.
+                        </p>
+                        <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+                            <Button
+                                variant="gold"
+                                size="terminal"
+                                onClick={() => setNewGroupOpen(true)}
+                            >
+                                <span aria-hidden>▸</span>
+                                Create circle
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="terminal"
+                                onClick={() => setJoinGroupOpen(true)}
+                            >
+                                <span aria-hidden>›</span>
+                                Join with code
+                            </Button>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {edges.map((edge) => {
+                            if (!edge?.node) return null;
+                            return (
+                                <Link
+                                    key={edge.node.id}
+                                    to={`/groups/${edge.node.id}`}
+                                    className="group"
+                                >
+                                    <GroupBox group={edge.node} />
+                                </Link>
+                            );
+                        })}
+                    </div>
+                )}
             </div>
-            {edges.length === 0 ? (
-                <p className="text-supporting">
-                    You have no groups yet.{" "}
-                    <span className="text-foreground font-medium">Create one to get started.</span>
-                </p>
-            ) : (
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {edges.map((edge) => {
-                        if (!edge?.node) return null;
-                        return (
-                            <Link key={edge.node.id} to={`/groups/${edge.node.id}`}>
-                                <GroupBox group={edge.node} />
-                            </Link>
-                        );
-                    })}
-                </div>
-            )}
+
             <DrawerDialog
                 open={joinGroupOpen}
                 onOpenChange={setJoinGroupOpen}
-                title="Join a group"
-                description="Enter an invite code to join an existing group."
+                title="Join a circle"
+                description="Enter an invite code to join an existing circle."
             >
                 <JoinGroupForm onJoined={() => setJoinGroupOpen(false)} />
             </DrawerDialog>

@@ -16,9 +16,23 @@ interface GroupBoxProps {
 export function GroupBox({ group }: GroupBoxProps) {
     const data = useFragment(GroupBoxFragment, group);
     return (
-        <div className="surface-card surface-card-interactive flex flex-col gap-2 p-5">
-            <h3 className="heading-card text-lg">{data.name}</h3>
-            {data.description && <p className="text-supporting line-clamp-2">{data.description}</p>}
+        <div className="surface-card surface-card-interactive flex h-full flex-col gap-2 p-5">
+            <div className="flex items-baseline gap-2">
+                <span
+                    aria-hidden
+                    className="font-mono text-[11px] tracking-[0.22em] text-medal-gold/70 transition-colors group-hover:text-medal-gold"
+                >
+                    ▸
+                </span>
+                <h3 className="font-heading text-lg font-medium tracking-[0.015em]">
+                    {data.name}
+                </h3>
+            </div>
+            {data.description ? (
+                <p className="line-clamp-2 pl-5 text-sm leading-relaxed text-muted-foreground">
+                    {data.description}
+                </p>
+            ) : null}
         </div>
     );
 }

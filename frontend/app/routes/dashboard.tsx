@@ -1,10 +1,11 @@
 import { graphql, usePreloadedQuery, loadQuery } from "react-relay";
+import { Link } from "react-router";
 import type { dashboardQuery } from "@/__generated__/dashboardQuery.graphql";
 import { PersonName } from "@/components/PersonName";
+import { Button } from "@/components/ui/button";
 import { getRelayEnvironment } from "@/relay/environment";
 import type { Route } from "./+types/dashboard";
 
-// Phase 5.4: replace this with the real DashboardPageQuery and render proper content.
 const DashboardQuery = graphql`
     query dashboardQuery {
         me {
@@ -14,9 +15,6 @@ const DashboardQuery = graphql`
     }
 `;
 
-// clientLoader runs on the client before the component renders.
-// It calls loadQuery() to kick off the Relay network request (render-as-you-fetch).
-// All protected pages follow this pattern: loadQuery in clientLoader, usePreloadedQuery in component.
 export async function clientLoader(_args: Route.ClientLoaderArgs) {
     const environment = getRelayEnvironment();
     const queryRef = loadQuery<dashboardQuery>(environment, DashboardQuery, {});
@@ -25,22 +23,46 @@ export async function clientLoader(_args: Route.ClientLoaderArgs) {
 
 export function HydrateFallback() {
     return (
-        <div className="flex h-screen w-full items-center justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        <div className="flex h-full w-full items-center justify-center">
+            <div className="flex flex-col items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                <div className="size-6 animate-spin rounded-full border-2 border-medal-gold/40 border-t-medal-gold" />
+                <span>loading</span>
+            </div>
         </div>
     );
 }
 
 export default function Dashboard({ loaderData }: Route.ComponentProps) {
-    // usePreloadedQuery suspends until the query completes.
-    // The Suspense boundary in _protected.tsx shows the spinner while loading.
     const data = usePreloadedQuery(DashboardQuery, loaderData.queryRef);
+
     return (
-        <main className="flex flex-col container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-semibold">Dashboard</h1>
-            <p className="mt-2 text-muted-foreground">
-                Welcome back, <PersonName firstName={data.me?.firstName} fallback="there" />.
+        <main className="container mx-auto flex flex-col px-4 py-10 sm:py-14">
+            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-muted-foreground">
+                <span className="text-medal-gold">$</span>
+                <span className="ml-2">dashboard</span>
             </p>
+
+            <h1 className="mt-6 font-heading text-4xl italic font-medium leading-tight tracking-[0.015em] text-foreground sm:text-5xl">
+                Welcome back,{" "}
+                <PersonName
+                    firstName={data.me?.firstName}
+                    fallback="champion"
+                    className="text-medal-gold"
+                />
+                .
+            </h1>
+            <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-muted-foreground">
+                What are we competing in today? Pick a circle and start handing out trophies.
+            </p>
+
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <Button variant="gold" size="terminal" asChild>
+                    <Link to="/groups">
+                        <span aria-hidden>▸</span>
+                        <span>view your circles</span>
+                    </Link>
+                </Button>
+            </div>
         </main>
     );
 }
