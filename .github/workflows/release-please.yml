@@ -110,4 +110,4 @@ jobs:
       - name: Pull released images and restart services
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }} \
-            "cd ~/troji && docker compose pull && docker compose up -d --remove-orphans --no-build"
+            "cd ~/troji && docker compose pull && docker compose up -d --remove-orphans --no-build && docker compose exec -T caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile"
