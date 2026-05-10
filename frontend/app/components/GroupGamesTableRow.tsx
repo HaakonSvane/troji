@@ -10,8 +10,12 @@ const GroupGamesTableRowFragment = graphql`
         name
         symbol
         description
-        trophies {
-            totalCount
+        trophies(first: 200) @connection(key: "GameTrophies_trophies") {
+            edges {
+                node {
+                    id
+                }
+            }
         }
     }
 `;
@@ -30,7 +34,7 @@ export function GroupGamesTableRow({
     currentUserId,
 }: GroupGamesTableRowProps) {
     const data = useFragment(GroupGamesTableRowFragment, game);
-    const trophyCount = data.trophies?.totalCount ?? 0;
+    const trophyCount = data.trophies?.edges?.length ?? 0;
     const trophyLabel = trophyCount === 1 ? "1 trophy" : `${trophyCount} trophies`;
 
     return (
@@ -51,9 +55,7 @@ export function GroupGamesTableRow({
                             {data.description}
                         </p>
                     ) : (
-                        <p className="text-sm text-muted-foreground">
-                            Open to inspect rewards.
-                        </p>
+                        <p className="text-sm text-muted-foreground">Open to inspect rewards.</p>
                     )}
                 </div>
                 <ChevronRightIcon className="mt-1 size-4 shrink-0 text-muted-foreground" />
