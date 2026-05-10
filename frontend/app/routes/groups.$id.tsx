@@ -63,6 +63,9 @@ const GroupPageQuery = graphql`
                         }
                     }
                 }
+                pageInfo {
+                    hasNextPage
+                }
             }
         }
         me {
@@ -150,6 +153,7 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
     ];
 
     const awarded = (group.trophies?.edges?.map((e) => e?.node).filter(Boolean) ?? []).filter((t) => t.isAwarded);
+    const trophiesTruncated = group.trophies?.pageInfo?.hasNextPage ?? false;
     const counts = new Map<string, { user: ReceiverShape; count: number }>();
     for (const trophy of awarded) {
         const receiver = trophy.receiver;
@@ -197,6 +201,11 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                     currentUserId={myId}
                 />
             </div>
+            {trophiesTruncated && (
+                <p className="text-xs text-muted-foreground">
+                    Standings and award counts reflect the first 200 trophies only.
+                </p>
+            )}
 
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_320px]">
                 <GroupActivityFeed group={group} currentUserId={myId} />

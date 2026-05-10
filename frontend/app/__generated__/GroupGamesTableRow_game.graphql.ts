@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6f8f57ddc1fa5b39e3955c8b65bc95d3>>
+ * @generated SignedSource<<a5365e0f05b15c4ba7fa57bd5d70bde8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,11 +16,7 @@ export type GroupGamesTableRow_game$data = {
   readonly name: string;
   readonly symbol: string;
   readonly trophies: {
-    readonly edges: ReadonlyArray<{
-      readonly node: {
-        readonly id: string;
-      };
-    }> | null | undefined;
+    readonly totalCount: number;
   } | null | undefined;
   readonly " $fragmentType": "GroupGamesTableRow_game";
 };
@@ -29,32 +25,19 @@ export type GroupGamesTableRow_game$key = {
   readonly " $fragmentSpreads": FragmentRefs<"GroupGamesTableRow_game">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
-  "metadata": {
-    "connection": [
-      {
-        "count": null,
-        "cursor": null,
-        "direction": "forward",
-        "path": [
-          "trophies"
-        ]
-      }
-    ]
-  },
+  "metadata": null,
   "name": "GroupGamesTableRow_game",
   "selections": [
-    (v0/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -77,73 +60,18 @@ return {
       "storageKey": null
     },
     {
-      "alias": "trophies",
+      "alias": null,
       "args": null,
       "concreteType": "TrophiesConnection",
       "kind": "LinkedField",
-      "name": "__GameTrophies_trophies_connection",
+      "name": "trophies",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
-          "concreteType": "TrophiesEdge",
-          "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "Trophy",
-              "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
-              "selections": [
-                (v0/*: any*/),
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "__typename",
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "cursor",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PageInfo",
-          "kind": "LinkedField",
-          "name": "pageInfo",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "endCursor",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "hasNextPage",
-              "storageKey": null
-            }
-          ],
+          "kind": "ScalarField",
+          "name": "totalCount",
           "storageKey": null
         }
       ],
@@ -153,8 +81,7 @@ return {
   "type": "Game",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "e8c3ef4db9fb654965d75695d29cdf6f";
+(node as any).hash = "52488852762a14839bd31b2f510fb794";
 
 export default node;

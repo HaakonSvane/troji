@@ -40,42 +40,7 @@ const CreateTrophyRequestMutation = graphql`
             }
             query {
                 groupById(id: $groupId) {
-                    recentActivity(first: 20) {
-                        __typename
-                        id
-                        occurredAt
-                        ... on TrophyAwardedActivity {
-                            trophy {
-                                id
-                                description
-                                game {
-                                    id
-                                    symbol
-                                    name
-                                }
-                                receiver {
-                                    id
-                                    firstName
-                                    middleName
-                                    lastName
-                                }
-                                awardedBy {
-                                    id
-                                    firstName
-                                    middleName
-                                    lastName
-                                }
-                            }
-                        }
-                        ... on MemberJoinedActivity {
-                            member {
-                                id
-                                firstName
-                                middleName
-                                lastName
-                            }
-                        }
-                    }
+                    ...GroupActivityFeed_group
                 }
             }
             errors {

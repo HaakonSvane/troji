@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3828faaaaa1c6c4f7b8a2ef57249acbf>>
+ * @generated SignedSource<<817fc70d9e741a6e86b2d480b816e693>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -40,6 +40,9 @@ export type groupsGameDetailQuery$data = {
           };
         };
       }> | null | undefined;
+      readonly pageInfo: {
+        readonly hasNextPage: boolean;
+      };
     } | null | undefined;
   } | null | undefined;
   readonly groupById: {
@@ -279,14 +282,14 @@ v11 = [
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "endCursor",
+        "name": "hasNextPage",
         "storageKey": null
       },
       {
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "hasNextPage",
+        "name": "endCursor",
         "storageKey": null
       }
     ],
@@ -401,7 +404,7 @@ return {
     ]
   },
   "params": {
-    "cacheID": "3310aa8246a2c23f954f79b542bffc12",
+    "cacheID": "add3a0c4844beb15e0e5c3199038357c",
     "id": null,
     "metadata": {
       "connection": [
@@ -418,11 +421,11 @@ return {
     },
     "name": "groupsGameDetailQuery",
     "operationKind": "query",
-    "text": "query groupsGameDetailQuery(\n  $groupId: ID!\n  $gameId: ID!\n) {\n  groupById(id: $groupId) {\n    id\n    name\n    members(first: 50) {\n      edges {\n        node {\n          id\n          firstName\n          lastName\n        }\n      }\n    }\n  }\n  gameById(id: $gameId) {\n    id\n    group {\n      id\n    }\n    name\n    symbol\n    description\n    trophies(first: 200) {\n      edges {\n        node {\n          id\n          isAwarded\n          description\n          game {\n            id\n            symbol\n            name\n          }\n          receiver {\n            id\n            firstName\n            lastName\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n"
+    "text": "query groupsGameDetailQuery(\n  $groupId: ID!\n  $gameId: ID!\n) {\n  groupById(id: $groupId) {\n    id\n    name\n    members(first: 50) {\n      edges {\n        node {\n          id\n          firstName\n          lastName\n        }\n      }\n    }\n  }\n  gameById(id: $gameId) {\n    id\n    group {\n      id\n    }\n    name\n    symbol\n    description\n    trophies(first: 200) {\n      edges {\n        node {\n          id\n          isAwarded\n          description\n          game {\n            id\n            symbol\n            name\n          }\n          receiver {\n            id\n            firstName\n            lastName\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "4285fd9f3afccf8aaeef34d1c5749306";
+(node as any).hash = "e668f9234ff5d4609c73ba6af0e2b675";
 
 export default node;
