@@ -14,6 +14,8 @@ If it is not clear from context what the change is about, use the diff to identi
   - `refactor`: Internal restructuring with no behavior change (e.g., `refactor(repository): consolidate validation logic`)
   - `test`: Adds or updates tests (e.g., `test(graphql): add schema error mapping tests`)
 
+Since this repository uses release please, commit work done in the backend and frontend separately. This does **not** mean you should use generic semantic scopes like `frontend` or `backend`, just that the commit includes files in the respective system. It is ok perform multiple commits if you see fit.
+
 - Focus the message on **what changed and why**, not on how the change was made:
   - ✓ `fix(errors): map GraphQL exceptions to proper error codes` (outcome)
   - ✗ `fix(errors): added IErrorFilter interface to Program.cs` (implementation)
