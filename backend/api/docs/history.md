@@ -1,5 +1,17 @@
 # Changelog
 
+## Version 0.4.0, released 2026-05-10
+
+
+### New features
+
+* **group:** redesign detail page around standings and activity ([#43](https://github.com/HaakonSvane/troji/issues/43)) ([6e5ecff](https://github.com/HaakonSvane/troji/commit/6e5ecff39e4adc364c33d8204819e8ee1bf9424d))
+
+
+### Bug fixes
+
+* prevent self-handouts in open groups ([#42](https://github.com/HaakonSvane/troji/issues/42)) ([abfdc0c](https://github.com/HaakonSvane/troji/commit/abfdc0ce8ef0e8f1e41f73dec4aa464e60465e23))
+
 ## Version 0.3.0, released 2026-05-09
 
 
