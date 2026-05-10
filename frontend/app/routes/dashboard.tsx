@@ -21,6 +21,13 @@ export async function clientLoader(_args: Route.ClientLoaderArgs) {
     return { queryRef };
 }
 
+export function meta() {
+    return [
+        { title: "Dashboard — Troji" },
+        { name: "description", content: "Your home base. Pick a circle and start handing out trophies." },
+    ];
+}
+
 export function HydrateFallback() {
     return (
         <div className="flex h-full w-full items-center justify-center">

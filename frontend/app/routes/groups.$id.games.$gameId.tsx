@@ -73,7 +73,10 @@ export function HydrateFallback() {
 }
 
 export function meta() {
-    return [{ title: "Game — Troji" }];
+    return [
+        { title: "Game — Troji" },
+        { name: "description", content: "Trophy history and stats for this game." },
+    ];
 }
 
 function StatReadout({

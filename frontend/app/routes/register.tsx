@@ -27,6 +27,13 @@ const RegisterUserMutation = graphql`
     }
 `;
 
+export function meta() {
+    return [
+        { title: "Set Up Profile — Troji" },
+        { name: "description", content: "Pick your handle before you enter the arena." },
+    ];
+}
+
 export default function RegisterPage() {
     const { user } = useUser();
     const navigate = useNavigate();

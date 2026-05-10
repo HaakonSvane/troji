@@ -89,7 +89,10 @@ export function HydrateFallback() {
 }
 
 export function meta() {
-    return [{ title: "Group — Troji" }];
+    return [
+        { title: "Group — Troji" },
+        { name: "description", content: "Games, members, and trophies for this circle." },
+    ];
 }
 
 function TabCount({ value }: { value: number }) {

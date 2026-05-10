@@ -46,7 +46,10 @@ export function HydrateFallback() {
 }
 
 export function meta() {
-    return [{ title: "Groups — Troji" }];
+    return [
+        { title: "Groups — Troji" },
+        { name: "description", content: "All your circles. Create one, join one, start competing." },
+    ];
 }
 
 export default function Groups({ loaderData }: Route.ComponentProps) {
