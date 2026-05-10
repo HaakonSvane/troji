@@ -15,6 +15,7 @@ public static class GameNode
         return await dataLoader.LoadAsync(game.ParentGroupId, cancellationToken);
     }
 
+    [UsePaging(IncludeTotalCount = true)]
     public static async Task<IReadOnlyCollection<Trophy>> GetTrophiesAsync(
         [Parent] Game game,
         ITrophiesByGameIdsDataLoader dataLoader,

@@ -11,6 +11,7 @@ namespace api.API.Group;
 [ExtendObjectType(typeof(Database.Models.Group))]
 public static class GroupNode
 {
+    [UsePaging(IncludeTotalCount = true)]
     public static async Task<IReadOnlyList<Trophy>> GetTrophiesAsync(
         [Parent] Database.Models.Group group,
         ITrophiesByGroupIdsDataLoader dataLoader,
