@@ -55,7 +55,7 @@ export function GroupTopPerformer({
                             middleName={user.middleName}
                             lastName={user.lastName}
                             isSelf={user.id === currentUserId}
-                            className="truncate font-heading text-2xl italic font-medium tracking-[0.015em] text-foreground sm:text-3xl"
+                            className="truncate font-heading text-2xl font-medium tracking-[0.015em] text-foreground sm:text-3xl"
                         />
                         <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
                             <span className="text-medal-gold">{count}</span>{" "}
@@ -73,7 +73,7 @@ export function GroupTopPerformer({
                         <span aria-hidden className="mr-2">▸</span>
                         no champion yet
                     </p>
-                    <p className="font-heading text-xl italic tracking-[0.015em] text-foreground sm:text-2xl">
+                    <p className="font-heading text-xl tracking-[0.015em] text-foreground sm:text-2xl">
                         Settle a rivalry. Crown one.
                     </p>
                 </div>

@@ -68,7 +68,7 @@ export default function Groups({ loaderData }: Route.ComponentProps) {
                 <div className="flex flex-col gap-3">
                     <Breadcrumb segments={[{ label: "groups" }]} />
                     <div className="flex flex-wrap items-end justify-between gap-4">
-                        <h1 className="font-heading text-4xl italic font-medium tracking-[0.015em] text-foreground sm:text-5xl">
+                        <h1 className="font-heading text-4xl font-medium tracking-[0.015em] text-foreground sm:text-5xl">
                             Your circles.
                         </h1>
                         <div className="flex items-center gap-2">
@@ -98,7 +98,7 @@ export default function Groups({ loaderData }: Route.ComponentProps) {
                             <span aria-hidden className="mr-2">▸</span>
                             ledger empty
                         </p>
-                        <p className="font-heading text-2xl italic tracking-[0.015em] text-foreground sm:text-3xl">
+                        <p className="font-heading text-2xl tracking-[0.015em] text-foreground sm:text-3xl">
                             No circles yet — go assemble one.
                         </p>
                         <p className="max-w-md text-sm leading-relaxed text-muted-foreground">

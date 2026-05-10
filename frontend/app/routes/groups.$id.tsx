@@ -113,7 +113,7 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                     <span aria-hidden className="mr-2">!</span>
                     not found
                 </p>
-                <h1 className="font-heading text-3xl italic tracking-[0.015em]">
+                <h1 className="font-heading text-3xl tracking-[0.015em]">
                     That circle isn&apos;t here.
                 </h1>
                 <Button variant="outline" size="terminal" onClick={() => navigate("/groups")}>

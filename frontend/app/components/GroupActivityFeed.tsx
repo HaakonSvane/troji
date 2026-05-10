@@ -79,7 +79,7 @@ export function GroupActivityFeed({ group, currentUserId }: GroupActivityFeedPro
                         <span aria-hidden className="mr-2">▸</span>
                         ledger quiet
                     </p>
-                    <p className="font-heading text-2xl italic tracking-[0.015em] text-foreground sm:text-3xl">
+                    <p className="font-heading text-2xl tracking-[0.015em] text-foreground sm:text-3xl">
                         Nothing&apos;s happened yet.
                     </p>
                 </div>

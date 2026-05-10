@@ -47,7 +47,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
         <main className="container mx-auto flex flex-col px-4 py-10 sm:py-14">
             <Breadcrumb segments={[{ label: "dashboard" }]} />
 
-            <h1 className="mt-6 font-heading text-4xl italic font-medium leading-tight tracking-[0.015em] text-foreground sm:text-5xl">
+            <h1 className="mt-6 font-heading text-4xl font-medium leading-tight tracking-[0.015em] text-foreground sm:text-5xl">
                 Welcome back,{" "}
                 <PersonName
                     firstName={data.me?.firstName}
