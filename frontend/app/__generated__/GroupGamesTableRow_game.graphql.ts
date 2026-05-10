@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f6d5d962e44cba1c2f4e631db0405575>>
+ * @generated SignedSource<<6f8f57ddc1fa5b39e3955c8b65bc95d3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,9 +15,13 @@ export type GroupGamesTableRow_game$data = {
   readonly id: string;
   readonly name: string;
   readonly symbol: string;
-  readonly trophies: ReadonlyArray<{
-    readonly id: string;
-  }>;
+  readonly trophies: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+      };
+    }> | null | undefined;
+  } | null | undefined;
   readonly " $fragmentType": "GroupGamesTableRow_game";
 };
 export type GroupGamesTableRow_game$key = {
@@ -36,7 +40,18 @@ var v0 = {
 return {
   "argumentDefinitions": [],
   "kind": "Fragment",
-  "metadata": null,
+  "metadata": {
+    "connection": [
+      {
+        "count": null,
+        "cursor": null,
+        "direction": "forward",
+        "path": [
+          "trophies"
+        ]
+      }
+    ]
+  },
   "name": "GroupGamesTableRow_game",
   "selections": [
     (v0/*: any*/),
@@ -62,14 +77,75 @@ return {
       "storageKey": null
     },
     {
-      "alias": null,
+      "alias": "trophies",
       "args": null,
-      "concreteType": "Trophy",
+      "concreteType": "TrophiesConnection",
       "kind": "LinkedField",
-      "name": "trophies",
-      "plural": true,
+      "name": "__GameTrophies_trophies_connection",
+      "plural": false,
       "selections": [
-        (v0/*: any*/)
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "TrophiesEdge",
+          "kind": "LinkedField",
+          "name": "edges",
+          "plural": true,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "Trophy",
+              "kind": "LinkedField",
+              "name": "node",
+              "plural": false,
+              "selections": [
+                (v0/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cursor",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "PageInfo",
+          "kind": "LinkedField",
+          "name": "pageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "endCursor",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasNextPage",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
       ],
       "storageKey": null
     }
@@ -79,6 +155,6 @@ return {
 };
 })();
 
-(node as any).hash = "cbf4101fb717a19b8cd90fba005e81db";
+(node as any).hash = "e8c3ef4db9fb654965d75695d29cdf6f";
 
 export default node;

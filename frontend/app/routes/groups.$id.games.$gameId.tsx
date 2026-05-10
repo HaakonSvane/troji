@@ -30,19 +30,27 @@ const GroupGameDetailQuery = graphql`
             name
             symbol
             description
-            trophies {
-                id
-                isAwarded
-                description
-                game {
-                    id
-                    symbol
-                    name
+            trophies(first: 200)
+                @connection(key: "GameTrophies_trophies") {
+                edges {
+                    node {
+                        id
+                        isAwarded
+                        description
+                        game {
+                            id
+                            symbol
+                            name
+                        }
+                        receiver {
+                            id
+                            firstName
+                            lastName
+                        }
+                    }
                 }
-                receiver {
-                    id
-                    firstName
-                    lastName
+                pageInfo {
+                    hasNextPage
                 }
             }
         }
@@ -143,7 +151,8 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
     }
 
     const members = group.members?.edges?.map((edge) => edge?.node).filter(Boolean) ?? [];
-    const trophies = game.trophies ?? [];
+    const trophies = game.trophies?.edges?.map((e) => e?.node).filter(Boolean) ?? [];
+    const trophiesTruncated = game.trophies?.pageInfo?.hasNextPage ?? false;
     const awardedCount = trophies.filter((t) => t.isAwarded).length;
     const pendingCount = trophies.filter((t) => !t.isAwarded).length;
 
@@ -184,6 +193,7 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
                     </div>
                     <AwardTrophyButton
                         preselectedGameId={game.id}
+                        groupId={group.id}
                         availableGames={[
                             { id: game.id, name: game.name, symbol: game.symbol },
                         ]}
@@ -226,6 +236,11 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
                     reward history
                 </h2>
                 <div className="flex flex-col gap-2">
+                    {trophiesTruncated && (
+                        <p className="text-xs text-muted-foreground">
+                            Showing first 200 trophies.
+                        </p>
+                    )}
                     {trophies.length > 0 ? (
                         trophies.map((trophy) => (
                             <div

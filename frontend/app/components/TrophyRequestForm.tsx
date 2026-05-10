@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { graphql, useMutation } from "react-relay";
+import { ConnectionHandler } from "relay-runtime";
 import type { TrophyRequestFormMutation } from "@/__generated__/TrophyRequestFormMutation.graphql";
 import { Button } from "@/components/ui/button";
 import { PersonName, formatPersonName } from "@/components/PersonName";
@@ -16,11 +17,41 @@ import { DrawerDialog } from "@/components/DrawerDialog";
 import { validateCreateTrophyRequestInput } from "@/lib/validation/forms";
 
 const CreateTrophyRequestMutation = graphql`
-    mutation TrophyRequestFormMutation($input: CreateTrophyRequestInput!) {
+    mutation TrophyRequestFormMutation(
+        $input: CreateTrophyRequestInput!
+        $connections: [ID!]!
+        $groupId: ID!
+    ) {
         createTrophyRequest(input: $input) {
-            trophy {
+            trophy @appendNode(connections: $connections, edgeTypeName: "TrophiesEdge") {
                 id
                 isAwarded
+                description
+                game {
+                    id
+                    symbol
+                    name
+                }
+                receiver {
+                    id
+                    firstName
+                    lastName
+                }
+            }
+            query {
+                groupById(id: $groupId) {
+                    ...GroupActivityFeed_group
+                    awardedTrophyCount
+                    topPerformer {
+                        user {
+                            id
+                            firstName
+                            middleName
+                            lastName
+                        }
+                        awardCount
+                    }
+                }
             }
             errors {
                 __typename
@@ -37,6 +68,7 @@ interface Member {
 
 interface TrophyRequestFormProps {
     gameId: string | null;
+    groupId: string;
     availableGames: Array<{ id: string; name: string; symbol: string }>;
     open: boolean;
     onOpenChange: (open: boolean) => void;
@@ -47,6 +79,7 @@ interface TrophyRequestFormProps {
 
 export function TrophyRequestForm({
     gameId,
+    groupId,
     availableGames,
     open,
     onOpenChange,
@@ -92,9 +125,13 @@ export function TrophyRequestForm({
             return;
         }
 
+        const gameConnectionId = ConnectionHandler.getConnectionID(effectiveGameId, "GameTrophies_trophies");
+
         commitRequest({
             variables: {
                 input: validation.data,
+                connections: [gameConnectionId],
+                groupId,
             },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onCompleted: (response: any) => {
