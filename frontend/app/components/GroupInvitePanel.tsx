@@ -82,16 +82,14 @@ export function GroupInvitePanel({
         setInviteError(null);
         commitCreate({
             variables: { input: { groupId } },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            onCompleted: (response: any) => {
+            onCompleted: (response) => {
                 const payload = response.createGroupInvite;
                 if (payload?.invite) {
                     setCurrentInvite(payload.invite);
                     return;
                 }
                 const tooSoon = payload?.errors?.find(
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    (e: any) => e.__typename === "InviteResetTooSoonError"
+                    (e) => e.__typename === "InviteResetTooSoonError"
                 );
                 if (tooSoon) {
                     setInviteError(
@@ -123,16 +121,14 @@ export function GroupInvitePanel({
         }
         commitJoin({
             variables: { input: { inviteCode: code } },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            onCompleted: (response: any) => {
+            onCompleted: (response) => {
                 const payload = response.joinGroup;
                 if (payload?.group?.id) {
                     navigate(`/groups/${payload.group.id}`);
                     return;
                 }
                 const expired = payload?.errors?.find(
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    (e: any) => e.__typename === "InviteExpiredError"
+                    (e) => e.__typename === "InviteExpiredError"
                 );
                 setJoinError(
                     expired ? "This invite has expired." : "Could not join group. Check the code."
