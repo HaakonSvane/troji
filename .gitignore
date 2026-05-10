@@ -57,3 +57,5 @@ frontend/.react-router/
 .idea/
 
 .playwright-mcp/
+
+.claude/worktrees/

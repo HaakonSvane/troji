@@ -69,7 +69,7 @@ export default function Groups({ loaderData }: Route.ComponentProps) {
                         <span className="text-medal-gold">$</span>
                         <span className="ml-2">groups</span>
                     </p>
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                    <div className="flex flex-wrap items-end justify-between gap-4">
                         <h1 className="font-heading text-4xl italic font-medium tracking-[0.015em] text-foreground sm:text-5xl">
                             Your circles.
                         </h1>
