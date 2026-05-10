@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 0.4.2, released 2026-05-10
+
+
+### Bug fixes
+
+* **repository:** rename GetUsersByGameIdsAsync to GetUsersByGameIds ([ed632e3](https://github.com/HaakonSvane/troji/commit/ed632e338095158da82ae9ef28d3fee0cf013797))
+
 ## Version 0.4.1, released 2026-05-10
 
 
