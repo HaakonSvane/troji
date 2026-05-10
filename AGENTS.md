@@ -31,7 +31,7 @@
 
 ## Committing Work
 
-After completing every chunk of work. Commit! Commit often, and try to separate work based on where the work was done (frontend / backend). This keeps our release please release notes good looking!
+After completing every chunk of work. Commit! Commit often, and try to separate commits based on where the work was done (frontend / backend). This does **not** mean you should use generic semantic scopes like `frontend` or `backend`, just that the commit inlcudes files in the respective system. This keeps our release please release notes good looking!
 
 ## Code philosophy
 Less is more. For every feature and fix, refactoring for less complexity should always be considered. We don't add to our mudball, we continuously reshape what our system is to fit our new needs. Behaviour is the flow through a constrained structure, and we aim at making that structure as simple as possible. Breaking changes should be communicated, but always considered if it leaves the system in a better state.
