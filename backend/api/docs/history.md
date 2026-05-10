@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 0.4.1, released 2026-05-10
+
+
+### Bug fixes
+
+* **seeder:** remove Console.WriteLine calls from database seeder ([16606f0](https://github.com/HaakonSvane/troji/commit/16606f03e703bff5e5a65467db6023ce6f22c49f))
+
 ## Version 0.4.0, released 2026-05-10
 
 

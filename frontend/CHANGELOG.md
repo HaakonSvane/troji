@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://github.com/HaakonSvane/troji/compare/frontend-v0.6.0...frontend-v0.6.1) (2026-05-10)
+
+
+### Bug Fixes
+
+* **relay:** replace unsafe any-casts with typed GraphQL error shape ([2c89847](https://github.com/HaakonSvane/troji/commit/2c898476253e417cf731d4829f9a6436ca8fa7f0))
+
 ## [0.6.0](https://github.com/HaakonSvane/troji/compare/frontend-v0.5.0...frontend-v0.6.0) (2026-05-10)
 
 
