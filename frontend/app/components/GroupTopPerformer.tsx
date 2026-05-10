@@ -27,23 +27,13 @@ export function GroupTopPerformer({
     className,
 }: GroupTopPerformerProps) {
     return (
-        <section
-            className={
-                "surface-card flex min-h-[14rem] flex-col gap-4 p-5 sm:p-6 " + (className ?? "")
-            }
-        >
-            <header className="flex items-center justify-between gap-3">
-                <h2 className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-                    <span className="text-medal-gold">$</span>
-                    <span className="ml-2">top performer</span>
-                </h2>
-                {user ? (
-                    <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-medal-gold">
-                        <span aria-hidden className="mr-1">▸</span>#1
-                    </span>
-                ) : null}
-            </header>
+        <section className={"flex flex-col gap-4 " + (className ?? "")}>
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                <span className="text-medal-gold">$</span>
+                <span className="ml-2">top performer</span>
+            </h2>
 
+            <div className="surface-card flex flex-1 flex-col gap-4 p-5 sm:p-6">
             {user ? (
                 <div className="flex flex-1 items-center gap-4">
                     <div className="flex size-14 shrink-0 items-center justify-center rounded-full border border-medal-gold/40 bg-surface-muted text-base font-medium text-foreground/90">
@@ -70,7 +60,9 @@ export function GroupTopPerformer({
             ) : (
                 <div className="flex flex-1 flex-col items-start justify-center gap-2">
                     <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-medal-gold">
-                        <span aria-hidden className="mr-2">▸</span>
+                        <span aria-hidden className="mr-2">
+                            ▸
+                        </span>
                         no champion yet
                     </p>
                     <p className="font-heading text-xl tracking-[0.015em] text-foreground sm:text-2xl">
@@ -78,6 +70,7 @@ export function GroupTopPerformer({
                     </p>
                 </div>
             )}
+            </div>
         </section>
     );
 }

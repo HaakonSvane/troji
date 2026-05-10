@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3f48382cd9db5bd436820de1e2c1a981>>
+ * @generated SignedSource<<d672835589c628dd8e859f5a7a24af76>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -373,7 +373,7 @@ return {
                       {
                         "kind": "Literal",
                         "name": "first",
-                        "value": 10
+                        "value": 5
                       }
                     ],
                     "concreteType": null,
@@ -449,7 +449,7 @@ return {
                         "abstractKey": null
                       }
                     ],
-                    "storageKey": "recentActivity(first:10)"
+                    "storageKey": "recentActivity(first:5)"
                   },
                   (v11/*: any*/),
                   (v13/*: any*/),
@@ -467,12 +467,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "395eab46b3209bc6e7624bd59e68d90c",
+    "cacheID": "88482a6db432280393dc68c08de04343",
     "id": null,
     "metadata": {},
     "name": "TrophyRequestFormMutation",
     "operationKind": "mutation",
-    "text": "mutation TrophyRequestFormMutation(\n  $input: CreateTrophyRequestInput!\n  $groupId: ID!\n) {\n  createTrophyRequest(input: $input) {\n    trophy {\n      id\n      isAwarded\n      description\n      game {\n        id\n        symbol\n        name\n      }\n      receiver {\n        id\n        firstName\n        lastName\n      }\n    }\n    query {\n      groupById(id: $groupId) {\n        ...GroupActivityFeed_group\n        awardedTrophyCount\n        topPerformer {\n          user {\n            id\n            firstName\n            middleName\n            lastName\n          }\n          awardCount\n        }\n        id\n      }\n    }\n    errors {\n      __typename\n    }\n  }\n}\n\nfragment GroupActivityFeed_group on Group {\n  recentActivityCount\n  recentActivity(first: 10) {\n    __typename\n    id\n    occurredAt\n    ... on TrophyAwardedActivity {\n      trophy {\n        id\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          firstName\n          middleName\n          lastName\n        }\n        awardedBy {\n          id\n          firstName\n          middleName\n          lastName\n        }\n      }\n    }\n    ... on MemberJoinedActivity {\n      member {\n        id\n        firstName\n        middleName\n        lastName\n      }\n    }\n  }\n}\n"
+    "text": "mutation TrophyRequestFormMutation(\n  $input: CreateTrophyRequestInput!\n  $groupId: ID!\n) {\n  createTrophyRequest(input: $input) {\n    trophy {\n      id\n      isAwarded\n      description\n      game {\n        id\n        symbol\n        name\n      }\n      receiver {\n        id\n        firstName\n        lastName\n      }\n    }\n    query {\n      groupById(id: $groupId) {\n        ...GroupActivityFeed_group\n        awardedTrophyCount\n        topPerformer {\n          user {\n            id\n            firstName\n            middleName\n            lastName\n          }\n          awardCount\n        }\n        id\n      }\n    }\n    errors {\n      __typename\n    }\n  }\n}\n\nfragment GroupActivityFeed_group on Group {\n  recentActivityCount\n  recentActivity(first: 5) {\n    __typename\n    id\n    occurredAt\n    ... on TrophyAwardedActivity {\n      trophy {\n        id\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          firstName\n          middleName\n          lastName\n        }\n        awardedBy {\n          id\n          firstName\n          middleName\n          lastName\n        }\n      }\n    }\n    ... on MemberJoinedActivity {\n      member {\n        id\n        firstName\n        middleName\n        lastName\n      }\n    }\n  }\n}\n"
   }
 };
 })();

@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 const GroupActivityFeedFragment = graphql`
     fragment GroupActivityFeed_group on Group {
         recentActivityCount
-        recentActivity(first: 10) {
+        recentActivity(first: 5) {
             __typename
             id
             occurredAt

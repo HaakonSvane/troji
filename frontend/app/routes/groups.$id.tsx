@@ -134,6 +134,7 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                 group={group}
                 memberCount={group.members?.totalCount ?? 0}
                 awardCount={group.awardedTrophyCount}
+                gamesTotalCount={group.games?.totalCount ?? 0}
                 isAdmin={isAdmin}
                 currentUserId={myId}
                 onInvite={() => setInviteOpen(true)}

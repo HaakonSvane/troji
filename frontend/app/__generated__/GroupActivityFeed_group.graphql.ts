@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<80defc558340b8b96049ad9eb3c08255>>
+ * @generated SignedSource<<eb4469cd8150237d610ef204c15cab77>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -102,7 +102,7 @@ return {
         {
           "kind": "Literal",
           "name": "first",
-          "value": 10
+          "value": 5
         }
       ],
       "concreteType": null,
@@ -215,7 +215,7 @@ return {
           "abstractKey": null
         }
       ],
-      "storageKey": "recentActivity(first:10)"
+      "storageKey": "recentActivity(first:5)"
     }
   ],
   "type": "Group",
@@ -223,6 +223,6 @@ return {
 };
 })();
 
-(node as any).hash = "62ce90356f272d48de4293d1f2fc37ea";
+(node as any).hash = "784a6bc7fb490627b8ec1663280ac1d0";
 
 export default node;
