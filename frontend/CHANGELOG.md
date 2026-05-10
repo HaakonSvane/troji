@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.2](https://github.com/HaakonSvane/troji/compare/frontend-v0.6.1...frontend-v0.6.2) (2026-05-10)
+
+
+### Bug Fixes
+
+* **invite:** remove any-casts on Relay mutation callbacks in GroupInvitePanel ([eb63fd7](https://github.com/HaakonSvane/troji/commit/eb63fd794f290181d90812f3e5460611a1df67ad))
+
 ## [0.6.1](https://github.com/HaakonSvane/troji/compare/frontend-v0.6.0...frontend-v0.6.1) (2026-05-10)
 
 
