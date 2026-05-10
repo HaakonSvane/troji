@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.6.0](https://github.com/HaakonSvane/troji/compare/frontend-v0.5.0...frontend-v0.6.0) (2026-05-10)
+
+
+### Features
+
+* **frontend:** add missing page meta across all routes ([#38](https://github.com/HaakonSvane/troji/issues/38)) ([d396eb5](https://github.com/HaakonSvane/troji/commit/d396eb5e8cef04bdbf52df16c32f284cacfdfff2))
+* **group:** redesign detail page around standings and activity ([#43](https://github.com/HaakonSvane/troji/issues/43)) ([6e5ecff](https://github.com/HaakonSvane/troji/commit/6e5ecff39e4adc364c33d8204819e8ee1bf9424d))
+
+
+### Bug Fixes
+
+* **frontend:** replace scroll-container layout with sticky header ([#41](https://github.com/HaakonSvane/troji/issues/41)) ([fdcc72f](https://github.com/HaakonSvane/troji/commit/fdcc72fe0bdc0563139f605621c8c4cd5731a87e))
+* **frontend:** tighten header and group page layout on mobile ([#37](https://github.com/HaakonSvane/troji/issues/37)) ([dfe5443](https://github.com/HaakonSvane/troji/commit/dfe5443b742b6479894b79173d849f6f14da7727))
+* prevent self-handouts in open groups ([#42](https://github.com/HaakonSvane/troji/issues/42)) ([abfdc0c](https://github.com/HaakonSvane/troji/commit/abfdc0ce8ef0e8f1e41f73dec4aa464e60465e23))
+
 ## [0.5.0](https://github.com/HaakonSvane/troji/compare/frontend-v0.4.1...frontend-v0.5.0) (2026-05-09)
 
 
