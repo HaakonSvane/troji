@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 0.4.4, released 2026-05-10
+
+
+### Bug fixes
+
+* **seeder:** add missing hans user to seed data ([efac6a8](https://github.com/HaakonSvane/troji/commit/efac6a8c2937b5389da47b3996ed59fce62d16e1))
+
 ## Version 0.4.3, released 2026-05-10
 
 

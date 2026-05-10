@@ -1,4 +1,4 @@
 {
-    "frontend": "0.7.0",
-    "backend/api": "0.4.3"
+    "frontend": "0.8.0",
+    "backend/api": "0.4.4"
 }
