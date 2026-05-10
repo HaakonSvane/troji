@@ -15,6 +15,7 @@ public static class TrophyMutations
     [Error<NoUserException>]
     [Error<NoGameException>]
     [Error<NoMemberException>]
+    [Error<SelfHandoutException>]
     public static async Task<Trophy> CreateTrophyRequest(
         [TokenUser] TokenUser? tokenUser,
         [ID] string userId,
@@ -48,6 +49,11 @@ public static class TrophyMutations
         {
             string serializedGroupId2 = serializer.Format(nameof(Group), game.ParentGroupId);
             throw new NoMemberException(tokenUser.Id, serializedGroupId2);
+        }
+
+        if (tokenUser.Id == userId)
+        {
+            throw new SelfHandoutException();
         }
 
         var trophy = new Trophy()
