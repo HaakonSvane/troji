@@ -10,7 +10,6 @@ public static class Seeder
         // Idempotency guard — if Alice is already in the DB this seed has run before.
         if (await db.Users.AnyAsync(u => u.Id == "user_seed_alice001"))
         {
-            Console.WriteLine("Seed data already present — skipping.");
             return;
         }
 
@@ -165,7 +164,5 @@ public static class Seeder
         );
         await db.SaveChangesAsync();
 
-        Console.WriteLine($"Seed complete. Created 4 users, 3 groups, 5 games, 4 trophies (1 pending).");
-        Console.WriteLine($"Join 'Board Game Café' with invite code: CAF-SEED");
     }
 }
