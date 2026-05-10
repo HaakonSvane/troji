@@ -53,7 +53,7 @@ export function GroupMembersCard({
                 ))}
             </div>
 
-            {totalCount > members.length ? (
+            {totalCount > 3 ? (
                 <footer className="mt-auto flex items-center pt-1">
                     <Button
                         variant="ghost"

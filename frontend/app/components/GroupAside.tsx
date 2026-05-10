@@ -10,6 +10,8 @@ type GameNode = GroupGamesTableRow_game$key & {
     symbol: string;
 };
 
+const PREVIEW_COUNT = 3;
+
 interface GroupAsideProps {
     groupId: string;
     isAdmin: boolean;
@@ -27,6 +29,8 @@ export function GroupAside({
     gamesTotalCount,
     onNewGame,
 }: GroupAsideProps) {
+    const preview = games.slice(0, PREVIEW_COUNT);
+
     return (
         <aside className="flex flex-col gap-4">
             <div className="flex items-center justify-between gap-3">
@@ -45,7 +49,7 @@ export function GroupAside({
                     </Button>
                 ) : null}
             </div>
-            {games.length === 0 ? (
+            {preview.length === 0 ? (
                 <div className="surface-card flex flex-col items-start gap-2 p-5">
                     <p className="font-heading text-base tracking-[0.015em]">
                         No games yet.
@@ -58,7 +62,7 @@ export function GroupAside({
                 </div>
             ) : (
                 <div className="flex flex-col gap-3">
-                    {games.map((game) => (
+                    {preview.map((game) => (
                         <GroupGamesTableRow
                             key={game.id}
                             groupId={groupId}
@@ -68,7 +72,7 @@ export function GroupAside({
                     ))}
                 </div>
             )}
-            {gamesTotalCount > games.length ? (
+            {gamesTotalCount > PREVIEW_COUNT ? (
                 <footer className="flex items-center">
                     <Button
                         variant="ghost"
