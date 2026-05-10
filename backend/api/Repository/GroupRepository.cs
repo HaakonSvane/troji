@@ -138,6 +138,15 @@ public sealed class GroupRepository : IGroupRepository
         return group;
     }
 
+    public async Task<int> GetRecentActivityCountAsync(int groupId, CancellationToken cancellationToken)
+    {
+        var awards = await _context.Trophies
+            .CountAsync(t => t.Game.ParentGroupId == groupId && t.AwardedDate != null, cancellationToken);
+        var joins = await _context.UserGroups
+            .CountAsync(ug => ug.GroupId == groupId, cancellationToken);
+        return awards + joins;
+    }
+
     public async Task<IReadOnlyList<IGroupActivity>> GetRecentActivityAsync(
         int groupId,
         int take,

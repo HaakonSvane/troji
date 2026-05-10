@@ -70,10 +70,20 @@ public sealed class UserRepository : IUserRepository
     public async Task<ILookup<int, User>> GetUsersByGroupIdsAsync(IReadOnlyList<int> ids, CancellationToken cancellationToken)
     {
         var userGroups = await _context.UserGroups
-            .Where(userGroup => ids.Contains(userGroup.GroupId))
-            .Include(userGroup => userGroup.User)
+            .Where(ug => ids.Contains(ug.GroupId))
+            .Include(ug => ug.User)
+            .Select(ug => new {
+                UserGroup = ug,
+                LastActivity = _context.Trophies
+                    .Where(t => t.ReceiverId == ug.UserId
+                             && t.Game.ParentGroupId == ug.GroupId
+                             && t.AwardedDate != null)
+                    .Max(t => (DateTimeOffset?)t.AwardedDate)
+            })
+            .OrderByDescending(x => x.LastActivity)
+            .ThenByDescending(x => x.UserGroup.JoinedAt)
             .ToListAsync(cancellationToken);
-        return userGroups.ToLookup(userGroup => userGroup.GroupId, userGroup => userGroup.User);
+        return userGroups.ToLookup(x => x.UserGroup.GroupId, x => x.UserGroup.User);
     }
 
     public ILookup<int, User> GetUsersByGameIds(IReadOnlyList<int> ids)

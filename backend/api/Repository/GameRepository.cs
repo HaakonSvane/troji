@@ -19,6 +19,15 @@ public class GameRepository : IGameRepository
     {
         var games = await _context.Games
             .Where(game => groupIds.Contains(game.ParentGroupId))
+            .Select(game => new {
+                Game = game,
+                LastActivity = _context.Trophies
+                    .Where(t => t.GameId == game.Id && t.AwardedDate != null)
+                    .Max(t => (DateTimeOffset?)t.AwardedDate)
+            })
+            .OrderByDescending(x => x.LastActivity)
+            .ThenByDescending(x => x.Game.CreatedDate)
+            .Select(x => x.Game)
             .ToListAsync(cancellationToken);
         return games.ToLookup(game => game.ParentGroupId, game => game);
     }

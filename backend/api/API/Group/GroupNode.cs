@@ -59,6 +59,14 @@ public static class GroupNode
         return await repository.GetRecentActivityAsync(group.Id, take, cancellationToken);
     }
 
+    public static async Task<int> GetRecentActivityCountAsync(
+        [Parent] Database.Models.Group group,
+        IGroupRepository repository,
+        CancellationToken cancellationToken)
+    {
+        return await repository.GetRecentActivityCountAsync(group.Id, cancellationToken);
+    }
+
     public static async Task<GroupTopPerformer?> GetTopPerformerAsync(
         [Parent] Database.Models.Group group,
         ITopPlayersByGroupIdsDataLoader dataLoader,
