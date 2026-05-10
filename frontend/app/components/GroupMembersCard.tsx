@@ -33,8 +33,7 @@ export function GroupMembersCard({
         <>
             <section
                 className={
-                    "surface-card flex min-h-[14rem] flex-col gap-3 p-5 sm:p-6 " +
-                    (className ?? "")
+                    "surface-card flex min-h-56 flex-col gap-3 p-5 sm:p-6 " + (className ?? "")
                 }
             >
                 <header className="flex items-center justify-between gap-3">
