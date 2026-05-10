@@ -24,8 +24,10 @@ export function AwardTrophyButton({
 }: AwardTrophyButtonProps) {
     const [open, setOpen] = useState(false);
 
+    const eligibleMembers = groupMembers.filter((m) => m.id !== currentUserId);
+
     const disabled =
-        groupMembers.length < 2
+        eligibleMembers.length === 0
             ? { isDisabled: true, reason: "You need at least one other member to award a trophy." }
             : !preselectedGameId && availableGames.length === 0
               ? { isDisabled: true, reason: "Create a game first before awarding trophies." }
@@ -47,7 +49,7 @@ export function AwardTrophyButton({
                 availableGames={availableGames}
                 open={open}
                 onOpenChange={setOpen}
-                groupMembers={groupMembers}
+                groupMembers={eligibleMembers}
                 currentUserId={currentUserId}
             />
         </>
