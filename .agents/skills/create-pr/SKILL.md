@@ -42,7 +42,7 @@ Follow these steps to create a Pull Request:
 4.  **Read Template**: Read the content of the identified template file.
 
 5.  **Draft Description**: Create a PR description that strictly follows the
-    template's structure.
+    template's structure + optional footers.
     - **Related Issues**: Link any issues fixed or related to this PR (e.g.,
       "Fixes #123").
     - **Headings**: Keep all headings from the template.
@@ -52,6 +52,12 @@ Follow these steps to create a Pull Request:
       (but prefer keeping it unchecked for transparency).
     - **Content**: Fill in the sections with clear, concise summaries of your
       changes.
+    - **Footers**: Optional. Only use this when multiple changes should be
+      included in the PR. This is important for larger features that span multiple areas. For example:
+      ```
+      fix(utils): unicode fix
+      feat(ui): new button component
+      ```
 
 6.  **Push Branch**: Push the current branch to the remote repository.
     **CRITICAL SAFETY RAIL:** Double-check your branch name before pushing.
