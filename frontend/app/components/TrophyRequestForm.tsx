@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { graphql, useMutation } from "react-relay";
+import { graphql, useMutation, useRelayEnvironment } from "react-relay";
 import { ConnectionHandler } from "relay-runtime";
 import type { TrophyRequestFormMutation } from "@/__generated__/TrophyRequestFormMutation.graphql";
 import { Button } from "@/components/ui/button";
@@ -87,6 +87,7 @@ export function TrophyRequestForm({
     currentUserId,
     onRequested,
 }: TrophyRequestFormProps) {
+    const environment = useRelayEnvironment();
     const [commitRequest, isSubmitting] = useMutation<TrophyRequestFormMutation>(
         CreateTrophyRequestMutation
     );
@@ -129,11 +130,12 @@ export function TrophyRequestForm({
             effectiveGameId,
             "GameTrophies_trophies"
         );
+        const connectionExists = environment.getStore().getSource().has(gameConnectionId);
 
         commitRequest({
             variables: {
                 input: validation.data,
-                connections: [gameConnectionId],
+                connections: connectionExists ? [gameConnectionId] : [],
                 groupId,
             },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
