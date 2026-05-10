@@ -79,7 +79,14 @@ public static class TrophyMutations
         };
 
         trophy.AwardedDate = DateTimeOffset.UtcNow;
-        return await gameRepository.CreateTrophyAsync(trophy, request, approvals, cancellationToken);
+        var savedTrophy = await gameRepository.CreateTrophyAsync(trophy, request, approvals, cancellationToken);
+
+        // Populate navigation properties so HotChocolate can resolve trophy.game and trophy.receiver
+        // without additional DB round-trips. These objects are already in memory from earlier in this method.
+        savedTrophy.Game = game;
+        savedTrophy.Receiver = members.First(m => m.Id == userId);
+
+        return savedTrophy;
     }
 
     [Error<NoUserException>]

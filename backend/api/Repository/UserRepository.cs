@@ -83,4 +83,14 @@ public sealed class UserRepository : IUserRepository
             .Include(trophy => trophy.Receiver)
             .ToLookup(trophy => trophy.GameId, trophy => trophy.Receiver);
     }
+
+    public async Task<ILookup<int, User>> GetTopPlayersByGroupIdsAsync(IReadOnlyList<int> ids, CancellationToken cancellationToken)
+    {
+        var trophies = await _context.Trophies
+            .Include(t => t.Receiver)
+            .Include(t => t.Game)
+            .Where(t => ids.Contains(t.Game.ParentGroupId) && t.AwardedDate != null)
+            .ToListAsync(cancellationToken);
+        return trophies.ToLookup(t => t.Game.ParentGroupId, t => t.Receiver);
+    }
 }
