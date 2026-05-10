@@ -9,9 +9,7 @@ import {
     LIGHT_DIM,
     LIGHT_PEAK,
     MEDAL_GLOW,
-    MEDAL_GRADIENT,
     MEDAL_SIZE,
-    SPECULAR_STOP,
     type MedalSize,
     type MedalTone,
 } from "./MedalBadge.config";
@@ -32,7 +30,7 @@ const toneCarvedEmojiClass: Record<MedalTone, string> = {
 
 /** u=0 at/above viewport center (peak lighting), u=1 at viewport bottom (dim). */
 function scrollProgress(centerY: number): number {
-    return Math.max(0, (centerY / window.innerHeight - 0.5) * 2);
+    return Math.min(1, Math.max(0, (centerY / window.innerHeight - 0.5) * 2));
 }
 
 /** Focal point of the gradient for a given scroll progress. */
@@ -76,12 +74,8 @@ export function MedalBadge({
     const { frame, rim, stamp } = MEDAL_SIZE[size];
     const frameRef = useRef<HTMLSpanElement>(null);
     const glareRef = useRef<HTMLSpanElement>(null);
-
-    // Stable random glow multiplier per instance (0.6–1.4×)
-    const glowFactor = useRef(0.6 + Math.random() * 0.8).current;
-    const { blur, spread, baseOpacity, l, c, h } = MEDAL_GLOW[tone];
-    const glowAlpha = Math.min(1, baseOpacity * glowFactor).toFixed(2);
-    const glowShadow = `0 0 ${Math.round(blur * glowFactor)}px ${Math.round(spread * glowFactor)}px oklch(${l} ${c} ${h} / ${glowAlpha})`;
+    // Initialized lazily in useEffect so it's client-only — avoids SSR/client mismatch.
+    const glowFactorRef = useRef<number | null>(null);
 
     const baseShadow =
         depth === "raised"  ? "inset 0 1px 1px rgba(255,255,255,0.45), 0 12px 22px -16px rgba(0,0,0,0.9)"
@@ -93,8 +87,18 @@ export function MedalBadge({
         const glare = glareRef.current;
         if (!el || !glare) return;
 
-        const { spec, base, shadow } = MEDAL_GRADIENT[tone];
+        // Stable random glow per instance, computed once after mount (client-only).
+        if (glowFactorRef.current === null) {
+            glowFactorRef.current = 0.6 + Math.random() * 0.8;
+        }
+        const glowFactor = glowFactorRef.current;
+        const { blur, spread, baseOpacity, l, c, h } = MEDAL_GLOW[tone];
+        const glowAlpha = Math.min(1, baseOpacity * glowFactor).toFixed(2);
+        const glowShadow = `0 0 ${Math.round(blur * glowFactor)}px ${Math.round(spread * glowFactor)}px oklch(${l} ${c} ${h} / ${glowAlpha})`;
+        el.style.boxShadow = `${baseShadow}, ${glowShadow}`;
+
         const { outerFade, innerFade } = GLARE_STOPS;
+        let rafId: number | null = null;
 
         function update() {
             const rect = el!.getBoundingClientRect();
@@ -102,7 +106,6 @@ export function MedalBadge({
             const { x, y } = lightPosition(u);
             const { angle, opacity } = glareParams(u);
 
-            el!.style.backgroundImage = `radial-gradient(circle at ${x.toFixed(1)}% ${y.toFixed(1)}%, ${spec} 0%, ${base} ${SPECULAR_STOP}%, ${shadow} 100%)`;
             el!.style.setProperty("--medal-shine-x", `${x.toFixed(1)}%`);
             el!.style.setProperty("--medal-shine-y", `${y.toFixed(1)}%`);
 
@@ -118,16 +121,27 @@ export function MedalBadge({
             )`;
         }
 
-        window.addEventListener("scroll", update, { passive: true });
+        function onScroll() {
+            if (rafId !== null) return;
+            rafId = requestAnimationFrame(() => {
+                update();
+                rafId = null;
+            });
+        }
+
+        window.addEventListener("scroll", onScroll, { passive: true });
         update();
-        return () => window.removeEventListener("scroll", update);
-    }, [tone]);
+        return () => {
+            window.removeEventListener("scroll", onScroll);
+            if (rafId !== null) cancelAnimationFrame(rafId);
+        };
+    }, [tone, baseShadow]);
 
     return (
         <span
             ref={frameRef}
             title={title}
-            style={{ boxShadow: `${baseShadow}, ${glowShadow}` }}
+            style={{ boxShadow: baseShadow }}
             className={cn(
                 "medal-badge",
                 "relative inline-flex shrink-0 items-center justify-center rounded-full border border-white/15 text-center",
