@@ -97,6 +97,7 @@ export function GroupHero({
                 <div className="flex flex-wrap items-center gap-3">
                     <AwardTrophyButton
                         preselectedGameId={null}
+                        groupId={data.id}
                         availableGames={availableGames}
                         groupMembers={groupMembers}
                         currentUserId={currentUserId}

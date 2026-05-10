@@ -49,14 +49,19 @@ const GroupPageQuery = graphql`
                 inviteCode
                 expirationDate
             }
-            trophies {
-                id
-                isAwarded
-                receiver {
-                    id
-                    firstName
-                    middleName
-                    lastName
+            trophies(first: 200)
+                @connection(key: "GroupTrophies_trophies") {
+                edges {
+                    node {
+                        id
+                        isAwarded
+                        receiver {
+                            id
+                            firstName
+                            middleName
+                            lastName
+                        }
+                    }
                 }
             }
         }
@@ -144,7 +149,7 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
         }),
     ];
 
-    const awarded = (group.trophies ?? []).filter((t) => t.isAwarded);
+    const awarded = (group.trophies?.edges?.map((e) => e?.node).filter(Boolean) ?? []).filter((t) => t.isAwarded);
     const counts = new Map<string, { user: ReceiverShape; count: number }>();
     for (const trophy of awarded) {
         const receiver = trophy.receiver;

@@ -30,19 +30,24 @@ const GroupGameDetailQuery = graphql`
             name
             symbol
             description
-            trophies {
-                id
-                isAwarded
-                description
-                game {
-                    id
-                    symbol
-                    name
-                }
-                receiver {
-                    id
-                    firstName
-                    lastName
+            trophies(first: 200)
+                @connection(key: "GameTrophies_trophies") {
+                edges {
+                    node {
+                        id
+                        isAwarded
+                        description
+                        game {
+                            id
+                            symbol
+                            name
+                        }
+                        receiver {
+                            id
+                            firstName
+                            lastName
+                        }
+                    }
                 }
             }
         }
@@ -143,7 +148,7 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
     }
 
     const members = group.members?.edges?.map((edge) => edge?.node).filter(Boolean) ?? [];
-    const trophies = game.trophies ?? [];
+    const trophies = game.trophies?.edges?.map((e) => e?.node).filter(Boolean) ?? [];
     const awardedCount = trophies.filter((t) => t.isAwarded).length;
     const pendingCount = trophies.filter((t) => !t.isAwarded).length;
 
@@ -184,6 +189,7 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
                     </div>
                     <AwardTrophyButton
                         preselectedGameId={game.id}
+                        groupId={group.id}
                         availableGames={[
                             { id: game.id, name: game.name, symbol: game.symbol },
                         ]}

@@ -7,6 +7,7 @@ import { TrophyRequestForm } from "@/components/TrophyRequestForm";
 interface AwardTrophyButtonProps extends VariantProps<typeof buttonVariants> {
     /** Pre-selected game. Pass null to show a game-picker dropdown inside the form. */
     preselectedGameId?: string | null;
+    groupId: string;
     availableGames: Array<{ id: string; name: string; symbol: string }>;
     groupMembers: Array<{ id: string; firstName?: string | null; lastName?: string | null }>;
     currentUserId?: string | null;
@@ -15,6 +16,7 @@ interface AwardTrophyButtonProps extends VariantProps<typeof buttonVariants> {
 
 export function AwardTrophyButton({
     preselectedGameId = null,
+    groupId,
     availableGames,
     groupMembers,
     currentUserId,
@@ -46,6 +48,7 @@ export function AwardTrophyButton({
             </Button>
             <TrophyRequestForm
                 gameId={preselectedGameId}
+                groupId={groupId}
                 availableGames={availableGames}
                 open={open}
                 onOpenChange={setOpen}
