@@ -41,6 +41,16 @@ const CreateTrophyRequestMutation = graphql`
             query {
                 groupById(id: $groupId) {
                     ...GroupActivityFeed_group
+                    awardedTrophyCount
+                    topPerformer {
+                        user {
+                            id
+                            firstName
+                            middleName
+                            lastName
+                        }
+                        awardCount
+                    }
                 }
             }
             errors {
@@ -116,12 +126,11 @@ export function TrophyRequestForm({
         }
 
         const gameConnectionId = ConnectionHandler.getConnectionID(effectiveGameId, "GameTrophies_trophies");
-        const groupConnectionId = ConnectionHandler.getConnectionID(groupId, "GroupTrophies_trophies");
 
         commitRequest({
             variables: {
                 input: validation.data,
-                connections: [gameConnectionId, groupConnectionId],
+                connections: [gameConnectionId],
                 groupId,
             },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

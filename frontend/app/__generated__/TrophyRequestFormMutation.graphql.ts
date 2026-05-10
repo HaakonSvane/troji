@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d0d5ad89c4046e50e55f0f53cb871fb6>>
+ * @generated SignedSource<<67740b2fa34a6a5c4c734d57051d9d1e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,6 +27,16 @@ export type TrophyRequestFormMutation$data = {
     }> | null | undefined;
     readonly query: {
       readonly groupById: {
+        readonly awardedTrophyCount: number;
+        readonly topPerformer: {
+          readonly awardCount: number;
+          readonly user: {
+            readonly firstName: string;
+            readonly id: string;
+            readonly lastName: string;
+            readonly middleName: string | null | undefined;
+          };
+        } | null | undefined;
         readonly " $fragmentSpreads": FragmentRefs<"GroupActivityFeed_group">;
       } | null | undefined;
     };
@@ -175,22 +185,10 @@ v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "__typename",
+  "name": "awardedTrophyCount",
   "storageKey": null
 },
-v12 = {
-  "alias": null,
-  "args": null,
-  "concreteType": null,
-  "kind": "LinkedField",
-  "name": "errors",
-  "plural": true,
-  "selections": [
-    (v11/*: any*/)
-  ],
-  "storageKey": null
-},
-v13 = [
+v12 = [
   (v4/*: any*/),
   (v7/*: any*/),
   {
@@ -201,7 +199,54 @@ v13 = [
     "storageKey": null
   },
   (v8/*: any*/)
-];
+],
+v13 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "GroupTopPerformer",
+  "kind": "LinkedField",
+  "name": "topPerformer",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "User",
+      "kind": "LinkedField",
+      "name": "user",
+      "plural": false,
+      "selections": (v12/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "awardCount",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v14 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+},
+v15 = {
+  "alias": null,
+  "args": null,
+  "concreteType": null,
+  "kind": "LinkedField",
+  "name": "errors",
+  "plural": true,
+  "selections": [
+    (v14/*: any*/)
+  ],
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": [
@@ -242,14 +287,16 @@ return {
                     "args": null,
                     "kind": "FragmentSpread",
                     "name": "GroupActivityFeed_group"
-                  }
+                  },
+                  (v11/*: any*/),
+                  (v13/*: any*/)
                 ],
                 "storageKey": null
               }
             ],
             "storageKey": null
           },
-          (v12/*: any*/)
+          (v15/*: any*/)
         ],
         "storageKey": null
       }
@@ -327,7 +374,7 @@ return {
                     "name": "recentActivity",
                     "plural": true,
                     "selections": [
-                      (v11/*: any*/),
+                      (v14/*: any*/),
                       (v4/*: any*/),
                       {
                         "alias": null,
@@ -357,7 +404,7 @@ return {
                                 "kind": "LinkedField",
                                 "name": "receiver",
                                 "plural": false,
-                                "selections": (v13/*: any*/),
+                                "selections": (v12/*: any*/),
                                 "storageKey": null
                               },
                               {
@@ -367,7 +414,7 @@ return {
                                 "kind": "LinkedField",
                                 "name": "awardedBy",
                                 "plural": false,
-                                "selections": (v13/*: any*/),
+                                "selections": (v12/*: any*/),
                                 "storageKey": null
                               }
                             ],
@@ -387,7 +434,7 @@ return {
                             "kind": "LinkedField",
                             "name": "member",
                             "plural": false,
-                            "selections": (v13/*: any*/),
+                            "selections": (v12/*: any*/),
                             "storageKey": null
                           }
                         ],
@@ -397,6 +444,8 @@ return {
                     ],
                     "storageKey": "recentActivity(first:20)"
                   },
+                  (v11/*: any*/),
+                  (v13/*: any*/),
                   (v4/*: any*/)
                 ],
                 "storageKey": null
@@ -404,23 +453,23 @@ return {
             ],
             "storageKey": null
           },
-          (v12/*: any*/)
+          (v15/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "db6f2a7864f3ccf461de9aae88b7b514",
+    "cacheID": "c1f84645185407b2d349db7580d53972",
     "id": null,
     "metadata": {},
     "name": "TrophyRequestFormMutation",
     "operationKind": "mutation",
-    "text": "mutation TrophyRequestFormMutation(\n  $input: CreateTrophyRequestInput!\n  $groupId: ID!\n) {\n  createTrophyRequest(input: $input) {\n    trophy {\n      id\n      isAwarded\n      description\n      game {\n        id\n        symbol\n        name\n      }\n      receiver {\n        id\n        firstName\n        lastName\n      }\n    }\n    query {\n      groupById(id: $groupId) {\n        ...GroupActivityFeed_group\n        id\n      }\n    }\n    errors {\n      __typename\n    }\n  }\n}\n\nfragment GroupActivityFeed_group on Group {\n  recentActivity(first: 20) {\n    __typename\n    id\n    occurredAt\n    ... on TrophyAwardedActivity {\n      trophy {\n        id\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          firstName\n          middleName\n          lastName\n        }\n        awardedBy {\n          id\n          firstName\n          middleName\n          lastName\n        }\n      }\n    }\n    ... on MemberJoinedActivity {\n      member {\n        id\n        firstName\n        middleName\n        lastName\n      }\n    }\n  }\n}\n"
+    "text": "mutation TrophyRequestFormMutation(\n  $input: CreateTrophyRequestInput!\n  $groupId: ID!\n) {\n  createTrophyRequest(input: $input) {\n    trophy {\n      id\n      isAwarded\n      description\n      game {\n        id\n        symbol\n        name\n      }\n      receiver {\n        id\n        firstName\n        lastName\n      }\n    }\n    query {\n      groupById(id: $groupId) {\n        ...GroupActivityFeed_group\n        awardedTrophyCount\n        topPerformer {\n          user {\n            id\n            firstName\n            middleName\n            lastName\n          }\n          awardCount\n        }\n        id\n      }\n    }\n    errors {\n      __typename\n    }\n  }\n}\n\nfragment GroupActivityFeed_group on Group {\n  recentActivity(first: 20) {\n    __typename\n    id\n    occurredAt\n    ... on TrophyAwardedActivity {\n      trophy {\n        id\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          firstName\n          middleName\n          lastName\n        }\n        awardedBy {\n          id\n          firstName\n          middleName\n          lastName\n        }\n      }\n    }\n    ... on MemberJoinedActivity {\n      member {\n        id\n        firstName\n        middleName\n        lastName\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8572ac05fee84de01c0b9477254d4041";
+(node as any).hash = "900971cdd8ab8bf0abb33a57e7c09da2";
 
 export default node;

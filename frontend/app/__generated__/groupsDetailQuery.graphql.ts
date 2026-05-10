@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a3d75afdb233669514b8fb58ea6c5866>>
+ * @generated SignedSource<<00040c4c24e0a38e093f978dcbf78a90>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,6 +18,7 @@ export type groupsDetailQuery$data = {
     readonly admin: {
       readonly id: string;
     } | null | undefined;
+    readonly awardedTrophyCount: number;
     readonly games: {
       readonly edges: ReadonlyArray<{
         readonly node: {
@@ -44,21 +45,13 @@ export type groupsDetailQuery$data = {
         };
       }> | null | undefined;
     } | null | undefined;
-    readonly trophies: {
-      readonly edges: ReadonlyArray<{
-        readonly node: {
-          readonly id: string;
-          readonly isAwarded: boolean;
-          readonly receiver: {
-            readonly firstName: string;
-            readonly id: string;
-            readonly lastName: string;
-            readonly middleName: string | null | undefined;
-          };
-        };
-      }> | null | undefined;
-      readonly pageInfo: {
-        readonly hasNextPage: boolean;
+    readonly topPerformer: {
+      readonly awardCount: number;
+      readonly user: {
+        readonly firstName: string;
+        readonly id: string;
+        readonly lastName: string;
+        readonly middleName: string | null | undefined;
       };
     } | null | undefined;
     readonly " $fragmentSpreads": FragmentRefs<"GroupActivityFeed_group" | "GroupHero_group">;
@@ -135,60 +128,58 @@ v8 = {
 v9 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "endCursor",
-  "storageKey": null
-},
-v10 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "hasNextPage",
-  "storageKey": null
-},
-v11 = {
-  "alias": null,
-  "args": null,
   "concreteType": "PageInfo",
   "kind": "LinkedField",
   "name": "pageInfo",
   "plural": false,
   "selections": [
-    (v9/*: any*/),
-    (v10/*: any*/)
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "endCursor",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "hasNextPage",
+      "storageKey": null
+    }
   ],
   "storageKey": null
 },
-v12 = {
+v10 = {
   "kind": "Literal",
   "name": "first",
   "value": 50
 },
-v13 = [
-  (v12/*: any*/)
+v11 = [
+  (v10/*: any*/)
 ],
-v14 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "firstName",
   "storageKey": null
 },
-v15 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "middleName",
   "storageKey": null
 },
-v16 = {
+v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "lastName",
   "storageKey": null
 },
-v17 = {
+v15 = {
   "alias": null,
   "args": null,
   "concreteType": "Invite",
@@ -213,71 +204,48 @@ v17 = {
   ],
   "storageKey": null
 },
-v18 = [
-  (v2/*: any*/),
-  (v14/*: any*/),
-  (v15/*: any*/),
-  (v16/*: any*/)
-],
-v19 = {
+v16 = {
   "alias": null,
   "args": null,
-  "concreteType": "User",
-  "kind": "LinkedField",
-  "name": "receiver",
-  "plural": false,
-  "selections": (v18/*: any*/),
+  "kind": "ScalarField",
+  "name": "awardedTrophyCount",
   "storageKey": null
 },
-v20 = [
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "TrophiesEdge",
-    "kind": "LinkedField",
-    "name": "edges",
-    "plural": true,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Trophy",
-        "kind": "LinkedField",
-        "name": "node",
-        "plural": false,
-        "selections": [
-          (v2/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "isAwarded",
-            "storageKey": null
-          },
-          (v19/*: any*/),
-          (v7/*: any*/)
-        ],
-        "storageKey": null
-      },
-      (v8/*: any*/)
-    ],
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "PageInfo",
-    "kind": "LinkedField",
-    "name": "pageInfo",
-    "plural": false,
-    "selections": [
-      (v10/*: any*/),
-      (v9/*: any*/)
-    ],
-    "storageKey": null
-  }
+v17 = [
+  (v2/*: any*/),
+  (v12/*: any*/),
+  (v13/*: any*/),
+  (v14/*: any*/)
 ],
-v21 = {
+v18 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "GroupTopPerformer",
+  "kind": "LinkedField",
+  "name": "topPerformer",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "User",
+      "kind": "LinkedField",
+      "name": "user",
+      "plural": false,
+      "selections": (v17/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "awardCount",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v19 = {
   "alias": null,
   "args": null,
   "concreteType": "User",
@@ -287,18 +255,18 @@ v21 = {
   "selections": (v3/*: any*/),
   "storageKey": null
 },
-v22 = {
+v20 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "description",
   "storageKey": null
 },
-v23 = [
-  (v12/*: any*/),
+v21 = [
+  (v10/*: any*/),
   (v4/*: any*/)
 ],
-v24 = [
+v22 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -383,13 +351,13 @@ return {
                 ],
                 "storageKey": null
               },
-              (v11/*: any*/)
+              (v9/*: any*/)
             ],
             "storageKey": "__GroupDetail_games_connection(order:{\"createdDate\":\"DESC\"})"
           },
           {
             "alias": null,
-            "args": (v13/*: any*/),
+            "args": (v11/*: any*/),
             "concreteType": "MembersConnection",
             "kind": "LinkedField",
             "name": "members",
@@ -412,9 +380,9 @@ return {
                     "plural": false,
                     "selections": [
                       (v2/*: any*/),
+                      (v12/*: any*/),
+                      (v13/*: any*/),
                       (v14/*: any*/),
-                      (v15/*: any*/),
-                      (v16/*: any*/),
                       {
                         "args": null,
                         "kind": "FragmentSpread",
@@ -429,21 +397,13 @@ return {
             ],
             "storageKey": "members(first:50)"
           },
-          (v17/*: any*/),
-          {
-            "alias": "trophies",
-            "args": null,
-            "concreteType": "TrophiesConnection",
-            "kind": "LinkedField",
-            "name": "__GroupTrophies_trophies_connection",
-            "plural": false,
-            "selections": (v20/*: any*/),
-            "storageKey": null
-          }
+          (v15/*: any*/),
+          (v16/*: any*/),
+          (v18/*: any*/)
         ],
         "storageKey": null
       },
-      (v21/*: any*/)
+      (v19/*: any*/)
     ],
     "type": "Query",
     "abstractKey": null
@@ -472,13 +432,13 @@ return {
             "plural": false,
             "selections": [
               (v2/*: any*/),
-              (v14/*: any*/),
-              (v16/*: any*/)
+              (v12/*: any*/),
+              (v14/*: any*/)
             ],
             "storageKey": null
           },
           (v5/*: any*/),
-          (v22/*: any*/),
+          (v20/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -521,7 +481,7 @@ return {
                     "plural": false,
                     "selections": [
                       (v2/*: any*/),
-                      (v22/*: any*/),
+                      (v20/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -536,7 +496,16 @@ return {
                         ],
                         "storageKey": null
                       },
-                      (v19/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "User",
+                        "kind": "LinkedField",
+                        "name": "receiver",
+                        "plural": false,
+                        "selections": (v17/*: any*/),
+                        "storageKey": null
+                      },
                       {
                         "alias": null,
                         "args": null,
@@ -544,7 +513,7 @@ return {
                         "kind": "LinkedField",
                         "name": "awardedBy",
                         "plural": false,
-                        "selections": (v18/*: any*/),
+                        "selections": (v17/*: any*/),
                         "storageKey": null
                       }
                     ],
@@ -564,7 +533,7 @@ return {
                     "kind": "LinkedField",
                     "name": "member",
                     "plural": false,
-                    "selections": (v18/*: any*/),
+                    "selections": (v17/*: any*/),
                     "storageKey": null
                   }
                 ],
@@ -576,7 +545,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v23/*: any*/),
+            "args": (v21/*: any*/),
             "concreteType": "GamesConnection",
             "kind": "LinkedField",
             "name": "games",
@@ -601,10 +570,10 @@ return {
                       (v2/*: any*/),
                       (v5/*: any*/),
                       (v6/*: any*/),
-                      (v22/*: any*/),
+                      (v20/*: any*/),
                       {
                         "alias": null,
-                        "args": (v24/*: any*/),
+                        "args": (v22/*: any*/),
                         "concreteType": "TrophiesConnection",
                         "kind": "LinkedField",
                         "name": "trophies",
@@ -635,13 +604,13 @@ return {
                             ],
                             "storageKey": null
                           },
-                          (v11/*: any*/)
+                          (v9/*: any*/)
                         ],
                         "storageKey": "trophies(first:200)"
                       },
                       {
                         "alias": null,
-                        "args": (v24/*: any*/),
+                        "args": (v22/*: any*/),
                         "filters": null,
                         "handle": "connection",
                         "key": "GameTrophies_trophies",
@@ -656,13 +625,13 @@ return {
                 ],
                 "storageKey": null
               },
-              (v11/*: any*/)
+              (v9/*: any*/)
             ],
             "storageKey": "games(first:50,order:{\"createdDate\":\"DESC\"})"
           },
           {
             "alias": null,
-            "args": (v23/*: any*/),
+            "args": (v21/*: any*/),
             "filters": [
               "order"
             ],
@@ -673,7 +642,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v13/*: any*/),
+            "args": (v11/*: any*/),
             "concreteType": "MembersConnection",
             "kind": "LinkedField",
             "name": "members",
@@ -694,7 +663,7 @@ return {
                     "kind": "LinkedField",
                     "name": "node",
                     "plural": false,
-                    "selections": (v18/*: any*/),
+                    "selections": (v17/*: any*/),
                     "storageKey": null
                   }
                 ],
@@ -703,34 +672,17 @@ return {
             ],
             "storageKey": "members(first:50)"
           },
-          (v17/*: any*/),
-          {
-            "alias": null,
-            "args": (v24/*: any*/),
-            "concreteType": "TrophiesConnection",
-            "kind": "LinkedField",
-            "name": "trophies",
-            "plural": false,
-            "selections": (v20/*: any*/),
-            "storageKey": "trophies(first:200)"
-          },
-          {
-            "alias": null,
-            "args": (v24/*: any*/),
-            "filters": null,
-            "handle": "connection",
-            "key": "GroupTrophies_trophies",
-            "kind": "LinkedHandle",
-            "name": "trophies"
-          }
+          (v15/*: any*/),
+          (v16/*: any*/),
+          (v18/*: any*/)
         ],
         "storageKey": null
       },
-      (v21/*: any*/)
+      (v19/*: any*/)
     ]
   },
   "params": {
-    "cacheID": "20d35db6876779f6f0eee9d22be7475e",
+    "cacheID": "e4ab3c84e33b382fa899f56369956a5b",
     "id": null,
     "metadata": {
       "connection": [
@@ -742,25 +694,16 @@ return {
             "groupById",
             "games"
           ]
-        },
-        {
-          "count": null,
-          "cursor": null,
-          "direction": "forward",
-          "path": [
-            "groupById",
-            "trophies"
-          ]
         }
       ]
     },
     "name": "groupsDetailQuery",
     "operationKind": "query",
-    "text": "query groupsDetailQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    admin {\n      id\n    }\n    ...GroupHero_group\n    ...GroupActivityFeed_group\n    games(first: 50, order: {createdDate: DESC}) {\n      edges {\n        node {\n          id\n          name\n          symbol\n          ...GroupGamesTableRow_game\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    members(first: 50) {\n      edges {\n        node {\n          id\n          firstName\n          middleName\n          lastName\n          ...MemberRow_user\n        }\n      }\n    }\n    invite {\n      inviteCode\n      expirationDate\n    }\n    trophies(first: 200) {\n      edges {\n        node {\n          id\n          isAwarded\n          receiver {\n            id\n            firstName\n            middleName\n            lastName\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n\nfragment GroupActivityFeed_group on Group {\n  recentActivity(first: 20) {\n    __typename\n    id\n    occurredAt\n    ... on TrophyAwardedActivity {\n      trophy {\n        id\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          firstName\n          middleName\n          lastName\n        }\n        awardedBy {\n          id\n          firstName\n          middleName\n          lastName\n        }\n      }\n    }\n    ... on MemberJoinedActivity {\n      member {\n        id\n        firstName\n        middleName\n        lastName\n      }\n    }\n  }\n}\n\nfragment GroupGamesTableRow_game on Game {\n  id\n  name\n  symbol\n  description\n  trophies(first: 200) {\n    edges {\n      node {\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment GroupHero_group on Group {\n  id\n  name\n  description\n  createdDate\n  admin {\n    id\n    firstName\n    lastName\n  }\n}\n\nfragment MemberRow_user on User {\n  id\n  firstName\n  middleName\n  lastName\n}\n"
+    "text": "query groupsDetailQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    admin {\n      id\n    }\n    ...GroupHero_group\n    ...GroupActivityFeed_group\n    games(first: 50, order: {createdDate: DESC}) {\n      edges {\n        node {\n          id\n          name\n          symbol\n          ...GroupGamesTableRow_game\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    members(first: 50) {\n      edges {\n        node {\n          id\n          firstName\n          middleName\n          lastName\n          ...MemberRow_user\n        }\n      }\n    }\n    invite {\n      inviteCode\n      expirationDate\n    }\n    awardedTrophyCount\n    topPerformer {\n      user {\n        id\n        firstName\n        middleName\n        lastName\n      }\n      awardCount\n    }\n  }\n  me {\n    id\n  }\n}\n\nfragment GroupActivityFeed_group on Group {\n  recentActivity(first: 20) {\n    __typename\n    id\n    occurredAt\n    ... on TrophyAwardedActivity {\n      trophy {\n        id\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          firstName\n          middleName\n          lastName\n        }\n        awardedBy {\n          id\n          firstName\n          middleName\n          lastName\n        }\n      }\n    }\n    ... on MemberJoinedActivity {\n      member {\n        id\n        firstName\n        middleName\n        lastName\n      }\n    }\n  }\n}\n\nfragment GroupGamesTableRow_game on Game {\n  id\n  name\n  symbol\n  description\n  trophies(first: 200) {\n    edges {\n      node {\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment GroupHero_group on Group {\n  id\n  name\n  description\n  createdDate\n  admin {\n    id\n    firstName\n    lastName\n  }\n}\n\nfragment MemberRow_user on User {\n  id\n  firstName\n  middleName\n  lastName\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f4439f52357b70fa2bfdf14ca5283858";
+(node as any).hash = "52c1b9d097292c5466fe7360d5280c18";
 
 export default node;

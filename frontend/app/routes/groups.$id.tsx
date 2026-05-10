@@ -49,23 +49,15 @@ const GroupPageQuery = graphql`
                 inviteCode
                 expirationDate
             }
-            trophies(first: 200)
-                @connection(key: "GroupTrophies_trophies") {
-                edges {
-                    node {
-                        id
-                        isAwarded
-                        receiver {
-                            id
-                            firstName
-                            middleName
-                            lastName
-                        }
-                    }
+            awardedTrophyCount
+            topPerformer {
+                user {
+                    id
+                    firstName
+                    middleName
+                    lastName
                 }
-                pageInfo {
-                    hasNextPage
-                }
+                awardCount
             }
         }
         me {
@@ -96,13 +88,6 @@ export function meta() {
         { title: "Circle — Troji" },
         { name: "description", content: "Standings, recent activity, and rewards in this circle." },
     ];
-}
-
-interface ReceiverShape {
-    id: string;
-    firstName?: string | null;
-    middleName?: string | null;
-    lastName?: string | null;
 }
 
 export default function GroupDetail({ loaderData }: Route.ComponentProps) {
@@ -152,36 +137,12 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
         }),
     ];
 
-    const awarded = (group.trophies?.edges?.map((e) => e?.node).filter(Boolean) ?? []).filter((t) => t.isAwarded);
-    const trophiesTruncated = group.trophies?.pageInfo?.hasNextPage ?? false;
-    const counts = new Map<string, { user: ReceiverShape; count: number }>();
-    for (const trophy of awarded) {
-        const receiver = trophy.receiver;
-        if (!receiver) continue;
-        const existing = counts.get(receiver.id);
-        if (existing) {
-            existing.count++;
-        } else {
-            counts.set(receiver.id, {
-                user: {
-                    id: receiver.id,
-                    firstName: receiver.firstName,
-                    middleName: receiver.middleName,
-                    lastName: receiver.lastName,
-                },
-                count: 1,
-            });
-        }
-    }
-    const standings = [...counts.values()].sort((a, b) => b.count - a.count);
-    const topPerformer = standings[0] ?? null;
-
     return (
         <main className="container mx-auto flex flex-col gap-10 px-4 py-10 sm:py-14">
             <GroupHero
                 group={group}
                 memberCount={members.length}
-                awardCount={awarded.length}
+                awardCount={group.awardedTrophyCount}
                 isAdmin={isAdmin}
                 currentUserId={myId}
                 availableGames={trophyGameOptions}
@@ -191,8 +152,8 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
 
             <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
                 <GroupTopPerformer
-                    user={topPerformer?.user ?? null}
-                    count={topPerformer?.count ?? 0}
+                    user={group.topPerformer?.user ?? null}
+                    count={group.topPerformer?.awardCount ?? 0}
                     currentUserId={myId}
                 />
                 <GroupMembersCard
@@ -201,11 +162,6 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                     currentUserId={myId}
                 />
             </div>
-            {trophiesTruncated && (
-                <p className="text-xs text-muted-foreground">
-                    Standings and award counts reflect the first 200 trophies only.
-                </p>
-            )}
 
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_320px]">
                 <GroupActivityFeed group={group} currentUserId={myId} />
