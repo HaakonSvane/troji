@@ -1,6 +1,7 @@
-import { graphql, loadQuery, usePreloadedQuery } from "react-relay";
+import { graphql, loadQuery, usePreloadedQuery, usePaginationFragment } from "react-relay";
 import { useNavigate } from "react-router";
 import type { groupsGamesQuery } from "@/__generated__/groupsGamesQuery.graphql";
+import type { groupsGames_group$key } from "@/__generated__/groupsGames_group.graphql";
 import { getRelayEnvironment } from "@/relay/environment";
 import { GroupGamesTableRow } from "@/components/GroupGamesTableRow";
 import { Breadcrumb } from "@/components/Breadcrumb";
@@ -12,18 +13,29 @@ const GroupGamesPageQuery = graphql`
         groupById(id: $id) {
             id
             name
-            games(first: 50) {
-                totalCount
-                edges {
-                    node {
-                        id
-                        ...GroupGamesTableRow_game
-                    }
-                }
-            }
+            ...groupsGames_group
         }
         me {
             id
+        }
+    }
+`;
+
+const GroupsGamesPageListFragment = graphql`
+    fragment groupsGames_group on Group
+    @refetchable(queryName: "groupsGamesPageListPaginationQuery")
+    @argumentDefinitions(
+        first: { type: "Int", defaultValue: 25 }
+        after: { type: "String" }
+    ) {
+        games(first: $first, after: $after) @connection(key: "GroupGamesPage_games") {
+            totalCount
+            edges {
+                node {
+                    id
+                    ...GroupGamesTableRow_game
+                }
+            }
         }
     }
 `;
@@ -54,6 +66,62 @@ export function meta() {
     ];
 }
 
+function GamesList({
+    groupId,
+    group,
+    myId,
+}: {
+    groupId: string;
+    group: groupsGames_group$key;
+    myId?: string | null;
+}) {
+    const { data, loadNext, hasNext, isLoadingNext } = usePaginationFragment(
+        GroupsGamesPageListFragment,
+        group
+    );
+
+    const games = data.games?.edges?.map((e) => e?.node).filter(Boolean) ?? [];
+
+    if (games.length === 0) {
+        return (
+            <div className="surface-card flex flex-col items-start gap-2 p-6 sm:p-8">
+                <p className="font-heading text-xl tracking-[0.015em]">No games yet.</p>
+                <p className="text-sm text-muted-foreground">
+                    Go back to the circle and create one.
+                </p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-3">
+                {games.map((game) => (
+                    <GroupGamesTableRow
+                        key={game.id}
+                        groupId={groupId}
+                        game={game}
+                        currentUserId={myId}
+                    />
+                ))}
+            </div>
+            {hasNext ? (
+                <div className="flex justify-start">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        busy={isLoadingNext}
+                        disabled={isLoadingNext}
+                        onClick={() => loadNext(25)}
+                    >
+                        Load more
+                    </Button>
+                </div>
+            ) : null}
+        </div>
+    );
+}
+
 export default function GroupGames({ loaderData }: Route.ComponentProps) {
     const navigate = useNavigate();
     const data = usePreloadedQuery(GroupGamesPageQuery, loaderData.queryRef);
@@ -78,8 +146,6 @@ export default function GroupGames({ loaderData }: Route.ComponentProps) {
         );
     }
 
-    const games = group.games?.edges?.map((e) => e?.node).filter(Boolean) ?? [];
-
     return (
         <main className="container mx-auto flex flex-col gap-6 px-4 py-10 sm:py-14">
             <Breadcrumb
@@ -89,31 +155,8 @@ export default function GroupGames({ loaderData }: Route.ComponentProps) {
                     { label: "games" },
                 ]}
             />
-            <div className="flex items-baseline gap-3">
-                <h1 className="font-heading text-3xl font-medium tracking-[0.015em]">Games</h1>
-                <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-                    {group.games?.totalCount ?? 0} total
-                </span>
-            </div>
-            {games.length === 0 ? (
-                <div className="surface-card flex flex-col items-start gap-2 p-6 sm:p-8">
-                    <p className="font-heading text-xl tracking-[0.015em]">No games yet.</p>
-                    <p className="text-sm text-muted-foreground">
-                        Go back to the circle and create one.
-                    </p>
-                </div>
-            ) : (
-                <div className="flex flex-col gap-3">
-                    {games.map((game) => (
-                        <GroupGamesTableRow
-                            key={game.id}
-                            groupId={group.id}
-                            game={game}
-                            currentUserId={myId}
-                        />
-                    ))}
-                </div>
-            )}
+            <h1 className="font-heading text-3xl font-medium tracking-[0.015em]">Games</h1>
+            <GamesList groupId={group.id} group={group} myId={myId} />
         </main>
     );
 }
