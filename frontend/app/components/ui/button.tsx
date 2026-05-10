@@ -34,12 +34,12 @@ const buttonVariants = cva(
                 lg: "h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
                 terminal:
                     "h-auto gap-2 px-4 py-2 font-mono text-xs uppercase tracking-[0.18em] sm:gap-3 sm:px-6 sm:py-3 sm:text-sm",
-                icon: "size-8",
+                icon: "size-8 [&_svg:not([class*='size-'])]:size-5",
                 "icon-xs":
                     "size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
                 "icon-sm":
-                    "size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg",
-                "icon-lg": "size-9",
+                    "size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-5",
+                "icon-lg": "size-9 [&_svg:not([class*='size-'])]:size-6",
             },
         },
         defaultVariants: {

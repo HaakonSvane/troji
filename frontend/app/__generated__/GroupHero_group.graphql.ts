@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0d7837cb44ef8998aff23180b939bf3e>>
+ * @generated SignedSource<<a4b6d25c12de6869f422ec4e6f7de925>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type GroupSocialCard_group$data = {
+export type GroupHero_group$data = {
   readonly admin: {
     readonly firstName: string;
     readonly id: string;
@@ -20,11 +20,11 @@ export type GroupSocialCard_group$data = {
   readonly description: string | null | undefined;
   readonly id: string;
   readonly name: string;
-  readonly " $fragmentType": "GroupSocialCard_group";
+  readonly " $fragmentType": "GroupHero_group";
 };
-export type GroupSocialCard_group$key = {
-  readonly " $data"?: GroupSocialCard_group$data;
-  readonly " $fragmentSpreads": FragmentRefs<"GroupSocialCard_group">;
+export type GroupHero_group$key = {
+  readonly " $data"?: GroupHero_group$data;
+  readonly " $fragmentSpreads": FragmentRefs<"GroupHero_group">;
 };
 
 const node: ReaderFragment = (function(){
@@ -39,7 +39,7 @@ return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "GroupSocialCard_group",
+  "name": "GroupHero_group",
   "selections": [
     (v0/*: any*/),
     {
@@ -54,6 +54,13 @@ return {
       "args": null,
       "kind": "ScalarField",
       "name": "description",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "createdDate",
       "storageKey": null
     },
     {
@@ -81,13 +88,6 @@ return {
         }
       ],
       "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "createdDate",
-      "storageKey": null
     }
   ],
   "type": "Group",
@@ -95,6 +95,6 @@ return {
 };
 })();
 
-(node as any).hash = "96f2143c91a870d3e194ca371c04a669";
+(node as any).hash = "3f66a16c3052ed3693827d301b22a21f";
 
 export default node;

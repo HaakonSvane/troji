@@ -2,6 +2,7 @@ import { graphql, usePreloadedQuery, loadQuery } from "react-relay";
 import { ConnectionHandler } from "relay-runtime";
 import type { groupsPageQuery } from "@/__generated__/groupsPageQuery.graphql";
 import { getRelayEnvironment } from "@/relay/environment";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { GroupBox } from "@/components/GroupBox";
 import { DrawerDialog } from "@/components/DrawerDialog";
 import { JoinGroupForm } from "@/components/JoinGroupForm";
@@ -65,10 +66,7 @@ export default function Groups({ loaderData }: Route.ComponentProps) {
         <main className="container mx-auto px-4 py-10 sm:py-14">
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-3">
-                    <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-muted-foreground">
-                        <span className="text-medal-gold">$</span>
-                        <span className="ml-2">groups</span>
-                    </p>
+                    <Breadcrumb segments={[{ label: "groups" }]} />
                     <div className="flex flex-wrap items-end justify-between gap-4">
                         <h1 className="font-heading text-4xl italic font-medium tracking-[0.015em] text-foreground sm:text-5xl">
                             Your circles.
