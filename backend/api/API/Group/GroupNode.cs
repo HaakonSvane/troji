@@ -21,9 +21,9 @@ public static class GroupNode
     {
         return await dataLoader.LoadAsync(group.Id, cancellationToken);
     }
-    
+
     [UsePaging(IncludeTotalCount = true)]
-    [UseSorting] 
+    [UseSorting]
     public static async Task<IReadOnlyList<Game>> GetGamesAsync(
         [Parent] Database.Models.Group group,
         IGamesByGroupIdsDataLoader dataLoader,
@@ -31,15 +31,15 @@ public static class GroupNode
     {
         return await dataLoader.LoadAsync(group.Id, cancellationToken);
     }
-    
+
     public static async Task<GroupInvite?> GetInviteAsync(
         [Parent] Database.Models.Group group,
         IInvitesByGroupIdsDataLoader dataLoader,
         CancellationToken cancellationToken)
     {
         return await dataLoader.LoadAsync(group.Id, cancellationToken);
-    } 
-    
+    }
+
     [UsePaging(IncludeTotalCount = true)]
     public static async Task<IEnumerable<User>> GetMembersAsync(
         [Parent] Database.Models.Group group,
@@ -97,14 +97,14 @@ public static class GroupNode
     {
         return await repository.GetGroupsByIdsAsync(ids, cancellationToken);
     }
-    
+
     [DataLoader]
     internal static async Task<ILookup<string, Database.Models.Group>> GetGroupsByUserIdsAsync(
         IReadOnlyList<string> ids, IGroupRepository repository, CancellationToken cancellationToken)
     {
         return await repository.GetGroupsForUsersIdsAsync(ids, cancellationToken);
     }
-    
+
     [DataLoader]
     internal static async Task<IReadOnlyDictionary<int, GroupInvite>> GetInvitesByGroupIdsAsync(
         IReadOnlyList<int> ids, IGroupRepository repository, CancellationToken cancellationToken)

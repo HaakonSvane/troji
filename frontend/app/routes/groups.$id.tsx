@@ -103,7 +103,9 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
         return (
             <main className="container mx-auto flex flex-col items-start gap-3 px-4 py-10 sm:py-14">
                 <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-destructive">
-                    <span aria-hidden className="mr-2">!</span>
+                    <span aria-hidden className="mr-2">
+                        !
+                    </span>
                     not found
                 </p>
                 <h1 className="font-heading text-3xl tracking-[0.015em]">

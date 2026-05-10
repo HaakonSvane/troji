@@ -125,7 +125,10 @@ export function TrophyRequestForm({
             return;
         }
 
-        const gameConnectionId = ConnectionHandler.getConnectionID(effectiveGameId, "GameTrophies_trophies");
+        const gameConnectionId = ConnectionHandler.getConnectionID(
+            effectiveGameId,
+            "GameTrophies_trophies"
+        );
 
         commitRequest({
             variables: {

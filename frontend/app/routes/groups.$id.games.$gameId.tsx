@@ -30,8 +30,7 @@ const GroupGameDetailQuery = graphql`
             name
             symbol
             description
-            trophies(first: 200)
-                @connection(key: "GameTrophies_trophies") {
+            trophies(first: 200) @connection(key: "GameTrophies_trophies") {
                 edges {
                     node {
                         id
@@ -101,8 +100,7 @@ function StatReadout({
     return (
         <div
             className={
-                "surface-card flex flex-col gap-2 p-5" +
-                (accented ? " border-medal-gold/45" : "")
+                "surface-card flex flex-col gap-2 p-5" + (accented ? " border-medal-gold/45" : "")
             }
         >
             <p
@@ -136,12 +134,12 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
         return (
             <main className="container mx-auto flex flex-col items-start gap-3 px-4 py-10 sm:py-14">
                 <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-destructive">
-                    <span aria-hidden className="mr-2">!</span>
+                    <span aria-hidden className="mr-2">
+                        !
+                    </span>
                     not found
                 </p>
-                <h1 className="font-heading text-3xl tracking-[0.015em]">
-                    No such game.
-                </h1>
+                <h1 className="font-heading text-3xl tracking-[0.015em]">No such game.</h1>
                 <Button variant="outline" size="terminal" onClick={() => navigate("/groups")}>
                     <span aria-hidden>‹</span>
                     Back to circles
@@ -178,7 +176,9 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
                         </span>
                         <div className="flex flex-col gap-2">
                             <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-medal-gold">
-                                <span aria-hidden className="mr-2">▸</span>
+                                <span aria-hidden className="mr-2">
+                                    ▸
+                                </span>
                                 game
                             </p>
                             <h1 className="font-heading text-3xl font-medium leading-tight tracking-[0.015em] text-foreground sm:text-4xl">
@@ -194,9 +194,7 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
                     <AwardTrophyButton
                         preselectedGameId={game.id}
                         groupId={group.id}
-                        availableGames={[
-                            { id: game.id, name: game.name, symbol: game.symbol },
-                        ]}
+                        availableGames={[{ id: game.id, name: game.name, symbol: game.symbol }]}
                         groupMembers={
                             members as Array<{
                                 id: string;
@@ -237,9 +235,7 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
                 </h2>
                 <div className="flex flex-col gap-2">
                     {trophiesTruncated && (
-                        <p className="text-xs text-muted-foreground">
-                            Showing first 200 trophies.
-                        </p>
+                        <p className="text-xs text-muted-foreground">Showing first 200 trophies.</p>
                     )}
                     {trophies.length > 0 ? (
                         trophies.map((trophy) => (
@@ -260,7 +256,9 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
                                         </p>
                                     ) : null}
                                     <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.22em] text-medal-gold/85">
-                                        <span aria-hidden className="mr-2">▸</span>
+                                        <span aria-hidden className="mr-2">
+                                            ▸
+                                        </span>
                                         awarded to {trophy.receiver?.firstName}{" "}
                                         {trophy.receiver?.lastName}
                                     </p>

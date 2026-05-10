@@ -78,9 +78,11 @@ export function MedalBadge({
     const glowFactorRef = useRef<number | null>(null);
 
     const baseShadow =
-        depth === "raised"  ? "inset 0 1px 1px rgba(255,255,255,0.45), 0 12px 22px -16px rgba(0,0,0,0.9)"
-        : depth === "carved" ? "inset 0 1px 1px rgba(255,255,255,0.25), 0 12px 22px -16px rgba(0,0,0,0.9)"
-        :                      "inset 0 1px 1px rgba(255,255,255,0.2)";
+        depth === "raised"
+            ? "inset 0 1px 1px rgba(255,255,255,0.45), 0 12px 22px -16px rgba(0,0,0,0.9)"
+            : depth === "carved"
+              ? "inset 0 1px 1px rgba(255,255,255,0.25), 0 12px 22px -16px rgba(0,0,0,0.9)"
+              : "inset 0 1px 1px rgba(255,255,255,0.2)";
 
     useEffect(() => {
         const el = frameRef.current;
