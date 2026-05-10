@@ -10,5 +10,5 @@ public interface IUserRepository
     public Task<User> RegisterUserAsync(string userId, string firstName, string? middleName, string lastName,
         CancellationToken cancellationToken);
     public Task<ILookup<int, User>> GetUsersByGroupIdsAsync(IReadOnlyList<int> ids, CancellationToken cancellationToken);
-    ILookup<int, User> GetUsersByGameIdsAsync(IReadOnlyList<int> ids);
+    ILookup<int, User> GetUsersByGameIds(IReadOnlyList<int> ids);
 }

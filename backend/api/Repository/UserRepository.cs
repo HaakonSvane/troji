@@ -76,7 +76,7 @@ public sealed class UserRepository : IUserRepository
         return userGroups.ToLookup(userGroup => userGroup.GroupId, userGroup => userGroup.User);
     }
 
-    public ILookup<int, User> GetUsersByGameIdsAsync(IReadOnlyList<int> ids)
+    public ILookup<int, User> GetUsersByGameIds(IReadOnlyList<int> ids)
     {
         return _context.Trophies
             .Where(trophy => ids.Contains(trophy.GameId))

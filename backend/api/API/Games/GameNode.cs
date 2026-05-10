@@ -43,7 +43,7 @@ public static class GameNode
         IReadOnlyList<int> groupIds,
         IUserRepository repository)
     {
-        return Task.FromResult(repository.GetUsersByGameIdsAsync(groupIds));
+        return Task.FromResult(repository.GetUsersByGameIds(groupIds));
     }
 
     [DataLoader]
