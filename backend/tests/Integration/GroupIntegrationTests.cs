@@ -90,6 +90,121 @@ public class GroupIntegrationTests
     }
 
     [Test]
+    public async Task RecentActivity_AfterJoinAndTrophyAward_ShouldReturnNewestFirstWithCorrectTypes()
+    {
+        // Arrange
+        const string adminId = "user_activity_admin_001";
+        const string joinerId = "user_activity_joiner_001";
+        const string inviteCode = "ACTCD001";
+
+        int groupId;
+        int gameId;
+        using (var scope = _factory.CreateDbScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<TrophyDbContext>();
+            await TestDataBuilder.CreateUserAsync(db, adminId, "Activity", "Admin");
+            await TestDataBuilder.CreateUserAsync(db, joinerId, "Activity", "Joiner");
+            var group = await TestDataBuilder.CreateGroupAsync(db, adminId, "Activity Group");
+            groupId = group.Id;
+            await TestDataBuilder.CreateGroupInviteAsync(db, group.Id, inviteCode);
+            var game = await TestDataBuilder.CreateGameAsync(db, group.Id, "Slack Replies", "💬");
+            gameId = game.Id;
+        }
+
+        const string joinMutation = """
+            mutation JoinGroup($input: JoinGroupInput!) {
+              joinGroup(input: $input) { group { id } }
+            }
+            """;
+        using (var joinResult = await GraphQLHelpers.ExecuteAsync(
+            _client, joinerId, joinMutation, new { input = new { inviteCode } }))
+        {
+            // sanity check
+            var groupNode = joinResult.RootElement.GetProperty("data").GetProperty("joinGroup").GetProperty("group");
+            Assert.That(groupNode.ValueKind, Is.Not.EqualTo(JsonValueKind.Null));
+        }
+
+        string relayAdminId;
+        string relayJoinerId;
+        string relayGameId;
+        string relayGroupId;
+        using (var idScope = _factory.CreateDbScope())
+        {
+            var serializer = idScope.ServiceProvider.GetRequiredService<INodeIdSerializer>();
+            relayAdminId = serializer.Format("User", adminId);
+            relayJoinerId = serializer.Format("User", joinerId);
+            relayGameId = serializer.Format("Game", gameId);
+            relayGroupId = serializer.Format("Group", groupId);
+        }
+
+        const string awardMutation = """
+            mutation AwardTrophy($input: CreateTrophyRequestInput!) {
+              createTrophyRequest(input: $input) { trophy { id } }
+            }
+            """;
+        using (var awardResult = await GraphQLHelpers.ExecuteAsync(
+            _client, adminId, awardMutation,
+            new { input = new { userId = relayJoinerId, gameId = relayGameId, description = "wittiest reply" } }))
+        {
+            var trophyNode = awardResult.RootElement.GetProperty("data").GetProperty("createTrophyRequest").GetProperty("trophy");
+            Assert.That(trophyNode.ValueKind, Is.Not.EqualTo(JsonValueKind.Null));
+        }
+
+        const string activityQuery = """
+            query GroupActivity($id: ID!) {
+              groupById(id: $id) {
+                recentActivity(first: 10) {
+                  __typename
+                  id
+                  occurredAt
+                  ... on TrophyAwardedActivity {
+                    trophy {
+                      id
+                      description
+                      receiver { id firstName }
+                      awardedBy { id firstName }
+                      game { id name }
+                    }
+                  }
+                  ... on MemberJoinedActivity {
+                    member { id firstName }
+                  }
+                }
+              }
+            }
+            """;
+
+        // Act
+        using var result = await GraphQLHelpers.ExecuteAsync(
+            _client, adminId, activityQuery, new { id = relayGroupId });
+
+        // Assert
+        var activity = result.RootElement
+            .GetProperty("data")
+            .GetProperty("groupById")
+            .GetProperty("recentActivity");
+
+        Assert.That(activity.ValueKind, Is.EqualTo(JsonValueKind.Array));
+        Assert.That(activity.GetArrayLength(), Is.EqualTo(3),
+            "Expected 3 activity entries: 1 trophy + 2 member joins (admin and joiner)");
+
+        // Newest first — trophy was awarded last
+        Assert.That(activity[0].GetProperty("__typename").GetString(), Is.EqualTo("TrophyAwardedActivity"));
+        var trophy = activity[0].GetProperty("trophy");
+        Assert.That(trophy.GetProperty("description").GetString(), Is.EqualTo("wittiest reply"));
+        Assert.That(trophy.GetProperty("receiver").GetProperty("firstName").GetString(), Is.EqualTo("Activity"));
+        Assert.That(trophy.GetProperty("awardedBy").GetProperty("firstName").GetString(), Is.EqualTo("Activity"));
+
+        // Joiner joined just before the award
+        Assert.That(activity[1].GetProperty("__typename").GetString(), Is.EqualTo("MemberJoinedActivity"));
+        Assert.That(activity[1].GetProperty("member").GetProperty("id").GetString(), Is.EqualTo(relayJoinerId));
+
+        // Admin was added when group was created
+        Assert.That(activity[2].GetProperty("__typename").GetString(), Is.EqualTo("MemberJoinedActivity"));
+        Assert.That(activity[2].GetProperty("member").GetProperty("id").GetString(), Is.EqualTo(relayAdminId));
+    }
+
+    [Test]
     public async Task GetGroupById_WhenUserIsNotMember_ShouldReturnAuthorizationError()
     {
         // Arrange

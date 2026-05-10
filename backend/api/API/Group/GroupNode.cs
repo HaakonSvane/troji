@@ -45,7 +45,17 @@ public static class GroupNode
     {
         return await dataLoader.LoadAsync(group.Id, cancellationToken);
     }
-    
+
+    public static async Task<IReadOnlyList<IGroupActivity>> GetRecentActivityAsync(
+        [Parent] Database.Models.Group group,
+        IGroupRepository repository,
+        int? first,
+        CancellationToken cancellationToken)
+    {
+        var take = Math.Clamp(first ?? 20, 1, 50);
+        return await repository.GetRecentActivityAsync(group.Id, take, cancellationToken);
+    }
+
     [DataLoader]
     internal static async Task<IReadOnlyDictionary<int, Database.Models.Group>> GetGroupsByIdsAsync(
         IReadOnlyList<int> ids, IGroupRepository repository, CancellationToken cancellationToken)

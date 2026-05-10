@@ -1,4 +1,5 @@
 using api.API.Errors;
+using api.API.Group;
 using api.Database;
 using api.Database.Models;
 using api.Properties;
@@ -135,5 +136,35 @@ public sealed class GroupRepository : IGroupRepository
         await _context.UserGroups.AddAsync(userGroup, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
         return group;
+    }
+
+    public async Task<IReadOnlyList<IGroupActivity>> GetRecentActivityAsync(
+        int groupId,
+        int take,
+        CancellationToken cancellationToken)
+    {
+        var awards = await _context.Trophies
+            .Include(t => t.Game)
+            .Include(t => t.Receiver)
+            .Where(t => t.Game.ParentGroupId == groupId && t.AwardedDate != null)
+            .OrderByDescending(t => t.AwardedDate)
+            .Take(take)
+            .ToListAsync(cancellationToken);
+
+        var joins = await _context.UserGroups
+            .Include(ug => ug.User)
+            .Where(ug => ug.GroupId == groupId)
+            .OrderByDescending(ug => ug.JoinedAt)
+            .Take(take)
+            .ToListAsync(cancellationToken);
+
+        var activities = new List<IGroupActivity>(awards.Count + joins.Count);
+        foreach (var award in awards) activities.Add(new TrophyAwardedActivity(award));
+        foreach (var join in joins) activities.Add(new MemberJoinedActivity(join.User, groupId, join.JoinedAt));
+
+        return activities
+            .OrderByDescending(a => a.OccurredAt)
+            .Take(take)
+            .ToList();
     }
 }
