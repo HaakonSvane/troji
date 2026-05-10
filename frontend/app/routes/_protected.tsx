@@ -15,7 +15,7 @@ export async function loader(args: Route.LoaderArgs) {
 
 function FullPageSpinner() {
     return (
-        <div className="flex h-full w-full items-center justify-center">
+        <div className="flex min-h-[50svh] w-full items-center justify-center">
             <div className="flex flex-col items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
                 <div className="size-6 animate-spin rounded-full border-2 border-medal-gold/40 border-t-medal-gold" />
                 <span>loading</span>
@@ -27,7 +27,7 @@ function FullPageSpinner() {
 function RouteError({ error }: { error: unknown }) {
     const message = error instanceof Error ? error.message : "An unexpected error occurred.";
     return (
-        <main className="flex h-full w-full flex-col items-center justify-center gap-3 p-8">
+        <main className="flex min-h-[50svh] w-full flex-col items-center justify-center gap-3 p-8">
             <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-destructive">
                 <span aria-hidden className="mr-2">!</span>
                 error
@@ -42,15 +42,13 @@ function RouteError({ error }: { error: unknown }) {
 
 export default function ProtectedLayout() {
     return (
-        <div className="flex h-screen flex-col overflow-hidden">
+        <>
             <Header />
-            <div className="flex-1 overflow-y-auto">
-                <Suspense fallback={<FullPageSpinner />}>
-                    <ErrorBoundary FallbackComponent={RouteError}>
-                        <Outlet />
-                    </ErrorBoundary>
-                </Suspense>
-            </div>
-        </div>
+            <Suspense fallback={<FullPageSpinner />}>
+                <ErrorBoundary FallbackComponent={RouteError}>
+                    <Outlet />
+                </ErrorBoundary>
+            </Suspense>
+        </>
     );
 }

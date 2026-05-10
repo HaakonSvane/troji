@@ -22,7 +22,7 @@ export function Header() {
     const [feedbackOpen, setFeedbackOpen] = useState(false);
 
     return (
-        <header className="z-40 w-full border-b border-border bg-background">
+        <header className="sticky top-0 z-40 w-full border-b border-border bg-background">
             <div className="container relative mx-auto flex h-12 items-center justify-between gap-3 px-4 sm:h-14">
                 <div className="flex items-center gap-2">
                     <VersionChip homeHref="/dashboard" />
