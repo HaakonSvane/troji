@@ -1,5 +1,17 @@
 # Changelog
 
+## Version 0.4.3, released 2026-05-10
+
+
+### Bug fixes
+
+* **trophies:** instant cache update after awarding a trophy ([#47](https://github.com/HaakonSvane/troji/issues/47)) ([4d4c6c3](https://github.com/HaakonSvane/troji/commit/4d4c6c30decc23d0b60189d93e98e76d2c764092))
+
+
+### Performance improvements
+
+* **backend:** sort games and members by recent activity, add recentActivityCount ([2c8f0e1](https://github.com/HaakonSvane/troji/commit/2c8f0e1d246560d3edbeb826f7dc4ba20499a590))
+
 ## Version 0.4.2, released 2026-05-10
 
 
