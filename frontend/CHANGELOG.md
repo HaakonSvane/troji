@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.7.0](https://github.com/HaakonSvane/troji/compare/frontend-v0.6.2...frontend-v0.7.0) (2026-05-10)
+
+
+### Features
+
+* **groups:** simplify dashboard queries, lazy-load award data, add sub-pages ([74c8969](https://github.com/HaakonSvane/troji/commit/74c8969bf69d657f97ea06c0d819149c7d6cd2d0))
+* **medals:** scroll-driven lighting, glare, glow, and carved emoji ([#48](https://github.com/HaakonSvane/troji/issues/48)) ([b01631e](https://github.com/HaakonSvane/troji/commit/b01631e2b0dbc1f8d7e7bddabc4a5936d30b84cb))
+
+
+### Bug Fixes
+
+* **groups:** compare view-all threshold against page size, not runtime array length ([facf24a](https://github.com/HaakonSvane/troji/commit/facf24a4f498e369da7bf12bad9ef1baebad38ec))
+* **trophies:** instant cache update after awarding a trophy ([#47](https://github.com/HaakonSvane/troji/issues/47)) ([4d4c6c3](https://github.com/HaakonSvane/troji/commit/4d4c6c30decc23d0b60189d93e98e76d2c764092))
+* **trophy-form:** skip [@append](https://github.com/append)Node when GameTrophies_trophies connection absent ([17ffa56](https://github.com/HaakonSvane/troji/commit/17ffa56a7118a54c8c84a03fe551089ea1488d86))
+
+
+### Performance Improvements
+
+* **backend:** sort games and members by recent activity, add recentActivityCount ([2c8f0e1](https://github.com/HaakonSvane/troji/commit/2c8f0e1d246560d3edbeb826f7dc4ba20499a590))
+* **game-detail:** paginate trophies 25 at a time, use totalCount for stats ([edd4d1b](https://github.com/HaakonSvane/troji/commit/edd4d1b6232d6cf8666060cf4a6a5098d4c558f1))
+* **groups/games:** paginate games page 25 at a time to stay under field cost limit ([a1c5c35](https://github.com/HaakonSvane/troji/commit/a1c5c35be1ed9c40b687af11d485adf8968df1e3))
+
 ## [0.6.2](https://github.com/HaakonSvane/troji/compare/frontend-v0.6.1...frontend-v0.6.2) (2026-05-10)
 
 
