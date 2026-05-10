@@ -34,7 +34,7 @@ export function Header() {
                                 aria-label="Open navigation menu"
                                 className="xl:hidden"
                             >
-                                <Bars3Icon className="size-5" />
+                                <Bars3Icon />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
@@ -117,7 +117,7 @@ export function Header() {
                         onClick={() => setFeedbackOpen(true)}
                         aria-label="Send feedback"
                     >
-                        <ChatBubbleOvalLeftEllipsisIcon className="size-5" />
+                        <ChatBubbleOvalLeftEllipsisIcon />
                     </Button>
                     <ClerkLoading>
                         <Skeleton className="size-8 rounded-full" />

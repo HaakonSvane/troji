@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { VersionChip } from "@/components/VersionChip";
 
 type AuthShellProps = {
@@ -20,10 +21,7 @@ export function AuthShell({ prompt, headline, children }: AuthShellProps) {
             </header>
 
             <section className="mx-auto flex w-full max-w-md flex-1 flex-col items-stretch px-6 py-10 sm:py-16">
-                <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-muted-foreground">
-                    <span className="text-medal-gold">$</span>
-                    <span className="ml-2">{prompt}</span>
-                </p>
+                <Breadcrumb segments={[{ label: prompt }]} />
                 {headline ? (
                     <p className="mt-6 font-heading text-2xl italic leading-snug tracking-[0.025em] text-foreground/95 sm:text-3xl">
                         {headline}

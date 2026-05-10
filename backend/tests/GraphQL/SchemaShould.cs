@@ -20,6 +20,8 @@ public class SchemaShould
             .AddGraphQLServer()
             .AddAuthorization()
             .AddTypes()
+            .AddType<api.API.Group.TrophyAwardedActivity>()
+            .AddType<api.API.Group.MemberJoinedActivity>()
             .AddGlobalObjectIdentification()
             .AddMutationConventions(applyToAllMutations: true)
             .AddQueryFieldToMutationPayloads()

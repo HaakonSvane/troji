@@ -1,8 +1,8 @@
 import { graphql, loadQuery, usePreloadedQuery } from "react-relay";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import type { groupsGameDetailQuery } from "@/__generated__/groupsGameDetailQuery.graphql";
-import { MedalBadge } from "@/components/MedalBadge";
 import { AwardTrophyButton } from "@/components/AwardTrophyButton";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { Button } from "@/components/ui/button";
 import { getRelayEnvironment } from "@/relay/environment";
 import type { Route } from "./+types/groups.$id.games.$gameId";
@@ -126,7 +126,7 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
     const myId = data.me?.id;
     if (!group || !game || game.group?.id !== group.id) {
         return (
-            <main className="container mx-auto flex flex-col items-start gap-3 px-4 py-10">
+            <main className="container mx-auto flex flex-col items-start gap-3 px-4 py-10 sm:py-14">
                 <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-destructive">
                     <span aria-hidden className="mr-2">!</span>
                     not found
@@ -148,36 +148,25 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
     const pendingCount = trophies.filter((t) => !t.isAwarded).length;
 
     return (
-        <main className="container mx-auto px-4 py-10 sm:py-12">
-            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-muted-foreground">
-                <span className="text-medal-gold">$</span>
-                <Link to="/groups" className="ml-2 transition-colors hover:text-foreground">
-                    groups
-                </Link>
-                <span aria-hidden className="mx-2 text-border">
-                    /
-                </span>
-                <Link
-                    to={`/groups/${group.id}`}
-                    className="transition-colors hover:text-foreground"
-                >
-                    {group.name}
-                </Link>
-                <span aria-hidden className="mx-2 text-border">
-                    /
-                </span>
-                <span className="text-foreground/85">{game.name}</span>
-            </p>
+        <main className="container mx-auto px-4 py-10 sm:py-14">
+            <Breadcrumb
+                segments={[
+                    { label: "groups", href: "/groups" },
+                    { label: group.name, href: `/groups/${group.id}` },
+                    { label: game.name },
+                ]}
+            />
 
             <section className="mt-6 flex flex-col gap-6">
                 <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
                     <div className="flex items-start gap-4">
-                        <MedalBadge
-                            emoji={game.symbol}
-                            size="md"
+                        <span
+                            aria-hidden
                             title={game.name}
-                            className="size-14"
-                        />
+                            className="shrink-0 text-5xl leading-none"
+                        >
+                            {game.symbol}
+                        </span>
                         <div className="flex flex-col gap-2">
                             <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-medal-gold">
                                 <span aria-hidden className="mr-2">▸</span>

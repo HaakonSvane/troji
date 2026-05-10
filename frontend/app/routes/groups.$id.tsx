@@ -1,17 +1,16 @@
 import { useState } from "react";
 import { graphql, usePreloadedQuery, loadQuery } from "react-relay";
 import { ConnectionHandler } from "relay-runtime";
-import { Link, useNavigate } from "react-router";
-import { PlusIcon, UserPlusIcon } from "@heroicons/react/24/outline";
+import { useNavigate } from "react-router";
 import type { groupsDetailQuery } from "@/__generated__/groupsDetailQuery.graphql";
 import { getRelayEnvironment } from "@/relay/environment";
-import { GroupSocialCard } from "@/components/GroupSocialCard";
-import { MemberRow } from "@/components/MemberRow";
-import { GroupGamesTableRow } from "@/components/GroupGamesTableRow";
+import { GroupHero } from "@/components/GroupHero";
+import { GroupTopPerformer } from "@/components/GroupTopPerformer";
+import { GroupMembersCard } from "@/components/GroupMembersCard";
+import { GroupActivityFeed } from "@/components/GroupActivityFeed";
+import { GroupAside } from "@/components/GroupAside";
 import { NewGameForm } from "@/components/NewGameForm";
 import { GroupInviteManager } from "@/components/GroupInviteManager";
-import { AwardTrophyButton } from "@/components/AwardTrophyButton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import type { Route } from "./+types/groups.$id";
 
@@ -19,11 +18,11 @@ const GroupPageQuery = graphql`
     query groupsDetailQuery($id: ID!) {
         groupById(id: $id) {
             id
-            name
             admin {
                 id
             }
-            ...GroupSocialCard_group
+            ...GroupHero_group
+            ...GroupActivityFeed_group
             games(first: 50, order: { createdDate: DESC })
                 @connection(key: "GroupDetail_games", filters: ["order"]) {
                 edges {
@@ -40,6 +39,7 @@ const GroupPageQuery = graphql`
                     node {
                         id
                         firstName
+                        middleName
                         lastName
                         ...MemberRow_user
                     }
@@ -52,15 +52,10 @@ const GroupPageQuery = graphql`
             trophies {
                 id
                 isAwarded
-                description
-                game {
-                    id
-                    symbol
-                    name
-                }
                 receiver {
                     id
                     firstName
+                    middleName
                     lastName
                 }
             }
@@ -90,17 +85,16 @@ export function HydrateFallback() {
 
 export function meta() {
     return [
-        { title: "Group — Troji" },
-        { name: "description", content: "Games, members, and trophies for this circle." },
+        { title: "Circle — Troji" },
+        { name: "description", content: "Standings, recent activity, and rewards in this circle." },
     ];
 }
 
-function TabCount({ value }: { value: number }) {
-    return (
-        <span className="ml-2 rounded-sm border border-border px-1.5 py-0.5 font-mono text-[10px] tracking-wide text-muted-foreground">
-            {value}
-        </span>
-    );
+interface ReceiverShape {
+    id: string;
+    firstName?: string | null;
+    middleName?: string | null;
+    lastName?: string | null;
 }
 
 export default function GroupDetail({ loaderData }: Route.ComponentProps) {
@@ -110,12 +104,11 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
     const myId = data.me?.id;
 
     const [newGameOpen, setNewGameOpen] = useState(false);
-    const [activeTab, setActiveTab] = useState("games");
     const [inviteOpen, setInviteOpen] = useState(false);
 
     if (!group) {
         return (
-            <main className="container mx-auto flex flex-col items-start gap-3 px-4 py-10">
+            <main className="container mx-auto flex flex-col items-start gap-3 px-4 py-10 sm:py-14">
                 <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-destructive">
                     <span aria-hidden className="mr-2">!</span>
                     not found
@@ -140,192 +133,76 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
         name: game!.name,
         symbol: game!.symbol,
     }));
+    const groupMemberLite = members.map((m) => ({
+        id: m!.id,
+        firstName: m!.firstName,
+        lastName: m!.lastName,
+    }));
     const gameConnections = [
         ConnectionHandler.getConnectionID(group.id, "GroupDetail_games", {
             order: { createdDate: "DESC" },
         }),
     ];
 
+    const awarded = (group.trophies ?? []).filter((t) => t.isAwarded);
+    const counts = new Map<string, { user: ReceiverShape; count: number }>();
+    for (const trophy of awarded) {
+        const receiver = trophy.receiver;
+        if (!receiver) continue;
+        const existing = counts.get(receiver.id);
+        if (existing) {
+            existing.count++;
+        } else {
+            counts.set(receiver.id, {
+                user: {
+                    id: receiver.id,
+                    firstName: receiver.firstName,
+                    middleName: receiver.middleName,
+                    lastName: receiver.lastName,
+                },
+                count: 1,
+            });
+        }
+    }
+    const standings = [...counts.values()].sort((a, b) => b.count - a.count);
+    const topPerformer = standings[0] ?? null;
+
     return (
-        <main className="container mx-auto px-4 py-10 sm:py-12">
-            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-muted-foreground">
-                <span className="text-medal-gold">$</span>
-                <Link
-                    to="/groups"
-                    className="ml-2 transition-colors hover:text-foreground"
-                >
-                    groups
-                </Link>
-                <span aria-hidden className="mx-2 text-border">
-                    /
-                </span>
-                <span className="text-foreground/85">{group.name}</span>
-            </p>
+        <main className="container mx-auto flex flex-col gap-10 px-4 py-10 sm:py-14">
+            <GroupHero
+                group={group}
+                memberCount={members.length}
+                awardCount={awarded.length}
+                isAdmin={isAdmin}
+                currentUserId={myId}
+                availableGames={trophyGameOptions}
+                groupMembers={groupMemberLite}
+                onInvite={() => setInviteOpen(true)}
+            />
 
-            <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr]">
-                <div>
-                    <GroupSocialCard
-                        group={group}
-                        memberCount={members.length}
-                        currentUserId={myId}
-                    />
-                </div>
+            <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
+                <GroupTopPerformer
+                    user={topPerformer?.user ?? null}
+                    count={topPerformer?.count ?? 0}
+                    currentUserId={myId}
+                />
+                <GroupMembersCard
+                    members={members as MembersCardMembers}
+                    adminId={group.admin?.id}
+                    currentUserId={myId}
+                />
+            </div>
 
-                <Tabs value={activeTab} onValueChange={setActiveTab}>
-                    <TabsList>
-                        <TabsTrigger value="games">
-                            Games
-                            <TabCount value={games.length} />
-                        </TabsTrigger>
-                        <TabsTrigger value="members">
-                            Members
-                            <TabCount value={members.length} />
-                        </TabsTrigger>
-                        <TabsTrigger value="trophies">
-                            Trophies
-                            <TabCount value={group.trophies?.length ?? 0} />
-                        </TabsTrigger>
-                    </TabsList>
-
-                    <TabsContent value="games" className="mt-6">
-                        <div className="mb-4 flex items-center justify-between">
-                            <h2 className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-                                games in this circle
-                            </h2>
-                            {isAdmin ? (
-                                <Button
-                                    size="sm"
-                                    leadingIcon={<PlusIcon />}
-                                    onClick={() => setNewGameOpen(true)}
-                                >
-                                    New game
-                                </Button>
-                            ) : null}
-                        </div>
-                        {games.length === 0 ? (
-                            <div className="surface-card flex flex-col items-start gap-3 p-6 sm:p-8">
-                                <p className="font-heading text-xl italic tracking-[0.015em]">
-                                    No games yet.
-                                </p>
-                                <p className="text-sm text-muted-foreground">
-                                    {isAdmin
-                                        ? "Create one and start handing out trophies."
-                                        : "Wait for the owner to add a game."}
-                                </p>
-                            </div>
-                        ) : (
-                            <div className="flex flex-col gap-3">
-                                {games.map((game) => (
-                                    <GroupGamesTableRow
-                                        key={game!.id}
-                                        groupId={group.id}
-                                        game={game!}
-                                        groupMembers={
-                                            members as Array<{
-                                                id: string;
-                                                firstName?: string | null;
-                                                lastName?: string | null;
-                                            }>
-                                        }
-                                        currentUserId={myId}
-                                    />
-                                ))}
-                            </div>
-                        )}
-                    </TabsContent>
-
-                    <TabsContent value="members" className="mt-6">
-                        <div className="mb-4 flex items-center justify-between">
-                            <h2 className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-                                people in this circle
-                            </h2>
-                            {isAdmin ? (
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    leadingIcon={<UserPlusIcon />}
-                                    onClick={() => setInviteOpen(true)}
-                                >
-                                    Invite
-                                </Button>
-                            ) : null}
-                        </div>
-                        <div className="surface-card divide-y divide-border px-4">
-                            {members.map((member) => (
-                                <MemberRow
-                                    key={member!.id}
-                                    user={member!}
-                                    isAdmin={member!.id === group.admin?.id}
-                                    isSelf={member!.id === myId}
-                                />
-                            ))}
-                        </div>
-                    </TabsContent>
-
-                    <TabsContent value="trophies" className="mt-6">
-                        <div className="mb-4 flex items-center justify-between">
-                            <h2 className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-                                rewards handed out
-                            </h2>
-                            <AwardTrophyButton
-                                preselectedGameId={null}
-                                availableGames={trophyGameOptions}
-                                groupMembers={
-                                    members as Array<{
-                                        id: string;
-                                        firstName?: string | null;
-                                        lastName?: string | null;
-                                    }>
-                                }
-                                currentUserId={myId}
-                                label="New trophy"
-                                variant="outline"
-                                size="sm"
-                            />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            {group.trophies && group.trophies.length > 0 ? (
-                                group.trophies.map((trophy) => (
-                                    <div
-                                        key={trophy.id}
-                                        className="surface-card flex items-center gap-4 p-4"
-                                    >
-                                        <div
-                                            aria-hidden
-                                            className="text-2xl"
-                                        >
-                                            {trophy.game?.symbol}
-                                        </div>
-                                        <div className="flex-1">
-                                            <p className="font-heading text-base font-medium tracking-[0.015em]">
-                                                {trophy.game?.name}
-                                            </p>
-                                            {trophy.description ? (
-                                                <p className="text-sm text-muted-foreground">
-                                                    {trophy.description}
-                                                </p>
-                                            ) : null}
-                                            <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.22em] text-medal-gold/80">
-                                                <span aria-hidden className="mr-2">▸</span>
-                                                awarded to {trophy.receiver?.firstName}{" "}
-                                                {trophy.receiver?.lastName}
-                                            </p>
-                                        </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <div className="surface-card flex flex-col items-start gap-3 p-6 sm:p-8">
-                                    <p className="font-heading text-xl italic tracking-[0.015em]">
-                                        No trophies awarded yet.
-                                    </p>
-                                    <p className="text-sm text-muted-foreground">
-                                        Settle a rivalry. Crown a champion.
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-                    </TabsContent>
-                </Tabs>
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_320px]">
+                <GroupActivityFeed group={group} currentUserId={myId} />
+                <GroupAside
+                    groupId={group.id}
+                    isAdmin={isAdmin}
+                    currentUserId={myId}
+                    games={games as GroupAsideGames}
+                    groupMembers={groupMemberLite}
+                    onNewGame={() => setNewGameOpen(true)}
+                />
             </div>
 
             <NewGameForm
@@ -343,3 +220,6 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
         </main>
     );
 }
+
+type GroupAsideGames = React.ComponentProps<typeof GroupAside>["games"];
+type MembersCardMembers = React.ComponentProps<typeof GroupMembersCard>["members"];

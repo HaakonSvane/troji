@@ -1,6 +1,7 @@
 import { graphql, usePreloadedQuery, loadQuery } from "react-relay";
 import { Link } from "react-router";
 import type { dashboardQuery } from "@/__generated__/dashboardQuery.graphql";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { PersonName } from "@/components/PersonName";
 import { Button } from "@/components/ui/button";
 import { getRelayEnvironment } from "@/relay/environment";
@@ -44,10 +45,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
 
     return (
         <main className="container mx-auto flex flex-col px-4 py-10 sm:py-14">
-            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-muted-foreground">
-                <span className="text-medal-gold">$</span>
-                <span className="ml-2">dashboard</span>
-            </p>
+            <Breadcrumb segments={[{ label: "dashboard" }]} />
 
             <h1 className="mt-6 font-heading text-4xl italic font-medium leading-tight tracking-[0.015em] text-foreground sm:text-5xl">
                 Welcome back,{" "}

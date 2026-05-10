@@ -3,7 +3,6 @@ import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router";
 import type { GroupGamesTableRow_game$key } from "@/__generated__/GroupGamesTableRow_game.graphql";
 import { AwardTrophyButton } from "@/components/AwardTrophyButton";
-import { MedalBadge } from "@/components/MedalBadge";
 
 const GroupGamesTableRowFragment = graphql`
     fragment GroupGamesTableRow_game on Game {
@@ -35,14 +34,16 @@ export function GroupGamesTableRow({
         data.trophies.length === 1 ? "1 trophy" : `${data.trophies.length} trophies`;
 
     return (
-        <div className="surface-card flex flex-col gap-3 p-4 transition-colors hover:border-medal-gold/40 sm:flex-row sm:items-center sm:justify-between">
+        <div className="surface-card surface-card-interactive overflow-hidden">
             <Link
                 to={`/groups/${groupId}/games/${data.id}`}
-                className="flex min-w-0 flex-1 items-center gap-4 rounded-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-medal-gold/40"
+                className="flex items-start gap-3 p-4 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-medal-gold/40"
             >
-                <MedalBadge emoji={data.symbol} size="md" title={data.name} />
+                <span aria-hidden className="mt-0.5 shrink-0 text-3xl leading-none">
+                    {data.symbol}
+                </span>
                 <div className="min-w-0 flex-1">
-                    <p className="font-heading text-base font-medium tracking-[0.015em] text-foreground">
+                    <p className="truncate font-heading text-base font-medium tracking-[0.015em] text-foreground">
                         {data.name}
                     </p>
                     {data.description ? (
@@ -51,17 +52,14 @@ export function GroupGamesTableRow({
                         </p>
                     ) : (
                         <p className="text-sm text-muted-foreground">
-                            Open this game to inspect its rewards and history.
+                            Open to inspect rewards.
                         </p>
                     )}
                 </div>
-                <div className="hidden items-center gap-2 sm:flex">
-                    <span className="pill-muted">{trophyLabel}</span>
-                    <ChevronRightIcon className="size-4 text-muted-foreground" />
-                </div>
+                <ChevronRightIcon className="mt-1 size-4 shrink-0 text-muted-foreground" />
             </Link>
-            <div className="flex items-center justify-between gap-3 sm:justify-end">
-                <span className="pill-muted sm:hidden">{trophyLabel}</span>
+            <div className="flex items-center justify-between gap-3 border-t border-border px-4 py-3">
+                <span className="pill-muted">{trophyLabel}</span>
                 <AwardTrophyButton
                     preselectedGameId={data.id}
                     availableGames={[{ id: data.id, name: data.name, symbol: data.symbol }]}
