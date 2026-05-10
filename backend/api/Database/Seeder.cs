@@ -22,8 +22,9 @@ public static class Seeder
         var alice = new User { Id = "user_seed_alice001", FirstName = "Alice", LastName = "Andersen" };
         var bob = new User { Id = "user_seed_bob001", FirstName = "Bob", LastName = "Bergström" };
         var carol = new User { Id = "user_seed_carol001", FirstName = "Carol", LastName = "Chen" };
+        var hans = new User { Id = "user_seed_hans001", FirstName = "Hans", MiddleName = "Oluf", LastName = "Kristoph" };
 
-        db.Users.AddRange(alice, bob, carol);
+        db.Users.AddRange(alice, bob, carol, hans);
         await db.SaveChangesAsync();
 
         // ── Groups ────────────────────────────────────────────────────────
@@ -62,9 +63,11 @@ public static class Seeder
             new UserGroup { UserId = myUserId, GroupId = friday.Id, JoinedAt = friday.CreatedDate },
             new UserGroup { UserId = alice.Id, GroupId = friday.Id, JoinedAt = friday.CreatedDate },
             new UserGroup { UserId = bob.Id, GroupId = friday.Id, JoinedAt = friday.CreatedDate },
+
             new UserGroup { UserId = bob.Id, GroupId = office.Id, JoinedAt = office.CreatedDate },
             new UserGroup { UserId = myUserId, GroupId = office.Id, JoinedAt = office.CreatedDate },
             new UserGroup { UserId = carol.Id, GroupId = office.Id, JoinedAt = office.CreatedDate },
+            new UserGroup { UserId = hans.Id, GroupId = office.Id, JoinedAt = office.CreatedDate },
             // café — you are intentionally NOT a member here
             new UserGroup { UserId = carol.Id, GroupId = cafe.Id, JoinedAt = cafe.CreatedDate },
             new UserGroup { UserId = alice.Id, GroupId = cafe.Id, JoinedAt = cafe.CreatedDate }
