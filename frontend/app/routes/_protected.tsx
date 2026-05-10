@@ -32,7 +32,7 @@ function RouteError({ error }: { error: unknown }) {
                 <span aria-hidden className="mr-2">!</span>
                 error
             </p>
-            <h1 className="font-heading text-3xl italic tracking-[0.015em] text-foreground">
+            <h1 className="font-heading text-3xl tracking-[0.015em] text-foreground">
                 Something broke.
             </h1>
             <p className="max-w-md text-center text-sm text-muted-foreground">{message}</p>

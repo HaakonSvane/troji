@@ -23,7 +23,7 @@ export function AuthShell({ prompt, headline, children }: AuthShellProps) {
             <section className="mx-auto flex w-full max-w-md flex-1 flex-col items-stretch px-6 py-10 sm:py-16">
                 <Breadcrumb segments={[{ label: prompt }]} />
                 {headline ? (
-                    <p className="mt-6 font-heading text-2xl italic leading-snug tracking-[0.025em] text-foreground/95 sm:text-3xl">
+                    <p className="mt-6 font-heading text-2xl leading-snug tracking-[0.025em] text-foreground/95 sm:text-3xl">
                         {headline}
                     </p>
                 ) : null}

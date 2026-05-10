@@ -131,7 +131,7 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
                     <span aria-hidden className="mr-2">!</span>
                     not found
                 </p>
-                <h1 className="font-heading text-3xl italic tracking-[0.015em]">
+                <h1 className="font-heading text-3xl tracking-[0.015em]">
                     No such game.
                 </h1>
                 <Button variant="outline" size="terminal" onClick={() => navigate("/groups")}>
@@ -172,7 +172,7 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
                                 <span aria-hidden className="mr-2">▸</span>
                                 game
                             </p>
-                            <h1 className="font-heading text-3xl italic font-medium leading-tight tracking-[0.015em] text-foreground sm:text-4xl">
+                            <h1 className="font-heading text-3xl font-medium leading-tight tracking-[0.015em] text-foreground sm:text-4xl">
                                 {game.name}
                             </h1>
                             {game.description ? (
@@ -254,7 +254,7 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
                         ))
                     ) : (
                         <div className="surface-card flex flex-col items-start gap-2 p-6 sm:p-8">
-                            <p className="font-heading text-xl italic tracking-[0.015em]">
+                            <p className="font-heading text-xl tracking-[0.015em]">
                                 Nothing on the board.
                             </p>
                             <p className="text-sm text-muted-foreground">

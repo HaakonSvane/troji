@@ -46,7 +46,7 @@ export function GroupAside({
             </div>
             {games.length === 0 ? (
                 <div className="surface-card flex flex-col items-start gap-2 p-5">
-                    <p className="font-heading text-base italic tracking-[0.015em]">
+                    <p className="font-heading text-base tracking-[0.015em]">
                         No games yet.
                     </p>
                     <p className="text-xs text-muted-foreground">

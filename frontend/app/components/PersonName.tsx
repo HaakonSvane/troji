@@ -34,7 +34,7 @@ export function PersonName({
         <span className={cn("inline-flex items-baseline gap-1", className)}>
             <span>{fullName}</span>
             {isSelf && (
-                <span className={cn("italic text-muted-foreground", selfClassName)}>(you)</span>
+                <span className={cn("text-muted-foreground", selfClassName)}>(you)</span>
             )}
         </span>
     );
