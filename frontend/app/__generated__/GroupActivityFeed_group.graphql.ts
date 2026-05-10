@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d51a9baf8091f0e3bf4ac16b907f3b36>>
+ * @generated SignedSource<<80defc558340b8b96049ad9eb3c08255>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -43,6 +43,7 @@ export type GroupActivityFeed_group$data = {
       };
     };
   }>;
+  readonly recentActivityCount: number;
   readonly " $fragmentType": "GroupActivityFeed_group";
 };
 export type GroupActivityFeed_group$key = {
@@ -90,11 +91,18 @@ return {
   "selections": [
     {
       "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "recentActivityCount",
+      "storageKey": null
+    },
+    {
+      "alias": null,
       "args": [
         {
           "kind": "Literal",
           "name": "first",
-          "value": 20
+          "value": 10
         }
       ],
       "concreteType": null,
@@ -207,7 +215,7 @@ return {
           "abstractKey": null
         }
       ],
-      "storageKey": "recentActivity(first:20)"
+      "storageKey": "recentActivity(first:10)"
     }
   ],
   "type": "Group",
@@ -215,6 +223,6 @@ return {
 };
 })();
 
-(node as any).hash = "85bfcb627644523013ae11cc05fa30b7";
+(node as any).hash = "62ce90356f272d48de4293d1f2fc37ea";
 
 export default node;

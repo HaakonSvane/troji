@@ -10,12 +10,8 @@ const GroupGamesTableRowFragment = graphql`
         name
         symbol
         description
-        trophies(first: 200) @connection(key: "GameTrophies_trophies") {
-            edges {
-                node {
-                    id
-                }
-            }
+        trophies {
+            totalCount
         }
     }
 `;
@@ -23,18 +19,16 @@ const GroupGamesTableRowFragment = graphql`
 interface GroupGamesTableRowProps {
     groupId: string;
     game: GroupGamesTableRow_game$key;
-    groupMembers: Array<{ id: string; firstName?: string | null; lastName?: string | null }>;
     currentUserId?: string | null;
 }
 
 export function GroupGamesTableRow({
     groupId,
     game,
-    groupMembers,
     currentUserId,
 }: GroupGamesTableRowProps) {
     const data = useFragment(GroupGamesTableRowFragment, game);
-    const trophyCount = data.trophies?.edges?.length ?? 0;
+    const trophyCount = data.trophies?.totalCount ?? 0;
     const trophyLabel = trophyCount === 1 ? "1 trophy" : `${trophyCount} trophies`;
 
     return (
@@ -65,8 +59,6 @@ export function GroupGamesTableRow({
                 <AwardTrophyButton
                     preselectedGameId={data.id}
                     groupId={groupId}
-                    availableGames={[{ id: data.id, name: data.name, symbol: data.symbol }]}
-                    groupMembers={groupMembers}
                     currentUserId={currentUserId}
                     variant="outline"
                     size="sm"

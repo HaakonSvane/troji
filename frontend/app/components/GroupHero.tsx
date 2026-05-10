@@ -26,8 +26,6 @@ interface GroupHeroProps {
     awardCount: number;
     isAdmin: boolean;
     currentUserId?: string | null;
-    availableGames: Array<{ id: string; name: string; symbol: string }>;
-    groupMembers: Array<{ id: string; firstName?: string | null; lastName?: string | null }>;
     onInvite: () => void;
 }
 
@@ -37,8 +35,6 @@ export function GroupHero({
     awardCount,
     isAdmin,
     currentUserId,
-    availableGames,
-    groupMembers,
     onInvite,
 }: GroupHeroProps) {
     const data = useFragment(GroupHeroFragment, group);
@@ -98,8 +94,6 @@ export function GroupHero({
                     <AwardTrophyButton
                         preselectedGameId={null}
                         groupId={data.id}
-                        availableGames={availableGames}
-                        groupMembers={groupMembers}
                         currentUserId={currentUserId}
                         variant="gold"
                         size="terminal"

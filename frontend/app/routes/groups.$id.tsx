@@ -23,8 +23,8 @@ const GroupPageQuery = graphql`
             }
             ...GroupHero_group
             ...GroupActivityFeed_group
-            games(first: 50, order: { createdDate: DESC })
-                @connection(key: "GroupDetail_games", filters: ["order"]) {
+            games(first: 3) @connection(key: "GroupDetail_games") {
+                totalCount
                 edges {
                     node {
                         id
@@ -34,7 +34,8 @@ const GroupPageQuery = graphql`
                     }
                 }
             }
-            members(first: 50) {
+            members(first: 3) {
+                totalCount
                 edges {
                     node {
                         id
@@ -123,32 +124,18 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
     const members = group.members?.edges?.map((e) => e?.node).filter(Boolean) ?? [];
     const isAdmin = myId != null && group.admin?.id === myId;
 
-    const trophyGameOptions = games.map((game) => ({
-        id: game!.id,
-        name: game!.name,
-        symbol: game!.symbol,
-    }));
-    const groupMemberLite = members.map((m) => ({
-        id: m!.id,
-        firstName: m!.firstName,
-        lastName: m!.lastName,
-    }));
     const gameConnections = [
-        ConnectionHandler.getConnectionID(group.id, "GroupDetail_games", {
-            order: { createdDate: "DESC" },
-        }),
+        ConnectionHandler.getConnectionID(group.id, "GroupDetail_games"),
     ];
 
     return (
         <main className="container mx-auto flex flex-col gap-10 px-4 py-10 sm:py-14">
             <GroupHero
                 group={group}
-                memberCount={members.length}
+                memberCount={group.members?.totalCount ?? 0}
                 awardCount={group.awardedTrophyCount}
                 isAdmin={isAdmin}
                 currentUserId={myId}
-                availableGames={trophyGameOptions}
-                groupMembers={groupMemberLite}
                 onInvite={() => setInviteOpen(true)}
             />
 
@@ -160,19 +147,21 @@ export default function GroupDetail({ loaderData }: Route.ComponentProps) {
                 />
                 <GroupMembersCard
                     members={members as MembersCardMembers}
+                    totalCount={group.members?.totalCount ?? 0}
+                    groupId={group.id}
                     adminId={group.admin?.id}
                     currentUserId={myId}
                 />
             </div>
 
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_320px]">
-                <GroupActivityFeed group={group} currentUserId={myId} />
+                <GroupActivityFeed group={group} groupId={group.id} currentUserId={myId} />
                 <GroupAside
                     groupId={group.id}
                     isAdmin={isAdmin}
                     currentUserId={myId}
                     games={games as GroupAsideGames}
-                    groupMembers={groupMemberLite}
+                    gamesTotalCount={group.games?.totalCount ?? 0}
                     onNewGame={() => setNewGameOpen(true)}
                 />
             </div>

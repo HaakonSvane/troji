@@ -1,4 +1,5 @@
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import { Link } from "react-router";
 import { GroupGamesTableRow } from "@/components/GroupGamesTableRow";
 import { Button } from "@/components/ui/button";
 import type { GroupGamesTableRow_game$key } from "@/__generated__/GroupGamesTableRow_game.graphql";
@@ -14,7 +15,7 @@ interface GroupAsideProps {
     isAdmin: boolean;
     currentUserId?: string | null;
     games: GameNode[];
-    groupMembers: Array<{ id: string; firstName?: string | null; lastName?: string | null }>;
+    gamesTotalCount: number;
     onNewGame: () => void;
 }
 
@@ -23,7 +24,7 @@ export function GroupAside({
     isAdmin,
     currentUserId,
     games,
-    groupMembers,
+    gamesTotalCount,
     onNewGame,
 }: GroupAsideProps) {
     return (
@@ -62,12 +63,25 @@ export function GroupAside({
                             key={game.id}
                             groupId={groupId}
                             game={game}
-                            groupMembers={groupMembers}
                             currentUserId={currentUserId}
                         />
                     ))}
                 </div>
             )}
+            {gamesTotalCount > games.length ? (
+                <footer className="flex items-center">
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        trailingIcon={<ArrowRightIcon />}
+                        asChild
+                    >
+                        <Link to={`/groups/${groupId}/games`}>
+                            View all {gamesTotalCount}
+                        </Link>
+                    </Button>
+                </footer>
+            ) : null}
         </aside>
     );
 }

@@ -1,39 +1,99 @@
-import { useState } from "react";
+import { useState, Suspense } from "react";
+import { graphql, usePreloadedQuery, loadQuery } from "react-relay";
+import type { PreloadedQuery } from "react-relay";
 import { GiftIcon } from "@heroicons/react/24/outline";
 import { type VariantProps } from "class-variance-authority";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { TrophyRequestForm } from "@/components/TrophyRequestForm";
+import { getRelayEnvironment } from "@/relay/environment";
+import type { AwardTrophyButtonDataQuery } from "@/__generated__/AwardTrophyButtonDataQuery.graphql";
+
+const AwardDialogDataQuery = graphql`
+    query AwardTrophyButtonDataQuery($groupId: ID!) {
+        groupById(id: $groupId) {
+            games(first: 50) {
+                edges {
+                    node {
+                        id
+                        name
+                        symbol
+                    }
+                }
+            }
+            members(first: 50) {
+                edges {
+                    node {
+                        id
+                        firstName
+                        lastName
+                    }
+                }
+            }
+        }
+    }
+`;
 
 interface AwardTrophyButtonProps extends VariantProps<typeof buttonVariants> {
-    /** Pre-selected game. Pass null to show a game-picker dropdown inside the form. */
     preselectedGameId?: string | null;
     groupId: string;
-    availableGames: Array<{ id: string; name: string; symbol: string }>;
-    groupMembers: Array<{ id: string; firstName?: string | null; lastName?: string | null }>;
     currentUserId?: string | null;
     label?: string;
+}
+
+function AwardDialogWithData({
+    queryRef,
+    preselectedGameId,
+    groupId,
+    currentUserId,
+    onClose,
+}: {
+    queryRef: PreloadedQuery<AwardTrophyButtonDataQuery>;
+    preselectedGameId: string | null;
+    groupId: string;
+    currentUserId?: string | null;
+    onClose: () => void;
+}) {
+    const data = usePreloadedQuery(AwardDialogDataQuery, queryRef);
+    const games =
+        data.groupById?.games?.edges?.map((e) => e?.node).filter(Boolean) ?? [];
+    const members =
+        data.groupById?.members?.edges?.map((e) => e?.node).filter(Boolean) ?? [];
+
+    return (
+        <TrophyRequestForm
+            gameId={preselectedGameId}
+            groupId={groupId}
+            availableGames={games as Array<{ id: string; name: string; symbol: string }>}
+            open={true}
+            onOpenChange={(next) => { if (!next) onClose(); }}
+            groupMembers={members.filter((m) => m?.id !== currentUserId) as Array<{
+                id: string;
+                firstName?: string | null;
+                lastName?: string | null;
+            }>}
+            currentUserId={currentUserId}
+        />
+    );
 }
 
 export function AwardTrophyButton({
     preselectedGameId = null,
     groupId,
-    availableGames,
-    groupMembers,
     currentUserId,
     label = "Award trophy",
     variant,
     size,
 }: AwardTrophyButtonProps) {
-    const [open, setOpen] = useState(false);
+    const [queryRef, setQueryRef] = useState<PreloadedQuery<AwardTrophyButtonDataQuery> | null>(null);
 
-    const eligibleMembers = groupMembers.filter((m) => m.id !== currentUserId);
-
-    const disabled =
-        eligibleMembers.length === 0
-            ? { isDisabled: true, reason: "You need at least one other member to award a trophy." }
-            : !preselectedGameId && availableGames.length === 0
-              ? { isDisabled: true, reason: "Create a game first before awarding trophies." }
-              : false;
+    const handleClick = () => {
+        const ref = loadQuery<AwardTrophyButtonDataQuery>(
+            getRelayEnvironment(),
+            AwardDialogDataQuery,
+            { groupId }
+        );
+        setQueryRef(ref);
+    };
 
     return (
         <>
@@ -41,20 +101,21 @@ export function AwardTrophyButton({
                 variant={variant}
                 size={size}
                 leadingIcon={<GiftIcon />}
-                disabled={disabled}
-                onClick={() => setOpen(true)}
+                onClick={handleClick}
             >
                 {label}
             </Button>
-            <TrophyRequestForm
-                gameId={preselectedGameId}
-                groupId={groupId}
-                availableGames={availableGames}
-                open={open}
-                onOpenChange={setOpen}
-                groupMembers={eligibleMembers}
-                currentUserId={currentUserId}
-            />
+            {queryRef && (
+                <Suspense fallback={null}>
+                    <AwardDialogWithData
+                        queryRef={queryRef}
+                        preselectedGameId={preselectedGameId}
+                        groupId={groupId}
+                        currentUserId={currentUserId}
+                        onClose={() => setQueryRef(null)}
+                    />
+                </Suspense>
+            )}
         </>
     );
 }

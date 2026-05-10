@@ -1,35 +1,49 @@
-import { graphql, useFragment } from "react-relay";
-import { Link } from "react-router";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import type { GroupActivityFeed_group$key } from "@/__generated__/GroupActivityFeed_group.graphql";
+import { graphql, loadQuery, usePreloadedQuery } from "react-relay";
+import { useNavigate } from "react-router";
+import type { groupsActivitiesQuery } from "@/__generated__/groupsActivitiesQuery.graphql";
+import { getRelayEnvironment } from "@/relay/environment";
 import { MedalBadge } from "@/components/MedalBadge";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { Button } from "@/components/ui/button";
 import { formatPersonName } from "@/components/PersonName";
 import { formatRelativeTime, formatAbsoluteDateTime } from "@/lib/relativeTime";
-import { Button } from "@/components/ui/button";
+import type { Route } from "./+types/groups.$id.activities";
 
-const GroupActivityFeedFragment = graphql`
-    fragment GroupActivityFeed_group on Group {
-        recentActivityCount
-        recentActivity(first: 10) {
-            __typename
+const GroupActivitiesPageQuery = graphql`
+    query groupsActivitiesQuery($id: ID!) {
+        groupById(id: $id) {
             id
-            occurredAt
-            ... on TrophyAwardedActivity {
-                trophy {
-                    id
-                    description
-                    game {
+            name
+            recentActivityCount
+            recentActivity(first: 50) {
+                __typename
+                id
+                occurredAt
+                ... on TrophyAwardedActivity {
+                    trophy {
                         id
-                        symbol
-                        name
+                        description
+                        game {
+                            id
+                            symbol
+                            name
+                        }
+                        receiver {
+                            id
+                            firstName
+                            middleName
+                            lastName
+                        }
+                        awardedBy {
+                            id
+                            firstName
+                            middleName
+                            lastName
+                        }
                     }
-                    receiver {
-                        id
-                        firstName
-                        middleName
-                        lastName
-                    }
-                    awardedBy {
+                }
+                ... on MemberJoinedActivity {
+                    member {
                         id
                         firstName
                         middleName
@@ -37,22 +51,37 @@ const GroupActivityFeedFragment = graphql`
                     }
                 }
             }
-            ... on MemberJoinedActivity {
-                member {
-                    id
-                    firstName
-                    middleName
-                    lastName
-                }
-            }
+        }
+        me {
+            id
         }
     }
 `;
 
-interface GroupActivityFeedProps {
-    group: GroupActivityFeed_group$key;
-    groupId: string;
-    currentUserId?: string | null;
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
+    const environment = getRelayEnvironment();
+    const queryRef = loadQuery<groupsActivitiesQuery>(environment, GroupActivitiesPageQuery, {
+        id: params.id,
+    });
+    return { queryRef };
+}
+
+export function HydrateFallback() {
+    return (
+        <div className="flex h-full w-full items-center justify-center">
+            <div className="flex flex-col items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                <div className="size-6 animate-spin rounded-full border-2 border-medal-gold/40 border-t-medal-gold" />
+                <span>loading</span>
+            </div>
+        </div>
+    );
+}
+
+export function meta() {
+    return [
+        { title: "Activity — Troji" },
+        { name: "description", content: "Recent activity in this circle." },
+    ];
 }
 
 function ActivityTime({ iso }: { iso: string }) {
@@ -67,18 +96,49 @@ function ActivityTime({ iso }: { iso: string }) {
     );
 }
 
-export function GroupActivityFeed({ group, groupId, currentUserId }: GroupActivityFeedProps) {
-    const data = useFragment(GroupActivityFeedFragment, group);
-    const items = data.recentActivity ?? [];
-    const hasMore = data.recentActivityCount > items.length;
+export default function GroupActivities({ loaderData }: Route.ComponentProps) {
+    const navigate = useNavigate();
+    const data = usePreloadedQuery(GroupActivitiesPageQuery, loaderData.queryRef);
+    const group = data.groupById;
+    const myId = data.me?.id;
+
+    if (!group) {
+        return (
+            <main className="container mx-auto flex flex-col items-start gap-3 px-4 py-10 sm:py-14">
+                <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-destructive">
+                    <span aria-hidden className="mr-2">!</span>
+                    not found
+                </p>
+                <h1 className="font-heading text-3xl tracking-[0.015em]">
+                    That circle isn&apos;t here.
+                </h1>
+                <Button variant="outline" size="terminal" onClick={() => navigate("/groups")}>
+                    <span aria-hidden>‹</span>
+                    Back to circles
+                </Button>
+            </main>
+        );
+    }
+
+    const items = group.recentActivity ?? [];
 
     return (
-        <section className="flex flex-col gap-4">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-                <span className="text-medal-gold">$</span>
-                <span className="ml-2">recent activity</span>
-            </h2>
-
+        <main className="container mx-auto flex flex-col gap-6 px-4 py-10 sm:py-14">
+            <Breadcrumb
+                segments={[
+                    { label: "groups", href: "/groups" },
+                    { label: group.name, href: `/groups/${group.id}` },
+                    { label: "activity" },
+                ]}
+            />
+            <div className="flex items-baseline gap-3">
+                <h1 className="font-heading text-3xl font-medium tracking-[0.015em]">Activity</h1>
+                {group.recentActivityCount > 50 ? (
+                    <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                        showing 50 of {group.recentActivityCount}
+                    </span>
+                ) : null}
+            </div>
             {items.length === 0 ? (
                 <div className="surface-card flex flex-col items-start gap-2 p-6 sm:p-8">
                     <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-medal-gold">
@@ -94,8 +154,8 @@ export function GroupActivityFeed({ group, groupId, currentUserId }: GroupActivi
                     {items.map((item) => {
                         if (item.__typename === "TrophyAwardedActivity" && item.trophy) {
                             const t = item.trophy;
-                            const receiverIsSelf = t.receiver?.id === currentUserId;
-                            const awarderIsSelf = t.awardedBy?.id === currentUserId;
+                            const receiverIsSelf = t.receiver?.id === myId;
+                            const awarderIsSelf = t.awardedBy?.id === myId;
                             const receiverName = formatPersonName({
                                 firstName: t.receiver?.firstName,
                                 middleName: t.receiver?.middleName,
@@ -148,7 +208,7 @@ export function GroupActivityFeed({ group, groupId, currentUserId }: GroupActivi
                             );
                         }
                         if (item.__typename === "MemberJoinedActivity" && item.member) {
-                            const memberIsSelf = item.member.id === currentUserId;
+                            const memberIsSelf = item.member.id === myId;
                             const memberName = formatPersonName({
                                 firstName: item.member.firstName,
                                 middleName: item.member.middleName,
@@ -182,20 +242,6 @@ export function GroupActivityFeed({ group, groupId, currentUserId }: GroupActivi
                     })}
                 </ol>
             )}
-            {hasMore ? (
-                <footer className="flex items-center">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        trailingIcon={<ArrowRightIcon />}
-                        asChild
-                    >
-                        <Link to={`/groups/${groupId}/activities`}>
-                            View all {data.recentActivityCount}
-                        </Link>
-                    </Button>
-                </footer>
-            ) : null}
-        </section>
+        </main>
     );
 }

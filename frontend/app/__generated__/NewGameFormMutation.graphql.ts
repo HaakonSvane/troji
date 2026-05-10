@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3384b4ed21c9567134e821cb0705494f>>
+ * @generated SignedSource<<1d1eae9badd45ebae0cf3bcd3142caa0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -65,19 +65,18 @@ v3 = {
 v4 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
   "concreteType": null,
   "kind": "LinkedField",
   "name": "errors",
   "plural": true,
   "selections": [
-    (v4/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "__typename",
+      "storageKey": null
+    },
     {
       "kind": "InlineFragment",
       "selections": [
@@ -94,14 +93,7 @@ v5 = {
     }
   ],
   "storageKey": null
-},
-v6 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 200
-  }
-];
+};
 return {
   "fragment": {
     "argumentDefinitions": [
@@ -137,7 +129,7 @@ return {
             ],
             "storageKey": null
           },
-          (v5/*: any*/)
+          (v4/*: any*/)
         ],
         "storageKey": null
       }
@@ -194,7 +186,7 @@ return {
               },
               {
                 "alias": null,
-                "args": (v6/*: any*/),
+                "args": null,
                 "concreteType": "TrophiesConnection",
                 "kind": "LinkedField",
                 "name": "trophies",
@@ -203,70 +195,12 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "TrophiesEdge",
-                    "kind": "LinkedField",
-                    "name": "edges",
-                    "plural": true,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "Trophy",
-                        "kind": "LinkedField",
-                        "name": "node",
-                        "plural": false,
-                        "selections": [
-                          (v3/*: any*/),
-                          (v4/*: any*/)
-                        ],
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "cursor",
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "PageInfo",
-                    "kind": "LinkedField",
-                    "name": "pageInfo",
-                    "plural": false,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "endCursor",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "hasNextPage",
-                        "storageKey": null
-                      }
-                    ],
+                    "kind": "ScalarField",
+                    "name": "totalCount",
                     "storageKey": null
                   }
                 ],
-                "storageKey": "trophies(first:200)"
-              },
-              {
-                "alias": null,
-                "args": (v6/*: any*/),
-                "filters": null,
-                "handle": "connection",
-                "key": "GameTrophies_trophies",
-                "kind": "LinkedHandle",
-                "name": "trophies"
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -292,19 +226,19 @@ return {
               }
             ]
           },
-          (v5/*: any*/)
+          (v4/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "c47fb1fa8b5e0173ba2ef1b84cd2cf7e",
+    "cacheID": "1fb67d14a487684510ba6988d4653562",
     "id": null,
     "metadata": {},
     "name": "NewGameFormMutation",
     "operationKind": "mutation",
-    "text": "mutation NewGameFormMutation(\n  $input: CreateGameInput!\n) {\n  createGame(input: $input) {\n    game {\n      id\n      ...GroupGamesTableRow_game\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n\nfragment GroupGamesTableRow_game on Game {\n  id\n  name\n  symbol\n  description\n  trophies(first: 200) {\n    edges {\n      node {\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "mutation NewGameFormMutation(\n  $input: CreateGameInput!\n) {\n  createGame(input: $input) {\n    game {\n      id\n      ...GroupGamesTableRow_game\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n\nfragment GroupGamesTableRow_game on Game {\n  id\n  name\n  symbol\n  description\n  trophies {\n    totalCount\n  }\n}\n"
   }
 };
 })();

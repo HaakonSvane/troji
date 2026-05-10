@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<67740b2fa34a6a5c4c734d57051d9d1e>>
+ * @generated SignedSource<<3f48382cd9db5bd436820de1e2c1a981>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -362,11 +362,18 @@ return {
                 "selections": [
                   {
                     "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "recentActivityCount",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
                     "args": [
                       {
                         "kind": "Literal",
                         "name": "first",
-                        "value": 20
+                        "value": 10
                       }
                     ],
                     "concreteType": null,
@@ -442,7 +449,7 @@ return {
                         "abstractKey": null
                       }
                     ],
-                    "storageKey": "recentActivity(first:20)"
+                    "storageKey": "recentActivity(first:10)"
                   },
                   (v11/*: any*/),
                   (v13/*: any*/),
@@ -460,12 +467,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c1f84645185407b2d349db7580d53972",
+    "cacheID": "395eab46b3209bc6e7624bd59e68d90c",
     "id": null,
     "metadata": {},
     "name": "TrophyRequestFormMutation",
     "operationKind": "mutation",
-    "text": "mutation TrophyRequestFormMutation(\n  $input: CreateTrophyRequestInput!\n  $groupId: ID!\n) {\n  createTrophyRequest(input: $input) {\n    trophy {\n      id\n      isAwarded\n      description\n      game {\n        id\n        symbol\n        name\n      }\n      receiver {\n        id\n        firstName\n        lastName\n      }\n    }\n    query {\n      groupById(id: $groupId) {\n        ...GroupActivityFeed_group\n        awardedTrophyCount\n        topPerformer {\n          user {\n            id\n            firstName\n            middleName\n            lastName\n          }\n          awardCount\n        }\n        id\n      }\n    }\n    errors {\n      __typename\n    }\n  }\n}\n\nfragment GroupActivityFeed_group on Group {\n  recentActivity(first: 20) {\n    __typename\n    id\n    occurredAt\n    ... on TrophyAwardedActivity {\n      trophy {\n        id\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          firstName\n          middleName\n          lastName\n        }\n        awardedBy {\n          id\n          firstName\n          middleName\n          lastName\n        }\n      }\n    }\n    ... on MemberJoinedActivity {\n      member {\n        id\n        firstName\n        middleName\n        lastName\n      }\n    }\n  }\n}\n"
+    "text": "mutation TrophyRequestFormMutation(\n  $input: CreateTrophyRequestInput!\n  $groupId: ID!\n) {\n  createTrophyRequest(input: $input) {\n    trophy {\n      id\n      isAwarded\n      description\n      game {\n        id\n        symbol\n        name\n      }\n      receiver {\n        id\n        firstName\n        lastName\n      }\n    }\n    query {\n      groupById(id: $groupId) {\n        ...GroupActivityFeed_group\n        awardedTrophyCount\n        topPerformer {\n          user {\n            id\n            firstName\n            middleName\n            lastName\n          }\n          awardCount\n        }\n        id\n      }\n    }\n    errors {\n      __typename\n    }\n  }\n}\n\nfragment GroupActivityFeed_group on Group {\n  recentActivityCount\n  recentActivity(first: 10) {\n    __typename\n    id\n    occurredAt\n    ... on TrophyAwardedActivity {\n      trophy {\n        id\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          firstName\n          middleName\n          lastName\n        }\n        awardedBy {\n          id\n          firstName\n          middleName\n          lastName\n        }\n      }\n    }\n    ... on MemberJoinedActivity {\n      member {\n        id\n        firstName\n        middleName\n        lastName\n      }\n    }\n  }\n}\n"
   }
 };
 })();

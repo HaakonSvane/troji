@@ -12,14 +12,8 @@ const GroupGameDetailQuery = graphql`
         groupById(id: $groupId) {
             id
             name
-            members(first: 50) {
-                edges {
-                    node {
-                        id
-                        firstName
-                        lastName
-                    }
-                }
+            members {
+                totalCount
             }
         }
         gameById(id: $gameId) {
@@ -148,7 +142,7 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
         );
     }
 
-    const members = group.members?.edges?.map((edge) => edge?.node).filter(Boolean) ?? [];
+    const memberCount = group.members?.totalCount ?? 0;
     const trophies = game.trophies?.edges?.map((e) => e?.node).filter(Boolean) ?? [];
     const trophiesTruncated = game.trophies?.pageInfo?.hasNextPage ?? false;
     const awardedCount = trophies.filter((t) => t.isAwarded).length;
@@ -194,14 +188,6 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
                     <AwardTrophyButton
                         preselectedGameId={game.id}
                         groupId={group.id}
-                        availableGames={[{ id: game.id, name: game.name, symbol: game.symbol }]}
-                        groupMembers={
-                            members as Array<{
-                                id: string;
-                                firstName?: string | null;
-                                lastName?: string | null;
-                            }>
-                        }
                         currentUserId={myId}
                         variant="gold"
                         size="terminal"
@@ -223,7 +209,7 @@ export default function GroupGameDetail({ loaderData }: Route.ComponentProps) {
                     />
                     <StatReadout
                         label="Recipients"
-                        value={members.length}
+                        value={memberCount}
                         description="Members eligible to receive."
                     />
                 </div>

@@ -11,5 +11,8 @@ export default [
         route("groups", "routes/groups.tsx"),
         route("groups/:id", "routes/groups.$id.tsx"),
         route("groups/:id/games/:gameId", "routes/groups.$id.games.$gameId.tsx"),
+        route("groups/:id/members", "routes/groups.$id.members.tsx"),
+        route("groups/:id/activities", "routes/groups.$id.activities.tsx"),
+        route("groups/:id/games", "routes/groups.$id.games.tsx"),
     ]),
 ] satisfies RouteConfig;
