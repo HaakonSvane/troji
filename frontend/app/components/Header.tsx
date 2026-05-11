@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { ClerkLoaded, ClerkLoading, UserButton } from "@clerk/react-router";
+import type { PreloadedQuery } from "react-relay";
 import { Bars3Icon, ChatBubbleOvalLeftEllipsisIcon } from "@heroicons/react/24/outline";
 import { NavLink } from "react-router";
+import type { UserMenuQuery as UserMenuQueryType } from "@/__generated__/UserMenuQuery.graphql";
 import { FeedbackForm } from "@/components/FeedbackForm";
+import { UserMenu } from "@/components/UserMenu";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -10,7 +12,6 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Skeleton } from "@/components/ui/skeleton";
 import { VersionChip } from "@/components/VersionChip";
 
 const navLinks = [
@@ -18,7 +19,11 @@ const navLinks = [
     { to: "/groups", label: "groups" },
 ];
 
-export function Header() {
+interface HeaderProps {
+    userMenuQueryRef?: PreloadedQuery<UserMenuQueryType>;
+}
+
+export function Header({ userMenuQueryRef }: HeaderProps) {
     const [feedbackOpen, setFeedbackOpen] = useState(false);
 
     return (
@@ -119,12 +124,7 @@ export function Header() {
                     >
                         <ChatBubbleOvalLeftEllipsisIcon />
                     </Button>
-                    <ClerkLoading>
-                        <Skeleton className="size-8 rounded-full" />
-                    </ClerkLoading>
-                    <ClerkLoaded>
-                        <UserButton />
-                    </ClerkLoaded>
+                    <UserMenu queryRef={userMenuQueryRef} />
                 </div>
                 <FeedbackForm open={feedbackOpen} onOpenChange={setFeedbackOpen} />
             </div>
