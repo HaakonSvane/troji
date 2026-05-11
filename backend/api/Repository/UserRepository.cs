@@ -94,6 +94,33 @@ public sealed class UserRepository : IUserRepository
             .ToLookup(trophy => trophy.GameId, trophy => trophy.Receiver);
     }
 
+    public async Task<User> UpdateUserAsync(
+        string userId,
+        string firstName,
+        string? middleName,
+        string lastName,
+        CancellationToken cancellationToken)
+    {
+        var normalizedFirstName = firstName.Trim();
+        var normalizedLastName = lastName.Trim();
+        var normalizedMiddleName = string.IsNullOrWhiteSpace(middleName) ? null : middleName.Trim();
+
+        if (string.IsNullOrWhiteSpace(normalizedFirstName) || string.IsNullOrWhiteSpace(normalizedLastName))
+        {
+            throw new ArgumentException("First name and last name are required.");
+        }
+
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellationToken)
+            ?? throw new NoUserException();
+
+        user.FirstName = normalizedFirstName;
+        user.MiddleName = normalizedMiddleName;
+        user.LastName = normalizedLastName;
+
+        await _context.SaveChangesAsync(cancellationToken);
+        return user;
+    }
+
     public async Task<ILookup<int, User>> GetTopPlayersByGroupIdsAsync(IReadOnlyList<int> ids, CancellationToken cancellationToken)
     {
         var trophies = await _context.Trophies
