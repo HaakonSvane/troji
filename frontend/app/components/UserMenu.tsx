@@ -1,7 +1,9 @@
 import { Suspense } from "react";
 import { useClerk } from "@clerk/react-router";
+import { ArrowRightOnRectangleIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { graphql, usePreloadedQuery } from "react-relay";
 import type { PreloadedQuery } from "react-relay";
+import { Link } from "react-router";
 import type { UserMenuQuery as UserMenuQueryType } from "@/__generated__/UserMenuQuery.graphql";
 import {
     DropdownMenu,
@@ -47,16 +49,24 @@ function UserMenuContent({ queryRef }: UserMenuContentProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent
                 align="end"
+                onCloseAutoFocus={(e) => e.preventDefault()}
                 className="min-w-44 border-border bg-background p-1"
             >
-                <DropdownMenuLabel className="px-2 py-1.5 font-sans text-xs text-foreground/70">
+                <DropdownMenuLabel className="px-3 py-2 font-sans text-xs text-foreground/70">
                     {fullName}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild className="min-h-8 cursor-pointer gap-2 px-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground focus:text-foreground">
+                    <Link to="/settings">
+                        <Cog6ToothIcon className="size-3.5 shrink-0" />
+                        Settings
+                    </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem
-                    className="cursor-pointer font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground focus:text-foreground"
+                    className="min-h-8 cursor-pointer gap-2 px-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground focus:text-foreground"
                     onSelect={() => signOut({ redirectUrl: "/" })}
                 >
+                    <ArrowRightOnRectangleIcon className="size-3.5 shrink-0" />
                     Sign out
                 </DropdownMenuItem>
             </DropdownMenuContent>

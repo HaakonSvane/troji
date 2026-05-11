@@ -8,6 +8,7 @@ export default [
     layout("routes/_protected.tsx", [
         route("register", "routes/register.tsx"),
         route("dashboard", "routes/dashboard.tsx"),
+        route("settings", "routes/settings.tsx"),
         route("groups", "routes/groups.tsx"),
         route("groups/:id", "routes/groups.$id.tsx"),
         route("groups/:id/games/:gameId", "routes/groups.$id.games.$gameId.tsx"),

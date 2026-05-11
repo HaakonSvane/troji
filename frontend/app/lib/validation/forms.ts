@@ -1,6 +1,7 @@
 import type { CreateGameInput } from "@/__generated__/NewGameFormMutation.graphql";
 import type { CreateGroupInput } from "@/__generated__/NewGroupFormMutation.graphql";
 import type { CreateTrophyRequestInput } from "@/__generated__/TrophyRequestFormMutation.graphql";
+import type { UpdateUserInput } from "@/__generated__/settingsMutation.graphql";
 import { z } from "zod";
 
 type ValidationResult<T> = { success: true; data: T } | { success: false; error: string };
@@ -73,6 +74,23 @@ export function validateCreateTrophyRequestInput(values: {
     return toValidationResult<CreateTrophyRequestInput>(
         createTrophyRequestInputSchema.safeParse(values),
         "Could not validate trophy request details."
+    );
+}
+
+const updateUserInputSchema = z.object({
+    firstName: requiredText("First name is required."),
+    middleName: optionalText,
+    lastName: requiredText("Last name is required."),
+});
+
+export function validateUpdateUserInput(values: {
+    firstName: string;
+    middleName: string;
+    lastName: string;
+}): ValidationResult<UpdateUserInput> {
+    return toValidationResult<UpdateUserInput>(
+        updateUserInputSchema.safeParse(values),
+        "Could not validate profile details."
     );
 }
 
