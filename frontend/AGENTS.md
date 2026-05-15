@@ -56,7 +56,10 @@
 
 ## References
 
-- Read `backend/AGENTS.md` before changing backend-facing GraphQL assumptions.
+- `app/routes/AGENTS.md` — data-loading triplet, HydrateFallback, pagination, route naming.
+- `app/relay/AGENTS.md` — environment singleton, boot phase, NoUserError redirect.
+- `app/components/AGENTS.md` — DrawerDialog, form pattern, MedalBadge exception.
+- `backend/AGENTS.md` — backend-facing GraphQL assumptions.
 
 ## Server-Only Secrets
 
