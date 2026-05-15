@@ -4,7 +4,7 @@ import type { PreloadedQuery } from "react-relay";
 import { GiftIcon } from "@heroicons/react/24/outline";
 import { type VariantProps } from "class-variance-authority";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { TrophyRequestForm } from "@/components/TrophyRequestForm";
+import { TrophyAwardJourney } from "@/components/TrophyAwardJourney";
 import { getRelayEnvironment } from "@/relay/environment";
 import type { AwardTrophyButtonDataQuery } from "@/__generated__/AwardTrophyButtonDataQuery.graphql";
 
@@ -60,7 +60,7 @@ function AwardDialogWithData({
         data.groupById?.members?.edges?.map((e) => e?.node).filter(Boolean) ?? [];
 
     return (
-        <TrophyRequestForm
+        <TrophyAwardJourney
             gameId={preselectedGameId}
             groupId={groupId}
             availableGames={games as Array<{ id: string; name: string; symbol: string }>}
