@@ -338,7 +338,7 @@ function Breadcrumb({
             {showMedal && (
                 <motion.span
                     layoutId="award-medal"
-                    className="inline-flex will-change-transform"
+                    className="inline-flex rounded-full"
                 >
                     <MedalBadge emoji={game!.symbol} size="sm" title={game!.name} />
                 </motion.span>
@@ -349,7 +349,7 @@ function Breadcrumb({
             {showAvatar && (
                 <motion.span
                     layoutId="award-avatar"
-                    className="inline-flex will-change-transform"
+                    className="inline-flex rounded-full"
                 >
                     <UserAvatar
                         firstName={member!.firstName}
@@ -377,7 +377,7 @@ function GameStep({
             <div className="flex justify-center py-3">
                 <motion.span
                     layoutId="award-medal"
-                    className="inline-flex will-change-transform"
+                    className="inline-flex rounded-full"
                 >
                     <MedalBadge
                         emoji={selectedGame?.symbol ?? "🏅"}
@@ -423,7 +423,7 @@ function RecipientStep({
             <div className="flex justify-center py-3">
                 <motion.span
                     layoutId="award-avatar"
-                    className="inline-flex will-change-transform"
+                    className="inline-flex rounded-full"
                 >
                     <UserAvatar
                         firstName={selectedMember?.firstName}
