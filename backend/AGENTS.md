@@ -42,6 +42,8 @@ Read this when working anywhere under `backend/`.
 
 ## References
 
-- Read `backend/tests/AGENTS.md` before changing schema tests or snapshots.
+- `backend/api/AGENTS.md` — internal layout of the API project (GraphQL patterns, DataLoaders, DB conventions, Transport).
+- `backend/tests/AGENTS.md` — schema snapshot test.
+- `backend/tests/Integration/AGENTS.md` — integration test harness (Testcontainers + FakeAuthHandler).
 
 
