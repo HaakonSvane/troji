@@ -28,11 +28,8 @@ export const GLARE_PEAK_OPACITY = 0.82;
 
 /** Gradient stop positions (%) controlling streak width.
  *  outerFade: where the soft halo begins/ends.
- *  innerFade: where the bright core begins/ends.
- *  Kept wide enough that the medal's cardinal points (≈25% / 75% along
- *  the 135° axis) stay inside the lit band — otherwise the streak
- *  reads as a diamond inscribed in the circle. */
-export const GLARE_STOPS = { outerFade: 5, innerFade: 20 } as const;
+ *  innerFade: where the bright core begins/ends. */
+export const GLARE_STOPS = { outerFade: 30, innerFade: 46 } as const;
 
 // ── Per-tone gradient colors ──────────────────────────────────────────────────
 
