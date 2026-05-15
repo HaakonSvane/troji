@@ -146,7 +146,7 @@ export function MedalBadge({
             style={{ boxShadow: baseShadow }}
             className={cn(
                 "medal-badge",
-                "relative inline-flex shrink-0 items-center justify-center rounded-full border border-white/15 text-center",
+                "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/15 text-center",
                 toneFrameClass[tone],
                 frame,
                 awarded ? "" : "opacity-45 grayscale saturate-50",
@@ -173,7 +173,7 @@ export function MedalBadge({
             <span
                 ref={glareRef}
                 aria-hidden
-                className="absolute inset-0 rounded-full"
+                className="absolute -inset-px rounded-full"
                 style={{ mixBlendMode: "screen" }}
             />
             <span
