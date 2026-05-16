@@ -148,6 +148,13 @@ public sealed partial class ImageService : IImageService
         {
             return false;
         }
+        // FromUnixTimeSeconds throws on out-of-range input; reject anything outside
+        // [unix epoch, year 9999] up front so a malformed `exp` returns 403 rather
+        // than crashing the request pipeline.
+        if (expUnix < 0 || expUnix > 253402300799)
+        {
+            return false;
+        }
         if (DateTimeOffset.FromUnixTimeSeconds(expUnix) < DateTimeOffset.UtcNow)
         {
             return false;
