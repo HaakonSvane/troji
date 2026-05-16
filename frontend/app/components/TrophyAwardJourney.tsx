@@ -98,6 +98,13 @@ export function TrophyAwardJourney({
     const initialGameId =
         gameId ?? (availableGames.length === 1 ? availableGames[0].id : "");
     const initialUserId = groupMembers.length === 1 ? groupMembers[0].id : "";
+
+    const nextStep = (current: Step): Step => {
+        if (current === "game") return recipientIsLocked ? "comment" : "recipient";
+        if (current === "recipient") return "comment";
+        return current;
+    };
+
     const initialStep: Step = !initialGameId
         ? "game"
         : !initialUserId
@@ -160,12 +167,12 @@ export function TrophyAwardJourney({
 
     const pickGame = (id: string) => {
         setSelectedGameId(id);
-        setStep("recipient");
+        setStep(nextStep("game"));
     };
 
     const pickRecipient = (id: string) => {
         setSelectedUserId(id);
-        setStep("comment");
+        setStep(nextStep("recipient"));
     };
 
     const submit = () => {
