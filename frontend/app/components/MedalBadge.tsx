@@ -139,6 +139,9 @@ export function MedalBadge({
         };
     }, [tone, baseShadow]);
 
+    // `overflow-hidden` clips the `-inset-px` glare to the rounded rect. Any
+    // future descendant that intentionally extends past the frame (raised rim,
+    // protruding stamp) needs this constraint reconsidered first.
     return (
         <span
             ref={frameRef}
