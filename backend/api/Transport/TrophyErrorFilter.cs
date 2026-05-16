@@ -16,6 +16,7 @@ public sealed class TrophyErrorFilter : IErrorFilter
         if (error.Exception is not (
             NoUserException or
             UserAlreadyRegisteredException or
+            InvalidUserNameException or
             GroupNotFoundException or
             NoAdminException or
             NoInviteException or

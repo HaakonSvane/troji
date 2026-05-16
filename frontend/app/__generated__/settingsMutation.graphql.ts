@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b5cba69ae535ba3092ab8cf908ed25ca>>
+ * @generated SignedSource<<9ba2b009ce0587e16fd371e2de53841c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,12 +20,8 @@ export type settingsMutation$variables = {
 export type settingsMutation$data = {
   readonly updateUser: {
     readonly errors: ReadonlyArray<{
-      readonly __typename: "NoUserError";
-      readonly message: string;
-    } | {
-      // This will never be '%other', but we need some
-      // value in case none of the concrete values match.
-      readonly __typename: "%other";
+      readonly __typename: string;
+      readonly message?: string;
     }> | null | undefined;
     readonly user: {
       readonly firstName: string;
@@ -128,8 +124,8 @@ v1 = [
                 "storageKey": null
               }
             ],
-            "type": "NoUserError",
-            "abstractKey": null
+            "type": "Error",
+            "abstractKey": "__isError"
           }
         ],
         "storageKey": null
@@ -156,16 +152,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "e74634392fd670c89fc319edb387c7d5",
+    "cacheID": "8a957b5ab2ed55574a6ef08416a05c2d",
     "id": null,
     "metadata": {},
     "name": "settingsMutation",
     "operationKind": "mutation",
-    "text": "mutation settingsMutation(\n  $input: UpdateUserInput!\n) {\n  updateUser(input: $input) {\n    user {\n      id\n      firstName\n      middleName\n      lastName\n    }\n    errors {\n      __typename\n      ... on NoUserError {\n        message\n      }\n    }\n  }\n}\n"
+    "text": "mutation settingsMutation(\n  $input: UpdateUserInput!\n) {\n  updateUser(input: $input) {\n    user {\n      id\n      firstName\n      middleName\n      lastName\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2a50d706217fc67dad2b16c6b6930fcf";
+(node as any).hash = "09230317b8db1806d4167c5a7dd9ec2c";
 
 export default node;

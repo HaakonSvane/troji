@@ -9,6 +9,7 @@ namespace api.API.Account;
 public static class UserMutations
 {
     [Error<NoUserException>]
+    [Error<InvalidUserNameException>]
     public static async Task<User> UpdateUserAsync(
         [TokenUser] TokenUser? user,
         string firstName,

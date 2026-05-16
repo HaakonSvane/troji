@@ -36,7 +36,7 @@ const UpdateUserMutation = graphql`
             }
             errors {
                 __typename
-                ... on NoUserError {
+                ... on Error {
                     message
                 }
             }
