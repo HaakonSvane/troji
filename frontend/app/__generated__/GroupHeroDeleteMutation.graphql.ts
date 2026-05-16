@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<42a481854b3bda0b07530e33d3f74fd8>>
+ * @generated SignedSource<<2590683a02ba9697b15a6e3397c73ba0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type DeleteGroupInput = {
   groupId: string;
 };
 export type GroupHeroDeleteMutation$variables = {
+  connections: ReadonlyArray<string>;
   input: DeleteGroupInput;
 };
 export type GroupHeroDeleteMutation$data = {
@@ -33,28 +34,31 @@ export type GroupHeroDeleteMutation = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "input"
-  }
-],
-v1 = [
+var v0 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "connections"
+},
+v1 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "input"
+},
+v2 = [
   {
     "kind": "Variable",
     "name": "input",
     "variableName": "input"
   }
 ],
-v2 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "deletedId",
   "storageKey": null
 },
-v3 = {
+v4 = {
   "alias": null,
   "args": null,
   "concreteType": null,
@@ -88,14 +92,17 @@ v3 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/)
+    ],
     "kind": "Fragment",
     "metadata": null,
     "name": "GroupHeroDeleteMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v2/*: any*/),
         "concreteType": "DeleteGroupPayload",
         "kind": "LinkedField",
         "name": "deleteGroup",
@@ -109,11 +116,11 @@ return {
             "name": "deletedGroupPayload",
             "plural": false,
             "selections": [
-              (v2/*: any*/)
+              (v3/*: any*/)
             ],
             "storageKey": null
           },
-          (v3/*: any*/)
+          (v4/*: any*/)
         ],
         "storageKey": null
       }
@@ -123,13 +130,16 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v1/*: any*/),
+      (v0/*: any*/)
+    ],
     "kind": "Operation",
     "name": "GroupHeroDeleteMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v2/*: any*/),
         "concreteType": "DeleteGroupPayload",
         "kind": "LinkedField",
         "name": "deleteGroup",
@@ -143,20 +153,27 @@ return {
             "name": "deletedGroupPayload",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
+              (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
                 "filters": null,
-                "handle": "deleteRecord",
+                "handle": "deleteEdge",
                 "key": "",
                 "kind": "ScalarHandle",
-                "name": "deletedId"
+                "name": "deletedId",
+                "handleArgs": [
+                  {
+                    "kind": "Variable",
+                    "name": "connections",
+                    "variableName": "connections"
+                  }
+                ]
               }
             ],
             "storageKey": null
           },
-          (v3/*: any*/)
+          (v4/*: any*/)
         ],
         "storageKey": null
       }
@@ -173,6 +190,6 @@ return {
 };
 })();
 
-(node as any).hash = "5da8d9179e53bbbe000a11432128273d";
+(node as any).hash = "f85337999273282a6327e6695f85ed1d";
 
 export default node;

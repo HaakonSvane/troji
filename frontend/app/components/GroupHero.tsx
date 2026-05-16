@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { graphql, useFragment, useMutation } from "react-relay";
+import { ConnectionHandler } from "relay-runtime";
 import { useNavigate } from "react-router";
 import { UserPlusIcon, Cog6ToothIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import type { GroupHero_group$key } from "@/__generated__/GroupHero_group.graphql";
@@ -44,7 +45,7 @@ const GroupHeroFragment = graphql`
             id
             displayName
         }
-        transferableMembers: members(first: 50) {
+        transferableMembers: members(first: 100) {
             edges {
                 node {
                     id
@@ -94,10 +95,10 @@ const TransferGroupAdminMutation = graphql`
 `;
 
 const DeleteGroupMutation = graphql`
-    mutation GroupHeroDeleteMutation($input: DeleteGroupInput!) {
+    mutation GroupHeroDeleteMutation($input: DeleteGroupInput!, $connections: [ID!]!) {
         deleteGroup(input: $input) {
             deletedGroupPayload {
-                deletedId @deleteRecord
+                deletedId @deleteEdge(connections: $connections)
             }
             errors {
                 __typename
@@ -235,9 +236,13 @@ export function GroupHero({
     const handleConfirmDelete = () => {
         if (deleteConfirmName !== data.name) return;
         setDeleteError(null);
+        const connections = currentUserId
+            ? [ConnectionHandler.getConnectionID(currentUserId, "Groups_groups")]
+            : [];
         commitDelete({
             variables: {
                 input: { groupId: data.id, confirmName: deleteConfirmName },
+                connections,
             },
             onCompleted: (response) => {
                 const payload = response.deleteGroup;
@@ -432,7 +437,7 @@ export function GroupHero({
                                             <Select
                                                 value={transferTargetId}
                                                 onValueChange={setTransferTargetId}
-                                                disabled={isTransferring}
+                                                disabled={settingsBusy}
                                             >
                                                 <SelectTrigger
                                                     id="group-transfer-target"
@@ -455,7 +460,7 @@ export function GroupHero({
                                                 type="button"
                                                 size="sm"
                                                 variant="outline"
-                                                disabled={!transferTargetId || isTransferring}
+                                                disabled={!transferTargetId || settingsBusy}
                                                 onClick={() => {
                                                     setTransferError(null);
                                                     setTransferConfirmOpen(true);
@@ -475,7 +480,7 @@ export function GroupHero({
                                         type="button"
                                         size="sm"
                                         variant="destructive"
-                                        disabled={isDeleting}
+                                        disabled={settingsBusy}
                                         onClick={() => {
                                             setDeleteConfirmName("");
                                             setDeleteError(null);

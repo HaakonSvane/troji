@@ -36,8 +36,8 @@ const createGroupInputSchema = z.object({
 });
 
 const updateGroupInputSchema = z.object({
-    groupId: requiredText("Group id is required."),
-    name: requiredText("Group name is required."),
+    groupId: requiredText("Circle id is required."),
+    name: requiredText("Circle name is required."),
     description: optionalText,
 });
 
@@ -107,7 +107,7 @@ export function validateUpdateGroupInput(values: {
 }): ValidationResult<UpdateGroupInput> {
     return toValidationResult<UpdateGroupInput>(
         updateGroupInputSchema.safeParse(values),
-        "Could not validate group details."
+        "Could not validate circle details."
     );
 }
 
