@@ -41,14 +41,15 @@ export function DisplayName({
     const enableTooltip =
         showFullName && !isSelf && fullName.length > 0 && fullName !== user.displayName;
 
-    const nameSpan = (
+    const nameSpan = enableTooltip ? (
         <span
-            className={cn(
-                enableTooltip ? "cursor-help underline decoration-dotted underline-offset-4 decoration-border" : undefined
-            )}
+            tabIndex={0}
+            className="cursor-help rounded-sm underline decoration-dotted decoration-border underline-offset-4 outline-none focus-visible:ring-1 focus-visible:ring-medal-gold/50"
         >
             {user.displayName}
         </span>
+    ) : (
+        <span>{user.displayName}</span>
     );
 
     const content = (

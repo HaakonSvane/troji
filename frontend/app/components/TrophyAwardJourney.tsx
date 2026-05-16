@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { MedalBadge } from "@/components/MedalBadge";
 import { UserAvatar } from "@/components/UserAvatar";
 import { DisplayName } from "@/components/DisplayName";
+import { formatFullName } from "@/lib/format/names";
 import { cn } from "@/lib/utils";
 import {
     getMutationErrorMessage,
@@ -553,6 +554,9 @@ function RecipientStep({
                     {members.map((m) => {
                         const isSelected = m.id === selectedUserId;
                         const isSelf = m.id === currentUserId;
+                        const fullName = m.profile ? formatFullName(m.profile, "") : "";
+                        const showSrFullName =
+                            !isSelf && fullName.length > 0 && fullName !== m.displayName;
                         return (
                             <button
                                 key={m.id}
@@ -568,9 +572,11 @@ function RecipientStep({
                                 <DisplayName
                                     user={m}
                                     isSelf={isSelf}
-                                    showFullName
                                     className="font-sans text-sm"
                                 />
+                                {showSrFullName ? (
+                                    <span className="sr-only">, full name {fullName}</span>
+                                ) : null}
                             </button>
                         );
                     })}
