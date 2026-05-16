@@ -157,9 +157,6 @@ function AvatarField({ displayName, avatarUrl }: AvatarFieldProps) {
         setBusy(true);
         try {
             await uploadAvatar(file, () => getToken());
-            await fetchQuery(environment, SettingsPageQuery, {}).toPromise();
-            setPreview(null);
-            URL.revokeObjectURL(localPreview);
         } catch (err) {
             setPreview(null);
             URL.revokeObjectURL(localPreview);
@@ -168,6 +165,20 @@ function AvatarField({ displayName, avatarUrl }: AvatarFieldProps) {
                     ? err.message
                     : "Upload failed. Please try again."
             );
+            setBusy(false);
+            return;
+        }
+
+        // Upload succeeded. The refetch is a best-effort store refresh — if it
+        // fails (transient network blip), keep the local preview visible so the
+        // user still sees their new avatar, and let the next navigation pick up
+        // the canonical URL from the server.
+        try {
+            await fetchQuery(environment, SettingsPageQuery, {}).toPromise();
+            setPreview(null);
+            URL.revokeObjectURL(localPreview);
+        } catch (err) {
+            console.error("Avatar refetch failed after successful upload", err);
         } finally {
             setBusy(false);
         }
