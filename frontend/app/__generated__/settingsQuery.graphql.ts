@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c00c4f726a2fc396ade8ce9a10157d11>>
+ * @generated SignedSource<<a18b2c2bdf4ee9d48bbbf71979b02423>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type settingsQuery$data = {
   readonly me: {
     readonly displayName: string;
     readonly id: string;
+    readonly imageId: string | null | undefined;
     readonly profile: {
       readonly firstName: string;
       readonly lastName: string;
@@ -48,6 +49,13 @@ var v0 = [
         "args": null,
         "kind": "ScalarField",
         "name": "displayName",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "imageId",
         "storageKey": null
       },
       {
@@ -104,16 +112,16 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "cacheID": "5a658ab619ebcbb55431314dc994efe1",
+    "cacheID": "b8f7fd6d3bc4e2eda5ea2e94043b371a",
     "id": null,
     "metadata": {},
     "name": "settingsQuery",
     "operationKind": "query",
-    "text": "query settingsQuery {\n  me {\n    id\n    displayName\n    profile {\n      firstName\n      middleName\n      lastName\n    }\n  }\n}\n"
+    "text": "query settingsQuery {\n  me {\n    id\n    displayName\n    imageId\n    profile {\n      firstName\n      middleName\n      lastName\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d90ba7bd2ccc83197d6f2ed2322d1172";
+(node as any).hash = "a96875ff0827638439be06aef12eadfa";
 
 export default node;

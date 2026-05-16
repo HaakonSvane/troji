@@ -4,6 +4,7 @@ import type { settingsQuery } from "@/__generated__/settingsQuery.graphql";
 import type { settingsDisplayNameMutation } from "@/__generated__/settingsDisplayNameMutation.graphql";
 import type { settingsProfileMutation } from "@/__generated__/settingsProfileMutation.graphql";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { UserAvatar } from "@/components/UserAvatar";
 import { getRelayEnvironment } from "@/relay/environment";
 import {
     validateUpdateDisplayNameInput,
@@ -23,6 +24,7 @@ const SettingsPageQuery = graphql`
         me {
             id
             displayName
+            imageId
             profile {
                 firstName
                 middleName
@@ -91,115 +93,97 @@ export function meta() {
     return [{ title: "Settings — Troji" }];
 }
 
-export default function SettingsPage({ loaderData }: Route.ComponentProps) {
-    const data = usePreloadedQuery(SettingsPageQuery, loaderData.queryRef);
-    const [commitDisplayName, isSavingDisplayName] =
+function SectionLabel({ children }: { children: React.ReactNode }) {
+    return (
+        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+            <span className="text-medal-gold">$</span>
+            <span className="ml-2">{children}</span>
+        </p>
+    );
+}
+
+interface IdentityCardProps {
+    displayName: string;
+    initialDisplayName: string;
+    imageId: string | null | undefined;
+    onChange: (next: string) => void;
+}
+
+function IdentityCard({
+    displayName,
+    initialDisplayName,
+    imageId,
+    onChange,
+}: IdentityCardProps) {
+    const [commitDisplayName, isSubmitting] =
         useMutation<settingsDisplayNameMutation>(UpdateDisplayNameMutation);
-    const [commitProfile, isSavingProfile] =
-        useMutation<settingsProfileMutation>(UpdateProfileMutation);
-
-    const initialDisplayName = data.me?.displayName ?? "";
-    const initialFirstName = data.me?.profile?.firstName ?? "";
-    const initialMiddleName = data.me?.profile?.middleName ?? "";
-    const initialLastName = data.me?.profile?.lastName ?? "";
-
-    const [displayName, setDisplayName] = useState(initialDisplayName);
-    const [firstName, setFirstName] = useState(initialFirstName);
-    const [middleName, setMiddleName] = useState(initialMiddleName);
-    const [lastName, setLastName] = useState(initialLastName);
     const [formError, setFormError] = useState<string | null>(null);
     const [saved, setSaved] = useState(false);
 
-    const isSubmitting = isSavingDisplayName || isSavingProfile;
+    const dirty = displayName.trim() !== initialDisplayName.trim();
+    const fallbackError = "Could not save changes. Please try again.";
 
     const onSubmit = () => {
         setFormError(null);
         setSaved(false);
 
-        const fallbackError = "Could not save changes. Please try again.";
-        const displayNameDirty = displayName.trim() !== initialDisplayName.trim();
-        const profileDirty =
-            firstName.trim() !== initialFirstName.trim() ||
-            middleName.trim() !== (initialMiddleName ?? "").trim() ||
-            lastName.trim() !== initialLastName.trim();
-
-        if (!displayNameDirty && !profileDirty) {
+        if (!dirty) {
             setSaved(true);
             return;
         }
 
-        const displayNameValidation = displayNameDirty
-            ? validateUpdateDisplayNameInput({ displayName })
-            : null;
-        if (displayNameValidation && !displayNameValidation.success) {
-            setFormError(displayNameValidation.error);
+        const validation = validateUpdateDisplayNameInput({ displayName });
+        if (!validation.success) {
+            setFormError(validation.error);
             return;
         }
 
-        const profileValidation = profileDirty
-            ? validateUpdateProfileInput({ firstName, middleName, lastName })
-            : null;
-        if (profileValidation && !profileValidation.success) {
-            setFormError(profileValidation.error);
-            return;
-        }
-
-        const runProfile = () => {
-            if (!profileValidation?.success) {
-                setSaved(true);
-                return;
-            }
-            commitProfile({
-                variables: { input: profileValidation.data },
-                onCompleted: (response) => {
-                    const payload = response.updateUserProfile;
-                    if (payload?.user) {
-                        setSaved(true);
-                        return;
-                    }
-                    setFormError(getMutationErrorMessage(payload?.errors, fallbackError));
-                },
-                onError: (error) => {
-                    setFormError(getMutationNetworkErrorMessage(error, fallbackError));
-                },
-            });
-        };
-
-        if (displayNameValidation?.success) {
-            commitDisplayName({
-                variables: { input: displayNameValidation.data },
-                onCompleted: (response) => {
-                    const payload = response.updateUserDisplayName;
-                    if (!payload?.user) {
-                        setFormError(getMutationErrorMessage(payload?.errors, fallbackError));
-                        return;
-                    }
-                    runProfile();
-                },
-                onError: (error) => {
-                    setFormError(getMutationNetworkErrorMessage(error, fallbackError));
-                },
-            });
-        } else {
-            runProfile();
-        }
+        commitDisplayName({
+            variables: { input: validation.data },
+            onCompleted: (response) => {
+                const payload = response.updateUserDisplayName;
+                if (payload?.user) {
+                    setSaved(true);
+                    return;
+                }
+                setFormError(getMutationErrorMessage(payload?.errors, fallbackError));
+            },
+            onError: (error) => {
+                setFormError(getMutationNetworkErrorMessage(error, fallbackError));
+            },
+        });
     };
 
     return (
-        <main className="container mx-auto flex flex-col px-4 py-10 sm:py-14">
-            <Breadcrumb segments={[{ label: "settings" }]} />
-
-            <h1 className="mt-6 font-heading text-4xl font-medium leading-tight tracking-[0.015em] text-foreground sm:text-5xl">
-                Settings
-            </h1>
-
+        <section className="flex flex-col gap-4">
+            <SectionLabel>identity</SectionLabel>
             <form
-                className="mt-10 flex max-w-sm flex-col gap-5"
+                className="surface-card flex flex-col gap-5 p-5 sm:p-6"
                 onSubmit={(event) => {
                     event.preventDefault();
                     onSubmit();
                 }}
             >
+                <div className="flex flex-col gap-1">
+                    <h2 className="font-heading text-2xl font-medium tracking-[0.015em] text-foreground">
+                        How others see you
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                        Your handle and avatar across every circle.
+                    </p>
+                </div>
+
+                <div className="flex items-center gap-4">
+                    <UserAvatar displayName={displayName} imageId={imageId} size="lg" />
+                    <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                        avatar
+                        <br />
+                        <span className="lowercase tracking-normal text-foreground/60">
+                            uploads land later
+                        </span>
+                    </p>
+                </div>
+
                 <div className="flex flex-col gap-1.5">
                     <Label
                         htmlFor="displayName"
@@ -211,11 +195,128 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
                         id="displayName"
                         name="displayName"
                         value={displayName}
-                        onChange={(e) => { setDisplayName(e.target.value); setSaved(false); }}
+                        onChange={(e) => {
+                            onChange(e.target.value);
+                            setSaved(false);
+                            setFormError(null);
+                        }}
                         autoComplete="nickname"
                         maxLength={32}
                         required
                     />
+                </div>
+
+                {formError ? (
+                    <p
+                        className="font-mono text-[11px] uppercase tracking-[0.18em] text-destructive"
+                        role="alert"
+                    >
+                        <span aria-hidden className="mr-2">!</span>
+                        {formError}
+                    </p>
+                ) : null}
+
+                {saved ? (
+                    <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-medal-gold">
+                        <span aria-hidden className="mr-2">✓</span>
+                        Saved
+                    </p>
+                ) : null}
+
+                <Button
+                    type="submit"
+                    variant="gold"
+                    size="terminal"
+                    disabled={isSubmitting || !dirty}
+                    className="mt-1 self-start"
+                >
+                    <span aria-hidden>▸</span>
+                    <span>{isSubmitting ? "saving" : "save identity"}</span>
+                </Button>
+            </form>
+        </section>
+    );
+}
+
+interface ProfileCardProps {
+    firstName: string;
+    middleName: string;
+    lastName: string;
+    initialFirstName: string;
+    initialMiddleName: string;
+    initialLastName: string;
+    onChange: (next: { firstName: string; middleName: string; lastName: string }) => void;
+}
+
+function ProfileCard({
+    firstName,
+    middleName,
+    lastName,
+    initialFirstName,
+    initialMiddleName,
+    initialLastName,
+    onChange,
+}: ProfileCardProps) {
+    const [commitProfile, isSubmitting] =
+        useMutation<settingsProfileMutation>(UpdateProfileMutation);
+    const [formError, setFormError] = useState<string | null>(null);
+    const [saved, setSaved] = useState(false);
+
+    const dirty =
+        firstName.trim() !== initialFirstName.trim() ||
+        middleName.trim() !== initialMiddleName.trim() ||
+        lastName.trim() !== initialLastName.trim();
+
+    const fallbackError = "Could not save changes. Please try again.";
+
+    const onSubmit = () => {
+        setFormError(null);
+        setSaved(false);
+
+        if (!dirty) {
+            setSaved(true);
+            return;
+        }
+
+        const validation = validateUpdateProfileInput({ firstName, middleName, lastName });
+        if (!validation.success) {
+            setFormError(validation.error);
+            return;
+        }
+
+        commitProfile({
+            variables: { input: validation.data },
+            onCompleted: (response) => {
+                const payload = response.updateUserProfile;
+                if (payload?.user) {
+                    setSaved(true);
+                    return;
+                }
+                setFormError(getMutationErrorMessage(payload?.errors, fallbackError));
+            },
+            onError: (error) => {
+                setFormError(getMutationNetworkErrorMessage(error, fallbackError));
+            },
+        });
+    };
+
+    return (
+        <section className="flex flex-col gap-4">
+            <SectionLabel>profile</SectionLabel>
+            <form
+                className="surface-card flex flex-col gap-5 p-5 sm:p-6"
+                onSubmit={(event) => {
+                    event.preventDefault();
+                    onSubmit();
+                }}
+            >
+                <div className="flex flex-col gap-1">
+                    <h2 className="font-heading text-2xl font-medium tracking-[0.015em] text-foreground">
+                        So your friends know who you actually are
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                        Revealed on hover behind your display name. Not shown to strangers.
+                    </p>
                 </div>
 
                 <div className="flex flex-col gap-1.5">
@@ -229,7 +330,11 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
                         id="firstName"
                         name="firstName"
                         value={firstName}
-                        onChange={(e) => { setFirstName(e.target.value); setSaved(false); }}
+                        onChange={(e) => {
+                            onChange({ firstName: e.target.value, middleName, lastName });
+                            setSaved(false);
+                            setFormError(null);
+                        }}
                         autoComplete="given-name"
                         required
                     />
@@ -247,7 +352,11 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
                         id="middleName"
                         name="middleName"
                         value={middleName}
-                        onChange={(e) => { setMiddleName(e.target.value); setSaved(false); }}
+                        onChange={(e) => {
+                            onChange({ firstName, middleName: e.target.value, lastName });
+                            setSaved(false);
+                            setFormError(null);
+                        }}
                         autoComplete="additional-name"
                     />
                 </div>
@@ -263,7 +372,11 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
                         id="lastName"
                         name="lastName"
                         value={lastName}
-                        onChange={(e) => { setLastName(e.target.value); setSaved(false); }}
+                        onChange={(e) => {
+                            onChange({ firstName, middleName, lastName: e.target.value });
+                            setSaved(false);
+                            setFormError(null);
+                        }}
                         autoComplete="family-name"
                         required
                     />
@@ -290,13 +403,59 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
                     type="submit"
                     variant="gold"
                     size="terminal"
-                    disabled={isSubmitting}
-                    className="mt-2"
+                    disabled={isSubmitting || !dirty}
+                    className="mt-1 self-start"
                 >
                     <span aria-hidden>▸</span>
-                    <span>{isSubmitting ? "saving" : "save changes"}</span>
+                    <span>{isSubmitting ? "saving" : "save profile"}</span>
                 </Button>
             </form>
+        </section>
+    );
+}
+
+export default function SettingsPage({ loaderData }: Route.ComponentProps) {
+    const data = usePreloadedQuery(SettingsPageQuery, loaderData.queryRef);
+
+    const initialDisplayName = data.me?.displayName ?? "";
+    const initialFirstName = data.me?.profile?.firstName ?? "";
+    const initialMiddleName = data.me?.profile?.middleName ?? "";
+    const initialLastName = data.me?.profile?.lastName ?? "";
+
+    const [displayName, setDisplayName] = useState(initialDisplayName);
+    const [firstName, setFirstName] = useState(initialFirstName);
+    const [middleName, setMiddleName] = useState(initialMiddleName);
+    const [lastName, setLastName] = useState(initialLastName);
+
+    return (
+        <main className="container mx-auto flex flex-col px-4 py-10 sm:py-14">
+            <Breadcrumb segments={[{ label: "settings" }]} />
+
+            <h1 className="mt-6 font-heading text-4xl font-medium leading-tight tracking-[0.015em] text-foreground sm:text-5xl">
+                Settings
+            </h1>
+
+            <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
+                <IdentityCard
+                    displayName={displayName}
+                    initialDisplayName={initialDisplayName}
+                    imageId={data.me?.imageId}
+                    onChange={setDisplayName}
+                />
+                <ProfileCard
+                    firstName={firstName}
+                    middleName={middleName}
+                    lastName={lastName}
+                    initialFirstName={initialFirstName}
+                    initialMiddleName={initialMiddleName}
+                    initialLastName={initialLastName}
+                    onChange={(next) => {
+                        setFirstName(next.firstName);
+                        setMiddleName(next.middleName);
+                        setLastName(next.lastName);
+                    }}
+                />
+            </div>
         </main>
     );
 }
