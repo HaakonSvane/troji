@@ -1,8 +1,12 @@
 import { getAuth } from "@clerk/react-router/server";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { loadQuery } from "react-relay";
 import { Outlet, redirect } from "react-router";
+import { UserMenuQuery } from "@/components/UserMenu";
 import { Header } from "@/components/Header";
+import { getRelayEnvironment } from "@/relay/environment";
+import type { UserMenuQuery as UserMenuQueryType } from "@/__generated__/UserMenuQuery.graphql";
 import type { Route } from "./+types/_protected";
 
 export async function loader(args: Route.LoaderArgs) {
@@ -10,8 +14,15 @@ export async function loader(args: Route.LoaderArgs) {
     if (!isAuthenticated) {
         throw redirect("/sign-in");
     }
-    return null;
+    return { queryRef: undefined };
 }
+
+export function clientLoader(_args: Route.ClientLoaderArgs) {
+    const environment = getRelayEnvironment();
+    const queryRef = loadQuery<UserMenuQueryType>(environment, UserMenuQuery, {});
+    return { queryRef };
+}
+clientLoader.hydrate = true;
 
 function FullPageSpinner() {
     return (
@@ -40,10 +51,10 @@ function RouteError({ error }: { error: unknown }) {
     );
 }
 
-export default function ProtectedLayout() {
+export default function ProtectedLayout({ loaderData }: Route.ComponentProps) {
     return (
         <>
-            <Header />
+            <Header userMenuQueryRef={loaderData?.queryRef} />
             <Suspense fallback={<FullPageSpinner />}>
                 <ErrorBoundary FallbackComponent={RouteError}>
                     <Outlet />

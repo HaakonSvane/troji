@@ -1,6 +1,9 @@
 import type { CreateGameInput } from "@/__generated__/NewGameFormMutation.graphql";
 import type { CreateGroupInput } from "@/__generated__/NewGroupFormMutation.graphql";
 import type { CreateTrophyRequestInput } from "@/__generated__/TrophyAwardJourneyMutation.graphql";
+import type { RegisterUserInput } from "@/__generated__/registerUserMutation.graphql";
+import type { UpdateUserDisplayNameInput } from "@/__generated__/settingsDisplayNameMutation.graphql";
+import type { UpdateUserProfileInput } from "@/__generated__/settingsProfileMutation.graphql";
 import { z } from "zod";
 
 type ValidationResult<T> = { success: true; data: T } | { success: false; error: string };
@@ -10,6 +13,12 @@ const optionalText = z
     .string()
     .trim()
     .transform((value) => value || null);
+
+const displayNameSchema = z
+    .string()
+    .trim()
+    .min(1, "Display name is required.")
+    .max(32, "Display name must be at most 32 characters.");
 
 const createGameInputSchema = z.object({
     groupId: requiredText("Group is required."),
@@ -27,6 +36,23 @@ const createTrophyRequestInputSchema = z.object({
     gameId: requiredText("Game is required."),
     userId: requiredText("Select a member to receive the trophy."),
     description: optionalText,
+});
+
+const updateDisplayNameInputSchema = z.object({
+    displayName: displayNameSchema,
+});
+
+const profileNamesSchema = z.object({
+    firstName: requiredText("First name is required."),
+    middleName: optionalText,
+    lastName: requiredText("Last name is required."),
+});
+
+const registerUserInputSchema = z.object({
+    displayName: displayNameSchema,
+    firstName: requiredText("First name is required."),
+    middleName: optionalText,
+    lastName: requiredText("Last name is required."),
 });
 
 function toValidationResult<T>(
@@ -73,6 +99,38 @@ export function validateCreateTrophyRequestInput(values: {
     return toValidationResult<CreateTrophyRequestInput>(
         createTrophyRequestInputSchema.safeParse(values),
         "Could not validate trophy request details."
+    );
+}
+
+export function validateUpdateDisplayNameInput(values: {
+    displayName: string;
+}): ValidationResult<UpdateUserDisplayNameInput> {
+    return toValidationResult<UpdateUserDisplayNameInput>(
+        updateDisplayNameInputSchema.safeParse(values),
+        "Could not validate display name."
+    );
+}
+
+export function validateUpdateProfileInput(values: {
+    firstName: string;
+    middleName: string;
+    lastName: string;
+}): ValidationResult<UpdateUserProfileInput> {
+    return toValidationResult<UpdateUserProfileInput>(
+        profileNamesSchema.safeParse(values),
+        "Could not validate profile details."
+    );
+}
+
+export function validateRegisterUserInput(values: {
+    displayName: string;
+    firstName: string;
+    middleName: string;
+    lastName: string;
+}): ValidationResult<RegisterUserInput> {
+    return toValidationResult<RegisterUserInput>(
+        registerUserInputSchema.safeParse(values),
+        "Could not validate registration details."
     );
 }
 

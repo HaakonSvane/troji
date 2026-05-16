@@ -1,31 +1,45 @@
 import type { registerUserMutation } from "@/__generated__/registerUserMutation.graphql";
+import { getAuth } from "@clerk/react-router/server";
 import { useUser } from "@clerk/react-router";
 import { useEffect, useState } from "react";
 import { graphql, useMutation } from "react-relay";
-import { useNavigate } from "react-router";
+import { redirect, useNavigate } from "react-router";
 import { AuthShell } from "@/components/AuthShell";
+import type { Route } from "./+types/register";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TerminalCursor } from "@/components/TerminalCursor";
+import {
+    getMutationErrorMessage,
+    getMutationNetworkErrorMessage,
+} from "@/lib/relay/mutationErrors";
+import { validateRegisterUserInput } from "@/lib/validation/forms";
 
 const RegisterUserMutation = graphql`
     mutation registerUserMutation($input: RegisterUserInput!) {
         registerUser(input: $input) {
             user {
                 id
-                firstName
-                lastName
+                displayName
             }
             errors {
                 __typename
-                ... on UserAlreadyRegisteredError {
+                ... on Error {
                     message
                 }
             }
         }
     }
 `;
+
+export async function loader(args: Route.LoaderArgs) {
+    const { isAuthenticated } = await getAuth(args);
+    if (!isAuthenticated) {
+        throw redirect("/sign-in");
+    }
+    return {};
+}
 
 export function meta() {
     return [
@@ -40,6 +54,7 @@ export default function RegisterPage() {
     const [commitRegisterUser, isSubmitting] =
         useMutation<registerUserMutation>(RegisterUserMutation);
 
+    const [displayName, setDisplayName] = useState("");
     const [firstName, setFirstName] = useState("");
     const [middleName, setMiddleName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -62,37 +77,29 @@ export default function RegisterPage() {
     const onSubmit = () => {
         setFormError(null);
 
-        const normalizedFirstName = firstName.trim();
-        const normalizedLastName = lastName.trim();
-        const normalizedMiddleName = middleName.trim();
-
-        if (!normalizedFirstName || !normalizedLastName) {
-            setFormError("First name and last name are required.");
+        const validation = validateRegisterUserInput({
+            displayName,
+            firstName,
+            middleName,
+            lastName,
+        });
+        if (!validation.success) {
+            setFormError(validation.error);
             return;
         }
 
         commitRegisterUser({
-            variables: {
-                input: {
-                    firstName: normalizedFirstName,
-                    middleName: normalizedMiddleName || null,
-                    lastName: normalizedLastName,
-                },
-            },
-            // @types/react-relay is v18 but react-relay is v20; onCompleted is typed as
-            // (response: {}) in the older types, so a cast is required here.
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            onCompleted: (response: any) => {
+            variables: { input: validation.data },
+            onCompleted: (response) => {
                 const payload = response.registerUser;
 
-                if (payload?.user) {
+                if (payload.user) {
                     navigate("/dashboard", { replace: true });
                     return;
                 }
 
-                const alreadyRegistered = payload?.errors?.some(
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    (error: any) => error?.__typename === "UserAlreadyRegisteredError"
+                const alreadyRegistered = payload.errors?.some(
+                    (error) => error.__typename === "UserAlreadyRegisteredError"
                 );
 
                 if (alreadyRegistered) {
@@ -100,13 +107,28 @@ export default function RegisterPage() {
                     return;
                 }
 
-                setFormError("Could not complete registration. Please try again.");
+                setFormError(
+                    getMutationErrorMessage(
+                        payload.errors,
+                        "Could not complete registration. Please try again."
+                    )
+                );
             },
-            onError: () => {
-                setFormError("Could not complete registration. Please try again.");
+            onError: (error) => {
+                setFormError(
+                    getMutationNetworkErrorMessage(
+                        error,
+                        "Could not complete registration. Please try again."
+                    )
+                );
             },
         });
     };
+
+    const displayNamePlaceholder = [firstName, lastName]
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .join(" ");
 
     return (
         <AuthShell prompt="pick your handle" headline="What name goes on the trophy?">
@@ -117,6 +139,25 @@ export default function RegisterPage() {
                     onSubmit();
                 }}
             >
+                <div className="flex flex-col gap-1.5">
+                    <Label
+                        htmlFor="displayName"
+                        className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground"
+                    >
+                        Display name
+                    </Label>
+                    <Input
+                        id="displayName"
+                        name="displayName"
+                        value={displayName}
+                        onChange={(event) => setDisplayName(event.target.value)}
+                        autoComplete="nickname"
+                        placeholder={displayNamePlaceholder || "How others see you"}
+                        maxLength={32}
+                        required
+                    />
+                </div>
+
                 <div className="flex flex-col gap-1.5">
                     <Label
                         htmlFor="firstName"

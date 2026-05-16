@@ -2,6 +2,13 @@ import { Environment, Network, RecordSource, Store } from "relay-runtime";
 import type { FetchFunction, RequestParameters, Variables } from "relay-runtime";
 import type { GraphQLResponse } from "relay-runtime/lib/network/RelayNetworkTypes";
 
+class NoUserRedirectError extends Error {
+    constructor() {
+        super("NoUserError: redirecting to /register");
+        this.name = "NoUserRedirectError";
+    }
+}
+
 async function executeGraphQLRequest(
     getToken: () => Promise<string | null>,
     request: RequestParameters,
@@ -17,18 +24,22 @@ async function executeGraphQLRequest(
         body: JSON.stringify({ query: request.text, variables }),
     });
 
-    const json: { errors?: { extensions?: { code?: string } }[] } = await response.json();
+    const json: GraphQLResponse & {
+        errors?: { extensions?: { code?: string } }[];
+    } = await response.json();
 
-    // Authenticated but no DB user row → redirect to registration
+    // Authenticated but no DB user row → redirect to registration. The page is about
+    // to be replaced; rejecting fulfils the Promise<GraphQLResponse> contract so we
+    // don't need to fabricate a fake response.
     const hasNoUserError =
         Array.isArray(json.errors) &&
         json.errors.some((e) => e?.extensions?.code === "NoUserError");
     if (hasNoUserError && typeof window !== "undefined") {
         window.location.href = "/register";
-        return { data: null } as unknown as GraphQLResponse;
+        throw new NoUserRedirectError();
     }
 
-    return json as GraphQLResponse;
+    return json;
 }
 
 function createFetchFn(getToken: () => Promise<string | null>): FetchFunction {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<abae4287f41f9af57499baed52d4bd63>>
+ * @generated SignedSource<<41bae53576d2cd0cce83feaae5a85a35>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,10 +11,13 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type MemberRow_user$data = {
-  readonly firstName: string;
+  readonly displayName: string;
   readonly id: string;
-  readonly lastName: string;
-  readonly middleName: string | null | undefined;
+  readonly profile: {
+    readonly firstName: string;
+    readonly lastName: string;
+    readonly middleName: string | null | undefined;
+  };
   readonly " $fragmentType": "MemberRow_user";
 };
 export type MemberRow_user$key = {
@@ -39,21 +42,39 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "firstName",
+      "name": "displayName",
       "storageKey": null
     },
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "middleName",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "lastName",
+      "concreteType": "UserProfile",
+      "kind": "LinkedField",
+      "name": "profile",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "firstName",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "middleName",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "lastName",
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     }
   ],
@@ -61,6 +82,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "79f5ae2bef4326c8ed6f4097cb5289bb";
+(node as any).hash = "c1459c5815dbed14db1c8d462f313f9a";
 
 export default node;

@@ -58,6 +58,7 @@ TemporaryDependencyNodeTargetIdentifier=net10.0
 API/Account/
  UserMutations.cs
  UserNode.cs
+ UserProfile.cs
  UserQueries.cs
 API/Errors/
  AlreadyMemberException.cs
@@ -65,6 +66,8 @@ API/Errors/
  GameLimitExceededException.cs
  GroupLimitExceededException.cs
  GroupNotFoundException.cs
+ InvalidDisplayNameException.cs
+ InvalidUserNameException.cs
  InviteExpiredException.cs
  InviteResetTooSoonException.cs
  NoAdminException.cs
@@ -155,6 +158,8 @@ Migrations/
  20260425161150_OpenOnlyGroupRule.Designer.cs
  20260509072738_UniqueGameEmojiPerGroup.cs
  20260509072738_UniqueGameEmojiPerGroup.Designer.cs
+ 20260516055944_AddDisplayName.cs
+ 20260516055944_AddDisplayName.Designer.cs
  TrophyDbContextModelSnapshot.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs

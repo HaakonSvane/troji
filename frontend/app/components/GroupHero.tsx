@@ -22,8 +22,7 @@ const GroupHeroFragment = graphql`
         createdDate
         admin {
             id
-            firstName
-            lastName
+            displayName
         }
     }
 `;

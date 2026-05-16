@@ -1,3 +1,4 @@
+import { initialsFromDisplayName } from "@/lib/format/names";
 import { cn } from "@/lib/utils";
 
 type UserAvatarSize = "sm" | "md" | "lg";
@@ -9,23 +10,21 @@ const sizeClass: Record<UserAvatarSize, string> = {
 };
 
 interface UserAvatarProps {
-    firstName?: string | null;
-    lastName?: string | null;
+    displayName?: string | null;
+    imageId?: string | null;
     size?: UserAvatarSize;
     className?: string;
     title?: string;
 }
 
 export function UserAvatar({
-    firstName,
-    lastName,
+    displayName,
+    imageId: _imageId,
     size = "sm",
     className,
     title,
 }: UserAvatarProps) {
-    const firstInitial = Array.from(firstName ?? "")[0] ?? "";
-    const lastInitial = Array.from(lastName ?? "")[0] ?? "";
-    const initials = (firstInitial + lastInitial).toUpperCase();
+    const initials = initialsFromDisplayName(displayName);
 
     return (
         <span
@@ -36,7 +35,7 @@ export function UserAvatar({
                 className
             )}
         >
-            {initials || "?"}
+            {initials}
         </span>
     );
 }

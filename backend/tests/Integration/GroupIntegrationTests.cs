@@ -161,13 +161,13 @@ public class GroupIntegrationTests
                     trophy {
                       id
                       description
-                      receiver { id firstName }
-                      awardedBy { id firstName }
+                      receiver { id displayName }
+                      awardedBy { id displayName }
                       game { id name }
                     }
                   }
                   ... on MemberJoinedActivity {
-                    member { id firstName }
+                    member { id displayName }
                   }
                 }
               }
@@ -192,8 +192,8 @@ public class GroupIntegrationTests
         Assert.That(activity[0].GetProperty("__typename").GetString(), Is.EqualTo("TrophyAwardedActivity"));
         var trophy = activity[0].GetProperty("trophy");
         Assert.That(trophy.GetProperty("description").GetString(), Is.EqualTo("wittiest reply"));
-        Assert.That(trophy.GetProperty("receiver").GetProperty("firstName").GetString(), Is.EqualTo("Activity"));
-        Assert.That(trophy.GetProperty("awardedBy").GetProperty("firstName").GetString(), Is.EqualTo("Activity"));
+        Assert.That(trophy.GetProperty("receiver").GetProperty("displayName").GetString(), Is.EqualTo("Activity Joiner"));
+        Assert.That(trophy.GetProperty("awardedBy").GetProperty("displayName").GetString(), Is.EqualTo("Activity Admin"));
 
         // Joiner joined just before the award
         Assert.That(activity[1].GetProperty("__typename").GetString(), Is.EqualTo("MemberJoinedActivity"));

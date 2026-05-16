@@ -24,8 +24,12 @@ const AwardDialogDataQuery = graphql`
                 edges {
                     node {
                         id
-                        firstName
-                        lastName
+                        displayName
+                        profile {
+                            firstName
+                            middleName
+                            lastName
+                        }
                     }
                 }
             }
@@ -75,8 +79,12 @@ function AwardDialogWithData({
             onOpenChange={(next) => { if (!next) onClose(); }}
             groupMembers={members.filter((m) => m?.id !== currentUserId) as Array<{
                 id: string;
-                firstName?: string | null;
-                lastName?: string | null;
+                displayName: string;
+                profile: {
+                    firstName: string;
+                    middleName: string | null;
+                    lastName: string;
+                };
             }>}
             currentUserId={currentUserId}
         />

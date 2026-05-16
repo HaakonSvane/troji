@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3043920c2f54c10b06617dce151ad1df>>
+ * @generated SignedSource<<f2739ee00a4915d43791c0f9adb6fb39>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,17 +9,14 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type RegisterUserInput = {
+export type UpdateUserDisplayNameInput = {
   displayName: string;
-  firstName: string;
-  lastName: string;
-  middleName?: string | null | undefined;
 };
-export type registerUserMutation$variables = {
-  input: RegisterUserInput;
+export type settingsDisplayNameMutation$variables = {
+  input: UpdateUserDisplayNameInput;
 };
-export type registerUserMutation$data = {
-  readonly registerUser: {
+export type settingsDisplayNameMutation$data = {
+  readonly updateUserDisplayName: {
     readonly errors: ReadonlyArray<{
       readonly __typename: string;
       readonly message?: string;
@@ -30,9 +27,9 @@ export type registerUserMutation$data = {
     } | null | undefined;
   };
 };
-export type registerUserMutation = {
-  response: registerUserMutation$data;
-  variables: registerUserMutation$variables;
+export type settingsDisplayNameMutation = {
+  response: settingsDisplayNameMutation$data;
+  variables: settingsDisplayNameMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -53,9 +50,9 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "RegisterUserPayload",
+    "concreteType": "UpdateUserDisplayNamePayload",
     "kind": "LinkedField",
-    "name": "registerUser",
+    "name": "updateUserDisplayName",
     "plural": false,
     "selections": [
       {
@@ -124,7 +121,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "registerUserMutation",
+    "name": "settingsDisplayNameMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -133,20 +130,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "registerUserMutation",
+    "name": "settingsDisplayNameMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "30f472ea574bab30830ba75d4fed165f",
+    "cacheID": "4094387b6090fa6aaef0b5a6ee965e5c",
     "id": null,
     "metadata": {},
-    "name": "registerUserMutation",
+    "name": "settingsDisplayNameMutation",
     "operationKind": "mutation",
-    "text": "mutation registerUserMutation(\n  $input: RegisterUserInput!\n) {\n  registerUser(input: $input) {\n    user {\n      id\n      displayName\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n"
+    "text": "mutation settingsDisplayNameMutation(\n  $input: UpdateUserDisplayNameInput!\n) {\n  updateUserDisplayName(input: $input) {\n    user {\n      id\n      displayName\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "726ceda4c93ead8b2870bcf1d28bb0d9";
+(node as any).hash = "4b0b4ba3e4dc8491957f91a0dbee08d7";
 
 export default node;

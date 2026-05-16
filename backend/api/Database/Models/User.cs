@@ -11,13 +11,15 @@ public class User
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public required string Id { get; init; }
 
-    public required string FirstName { get; set; }
-
-    public string? MiddleName { get; set; }
-
-    public required string LastName { get; set; }
+    public required string DisplayName { get; set; }
 
     public string? ImageId { get; set; }
+
+    [GraphQLIgnore] public required string FirstName { get; set; }
+
+    [GraphQLIgnore] public string? MiddleName { get; set; }
+
+    [GraphQLIgnore] public required string LastName { get; set; }
 
     public ICollection<Trophy> Trophies { get; set; } = new List<Trophy>();
 

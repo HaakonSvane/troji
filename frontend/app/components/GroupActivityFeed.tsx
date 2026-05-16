@@ -3,7 +3,8 @@ import { Link } from "react-router";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import type { GroupActivityFeed_group$key } from "@/__generated__/GroupActivityFeed_group.graphql";
 import { MedalBadge } from "@/components/MedalBadge";
-import { formatPersonName } from "@/components/PersonName";
+import { DisplayName } from "@/components/DisplayName";
+import { initialsFromDisplayName } from "@/lib/format/names";
 import { formatRelativeTime, formatAbsoluteDateTime } from "@/lib/relativeTime";
 import { Button } from "@/components/ui/button";
 
@@ -25,24 +26,33 @@ const GroupActivityFeedFragment = graphql`
                     }
                     receiver {
                         id
-                        firstName
-                        middleName
-                        lastName
+                        displayName
+                        profile {
+                            firstName
+                            middleName
+                            lastName
+                        }
                     }
                     awardedBy {
                         id
-                        firstName
-                        middleName
-                        lastName
+                        displayName
+                        profile {
+                            firstName
+                            middleName
+                            lastName
+                        }
                     }
                 }
             }
             ... on MemberJoinedActivity {
                 member {
                     id
-                    firstName
-                    middleName
-                    lastName
+                    displayName
+                    profile {
+                        firstName
+                        middleName
+                        lastName
+                    }
                 }
             }
         }
@@ -96,18 +106,6 @@ export function GroupActivityFeed({ group, groupId, currentUserId }: GroupActivi
                             const t = item.trophy;
                             const receiverIsSelf = t.receiver?.id === currentUserId;
                             const awarderIsSelf = t.awardedBy?.id === currentUserId;
-                            const receiverName = formatPersonName({
-                                firstName: t.receiver?.firstName,
-                                middleName: t.receiver?.middleName,
-                                lastName: t.receiver?.lastName,
-                            });
-                            const awarderName = t.awardedBy
-                                ? formatPersonName({
-                                      firstName: t.awardedBy.firstName,
-                                      middleName: t.awardedBy.middleName,
-                                      lastName: t.awardedBy.lastName,
-                                  })
-                                : null;
                             return (
                                 <li
                                     key={item.id}
@@ -121,11 +119,17 @@ export function GroupActivityFeed({ group, groupId, currentUserId }: GroupActivi
                                     />
                                     <div className="min-w-0 flex-1">
                                         <p className="text-sm leading-relaxed text-foreground/90">
-                                            {awarderName ? (
+                                            {t.awardedBy ? (
                                                 <>
-                                                    <span className="text-foreground">
-                                                        {awarderIsSelf ? "You" : awarderName}
-                                                    </span>{" "}
+                                                    {awarderIsSelf ? (
+                                                        <span className="text-foreground">You</span>
+                                                    ) : (
+                                                        <DisplayName
+                                                            user={t.awardedBy}
+                                                            showFullName
+                                                            className="text-foreground"
+                                                        />
+                                                    )}{" "}
                                                     awarded{" "}
                                                 </>
                                             ) : null}
@@ -133,9 +137,17 @@ export function GroupActivityFeed({ group, groupId, currentUserId }: GroupActivi
                                                 {t.game?.name ?? "trophy"}
                                             </em>{" "}
                                             to{" "}
-                                            <span className="text-foreground">
-                                                {receiverIsSelf ? "you" : receiverName}
-                                            </span>
+                                            {receiverIsSelf ? (
+                                                <span className="text-foreground">you</span>
+                                            ) : t.receiver ? (
+                                                <DisplayName
+                                                    user={t.receiver}
+                                                    showFullName
+                                                    className="text-foreground"
+                                                />
+                                            ) : (
+                                                <span className="text-foreground">Unknown</span>
+                                            )}
                                         </p>
                                         {t.description ? (
                                             <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">
@@ -149,15 +161,7 @@ export function GroupActivityFeed({ group, groupId, currentUserId }: GroupActivi
                         }
                         if (item.__typename === "MemberJoinedActivity" && item.member) {
                             const memberIsSelf = item.member.id === currentUserId;
-                            const memberName = formatPersonName({
-                                firstName: item.member.firstName,
-                                middleName: item.member.middleName,
-                                lastName: item.member.lastName,
-                            });
-                            const initials = (
-                                (item.member.firstName?.[0] ?? "") +
-                                (item.member.lastName?.[0] ?? "")
-                            ).toUpperCase() || "?";
+                            const initials = initialsFromDisplayName(item.member.displayName);
                             return (
                                 <li
                                     key={item.id}
@@ -168,9 +172,15 @@ export function GroupActivityFeed({ group, groupId, currentUserId }: GroupActivi
                                     </div>
                                     <div className="min-w-0 flex-1">
                                         <p className="text-sm leading-relaxed text-foreground/90">
-                                            <span className="text-foreground">
-                                                {memberIsSelf ? "You" : memberName}
-                                            </span>{" "}
+                                            {memberIsSelf ? (
+                                                <span className="text-foreground">You</span>
+                                            ) : (
+                                                <DisplayName
+                                                    user={item.member}
+                                                    showFullName
+                                                    className="text-foreground"
+                                                />
+                                            )}{" "}
                                             joined the circle
                                         </p>
                                     </div>

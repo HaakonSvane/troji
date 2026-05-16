@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<621a1f6ef6c5b15d7922519cfd6ae89d>>
+ * @generated SignedSource<<c0320dffad9fe858f8b007ac5b55eeee>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -218,21 +218,39 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "firstName",
+                        "name": "displayName",
                         "storageKey": null
                       },
                       {
                         "alias": null,
                         "args": null,
-                        "kind": "ScalarField",
-                        "name": "middleName",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "lastName",
+                        "concreteType": "UserProfile",
+                        "kind": "LinkedField",
+                        "name": "profile",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "firstName",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "middleName",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "lastName",
+                            "storageKey": null
+                          }
+                        ],
                         "storageKey": null
                       }
                     ],
@@ -251,12 +269,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b5720d5d0d3d625eb98f1f1fb1bb62b7",
+    "cacheID": "76fb86fa8d3e55f142141b239a82fa15",
     "id": null,
     "metadata": {},
     "name": "groupsMembersQuery",
     "operationKind": "query",
-    "text": "query groupsMembersQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    name\n    admin {\n      id\n    }\n    members(first: 50) {\n      totalCount\n      edges {\n        node {\n          id\n          ...MemberRow_user\n        }\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n\nfragment MemberRow_user on User {\n  id\n  firstName\n  middleName\n  lastName\n}\n"
+    "text": "query groupsMembersQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    name\n    admin {\n      id\n    }\n    members(first: 50) {\n      totalCount\n      edges {\n        node {\n          id\n          ...MemberRow_user\n        }\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n\nfragment MemberRow_user on User {\n  id\n  displayName\n  profile {\n    firstName\n    middleName\n    lastName\n  }\n}\n"
   }
 };
 })();

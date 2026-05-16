@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7a719f4c8e00d0e39398b2fa805a5e5d>>
+ * @generated SignedSource<<b93bb132e9fee4ab9420d79483e7d901>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -207,14 +207,39 @@ return {
                                 "alias": null,
                                 "args": null,
                                 "kind": "ScalarField",
-                                "name": "firstName",
+                                "name": "displayName",
                                 "storageKey": null
                               },
                               {
                                 "alias": null,
                                 "args": null,
-                                "kind": "ScalarField",
-                                "name": "lastName",
+                                "concreteType": "UserProfile",
+                                "kind": "LinkedField",
+                                "name": "profile",
+                                "plural": false,
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "firstName",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "middleName",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "lastName",
+                                    "storageKey": null
+                                  }
+                                ],
                                 "storageKey": null
                               }
                             ],
@@ -281,16 +306,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4993a3e5a5d0bd96639f39b7391a343a",
+    "cacheID": "9329b6eb27faa9b9f8f9c78ad1c0d368",
     "id": null,
     "metadata": {},
     "name": "groupsGameDetailPaginationQuery",
     "operationKind": "query",
-    "text": "query groupsGameDetailPaginationQuery(\n  $after: String\n  $first: Int = 25\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...groupsGameDetail_game_2HEEH6\n    id\n  }\n}\n\nfragment groupsGameDetail_game_2HEEH6 on Game {\n  trophies(first: $first, after: $after) {\n    totalCount\n    edges {\n      node {\n        id\n        isAwarded\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          firstName\n          lastName\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n"
+    "text": "query groupsGameDetailPaginationQuery(\n  $after: String\n  $first: Int = 25\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...groupsGameDetail_game_2HEEH6\n    id\n  }\n}\n\nfragment groupsGameDetail_game_2HEEH6 on Game {\n  trophies(first: $first, after: $after) {\n    totalCount\n    edges {\n      node {\n        id\n        isAwarded\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          displayName\n          profile {\n            firstName\n            middleName\n            lastName\n          }\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d7a0bcf401b7862bba5281e3c209074c";
+(node as any).hash = "2003edfcad534217d2a2c76338588d66";
 
 export default node;

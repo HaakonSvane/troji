@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a4b6d25c12de6869f422ec4e6f7de925>>
+ * @generated SignedSource<<561c19778691340b4a618010cc7202ae>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,9 +12,8 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type GroupHero_group$data = {
   readonly admin: {
-    readonly firstName: string;
+    readonly displayName: string;
     readonly id: string;
-    readonly lastName: string;
   } | null | undefined;
   readonly createdDate: any;
   readonly description: string | null | undefined;
@@ -76,14 +75,7 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "firstName",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "lastName",
+          "name": "displayName",
           "storageKey": null
         }
       ],
@@ -95,6 +87,6 @@ return {
 };
 })();
 
-(node as any).hash = "3f66a16c3052ed3693827d301b22a21f";
+(node as any).hash = "1b25c2000db5faf8bf0bcf5fe35f3086";
 
 export default node;

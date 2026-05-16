@@ -1,10 +1,14 @@
-import { PersonName } from "@/components/PersonName";
+import { DisplayName } from "@/components/DisplayName";
+import { initialsFromDisplayName } from "@/lib/format/names";
 
 interface TopPerformerUser {
     id: string;
-    firstName?: string | null;
-    middleName?: string | null;
-    lastName?: string | null;
+    displayName: string;
+    profile?: {
+        firstName: string;
+        middleName?: string | null;
+        lastName: string;
+    } | null;
 }
 
 interface GroupTopPerformerProps {
@@ -12,12 +16,6 @@ interface GroupTopPerformerProps {
     count: number;
     currentUserId?: string | null;
     className?: string;
-}
-
-function getInitials(user: TopPerformerUser): string {
-    const first = user.firstName?.[0] ?? "";
-    const last = user.lastName?.[0] ?? "";
-    return (first + last).toUpperCase() || "?";
 }
 
 export function GroupTopPerformer({
@@ -37,14 +35,13 @@ export function GroupTopPerformer({
             {user ? (
                 <div className="flex flex-1 items-center gap-4">
                     <div className="flex size-14 shrink-0 items-center justify-center rounded-full border border-medal-gold/40 bg-surface-muted text-base font-medium text-foreground/90">
-                        {getInitials(user)}
+                        {initialsFromDisplayName(user.displayName)}
                     </div>
                     <div className="flex min-w-0 flex-1 flex-col gap-1">
-                        <PersonName
-                            firstName={user.firstName}
-                            middleName={user.middleName}
-                            lastName={user.lastName}
+                        <DisplayName
+                            user={user}
                             isSelf={user.id === currentUserId}
+                            showFullName
                             className="truncate font-heading text-2xl font-medium tracking-[0.015em] text-foreground sm:text-3xl"
                         />
                         <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">

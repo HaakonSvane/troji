@@ -36,6 +36,15 @@
 - Do not hand-edit `app/__generated__/`.
 - Regenerate Relay artifacts after schema changes or query/mutation text changes.
 
+## Error Handling
+
+- **No `any` / `unknown` casts in app code.** Relay generates discriminated unions for every mutation's `errors` array — `useMutation<XMutation>` types `onCompleted`'s `response` for you, so the `(response)` parameter never needs an annotation. The `unknown` in `RouteError({ error }: { error: unknown })` is the documented React-Router boundary; narrow with `error instanceof Error` (or `isRouteErrorResponse(error)` for typed router errors as in `app/root.tsx`).
+- **Spread `... on Error { message }`** in every mutation that has an `errors` field. This gives every union member a typed `message` and matches the existing pattern (`NewGameForm.tsx`, `register.tsx`). Spread additional `... on SpecificError { extraField }` only when you actually need that field — `GroupInviteManager.tsx` does this for `InviteResetTooSoonError.secondsToWait`.
+- **Discriminate via `__typename`.** For typed errors (`error.__typename === "InviteResetTooSoonError"`) TypeScript narrows the union member and exposes its structured fields. Never cast.
+- **Generic surfaces use `getMutationErrorMessage`.** When you only need to show "the first error message," call `getMutationErrorMessage(payload.errors, fallback)` from `app/lib/relay/mutationErrors.ts`. Pair it with `getMutationNetworkErrorMessage(error, fallback)` in `onError`.
+- **Server actions return `{ ok: true } | { ok: false; message }`.** Never let a throw escape an action — wrap each external call in try/catch and convert failures to a typed `{ ok: false as const, message }`. Non-fatal post-write steps (e.g. updating Clerk metadata after shipping the feedback) get their own try/catch and a `console.error`, but must not flip `ok` to false.
+- **`NoUserError` is a hard navigation** (`app/relay/environment.ts`) — the fetch rejects with `NoUserRedirectError` after `window.location.href = "/register"`. Do not catch it.
+
 ## Animations
 
 - `motion` (imported from `motion/react`) is the project's animation library — the modern successor to `framer-motion`. Do not reach for `framer-motion`, `react-spring`, or other libraries. CSS transitions (`tw-animate-css`) are still preferred for simple hover/state changes; reserve `motion` for layout/shared-element animations (`layoutId`, `LayoutGroup`) and multi-step UI choreography. First use: `app/components/TrophyAwardJourney.tsx`.

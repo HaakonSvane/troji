@@ -8,7 +8,7 @@
         "dev": "react-router dev",
         "relay": "relay-compiler",
         "start": "react-router-serve ./build/server/index.js",
-        "typecheck": "react-router typegen && tsc"
+        "typecheck": "react-router typegen && tsc --noEmit"
     },
     "dependencies": {
         "@clerk/react-router": "^3.1.3",

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3043920c2f54c10b06617dce151ad1df>>
+ * @generated SignedSource<<cce94b6b837d0261d03df447c9ca7038>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,30 +9,33 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type RegisterUserInput = {
-  displayName: string;
+export type UpdateUserProfileInput = {
   firstName: string;
   lastName: string;
   middleName?: string | null | undefined;
 };
-export type registerUserMutation$variables = {
-  input: RegisterUserInput;
+export type settingsProfileMutation$variables = {
+  input: UpdateUserProfileInput;
 };
-export type registerUserMutation$data = {
-  readonly registerUser: {
+export type settingsProfileMutation$data = {
+  readonly updateUserProfile: {
     readonly errors: ReadonlyArray<{
       readonly __typename: string;
       readonly message?: string;
     }> | null | undefined;
     readonly user: {
-      readonly displayName: string;
       readonly id: string;
+      readonly profile: {
+        readonly firstName: string;
+        readonly lastName: string;
+        readonly middleName: string | null | undefined;
+      };
     } | null | undefined;
   };
 };
-export type registerUserMutation = {
-  response: registerUserMutation$data;
-  variables: registerUserMutation$variables;
+export type settingsProfileMutation = {
+  response: settingsProfileMutation$data;
+  variables: settingsProfileMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -53,9 +56,9 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "RegisterUserPayload",
+    "concreteType": "UpdateUserProfilePayload",
     "kind": "LinkedField",
-    "name": "registerUser",
+    "name": "updateUserProfile",
     "plural": false,
     "selections": [
       {
@@ -76,8 +79,33 @@ v1 = [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "displayName",
+            "concreteType": "UserProfile",
+            "kind": "LinkedField",
+            "name": "profile",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "firstName",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "middleName",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "lastName",
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           }
         ],
@@ -124,7 +152,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "registerUserMutation",
+    "name": "settingsProfileMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -133,20 +161,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "registerUserMutation",
+    "name": "settingsProfileMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "30f472ea574bab30830ba75d4fed165f",
+    "cacheID": "7153b9e15128bc9ae7f1096a55fb9dfe",
     "id": null,
     "metadata": {},
-    "name": "registerUserMutation",
+    "name": "settingsProfileMutation",
     "operationKind": "mutation",
-    "text": "mutation registerUserMutation(\n  $input: RegisterUserInput!\n) {\n  registerUser(input: $input) {\n    user {\n      id\n      displayName\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n"
+    "text": "mutation settingsProfileMutation(\n  $input: UpdateUserProfileInput!\n) {\n  updateUserProfile(input: $input) {\n    user {\n      id\n      profile {\n        firstName\n        middleName\n        lastName\n      }\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "726ceda4c93ead8b2870bcf1d28bb0d9";
+(node as any).hash = "21a3bd7a474cfe8d152c4c7fd33f5dd7";
 
 export default node;

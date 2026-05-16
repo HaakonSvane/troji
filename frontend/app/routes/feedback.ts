@@ -48,19 +48,30 @@ export async function action(args: ActionFunctionArgs) {
         };
     }
 
-    await dispatchFeedback({
-        title: sanitiseForGitHub(validation.data.title, 120),
-        body: sanitiseForGitHub(validation.data.body, 4000),
-        userId,
-    });
+    try {
+        await dispatchFeedback({
+            title: sanitiseForGitHub(validation.data.title, 120),
+            body: sanitiseForGitHub(validation.data.body, 4000),
+            userId,
+        });
+    } catch (err) {
+        console.error("feedback dispatch failed", err);
+        return { ok: false as const, message: "Could not submit feedback. Please try again." };
+    }
 
-    const updatedSubmissions = buildUpdatedSubmissions(user);
-    await client.users.updateUserMetadata(userId, {
-        privateMetadata: {
-            ...((user.privateMetadata as Record<string, unknown>) ?? {}),
-            feedback: { submissions: updatedSubmissions },
-        },
-    });
+    // Metadata write is non-fatal: the feedback already shipped to GitHub, so a
+    // failure here must not erase the success on the client.
+    try {
+        const updatedSubmissions = buildUpdatedSubmissions(user);
+        await client.users.updateUserMetadata(userId, {
+            privateMetadata: {
+                ...(user.privateMetadata ?? {}),
+                feedback: { submissions: updatedSubmissions },
+            },
+        });
+    } catch (err) {
+        console.error("feedback metadata update failed", err);
+    }
 
     return { ok: true as const };
 }

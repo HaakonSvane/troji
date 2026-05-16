@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ad63aea1ae5d251b9b3151b11c5d284e>>
+ * @generated SignedSource<<a3975871e47ba84c58b046e13a04f7fa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 export type dashboardQuery$variables = Record<PropertyKey, never>;
 export type dashboardQuery$data = {
   readonly me: {
-    readonly firstName: string;
+    readonly displayName: string;
     readonly id: string;
   };
 };
@@ -42,7 +42,7 @@ var v0 = [
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "firstName",
+        "name": "displayName",
         "storageKey": null
       }
     ],
@@ -67,16 +67,16 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "cacheID": "227ec8644cfd14663c32eb93e5d0c128",
+    "cacheID": "6fbe08db6921b51042c13018cf1d025d",
     "id": null,
     "metadata": {},
     "name": "dashboardQuery",
     "operationKind": "query",
-    "text": "query dashboardQuery {\n  me {\n    id\n    firstName\n  }\n}\n"
+    "text": "query dashboardQuery {\n  me {\n    id\n    displayName\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "4796e9a8667dda449d37f7ac44040cb6";
+(node as any).hash = "9d4ba5184436d3680f2754fbd92ac1ef";
 
 export default node;
