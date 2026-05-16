@@ -7,6 +7,8 @@ namespace api.Repository;
 
 public sealed class UserRepository : IUserRepository
 {
+    private const int DisplayNameMaxLength = 32;
+
     private readonly TrophyDbContext _context;
 
     public UserRepository(TrophyDbContext context)
@@ -30,20 +32,14 @@ public sealed class UserRepository : IUserRepository
 
     public async Task<User> RegisterUserAsync(
         string userId,
+        string displayName,
         string firstName,
         string? middleName,
         string lastName,
         CancellationToken cancellationToken)
     {
-        var normalizedFirstName = firstName.Trim();
-        var normalizedLastName = lastName.Trim();
-        var normalizedMiddleName = string.IsNullOrWhiteSpace(middleName) ? null : middleName.Trim();
-
-        if (string.IsNullOrWhiteSpace(normalizedFirstName) ||
-            string.IsNullOrWhiteSpace(normalizedLastName))
-        {
-            throw new InvalidUserNameException();
-        }
+        var normalizedDisplayName = NormalizeDisplayName(displayName);
+        var (normalizedFirstName, normalizedMiddleName, normalizedLastName) = NormalizeProfileNames(firstName, middleName, lastName);
 
         var existing = await _context.Users
             .AnyAsync(u => u.Id == userId, cancellationToken);
@@ -56,6 +52,7 @@ public sealed class UserRepository : IUserRepository
         var user = new User
         {
             Id = userId,
+            DisplayName = normalizedDisplayName,
             FirstName = normalizedFirstName,
             MiddleName = normalizedMiddleName,
             LastName = normalizedLastName,
@@ -94,21 +91,30 @@ public sealed class UserRepository : IUserRepository
             .ToLookup(trophy => trophy.GameId, trophy => trophy.Receiver);
     }
 
-    public async Task<User> UpdateUserAsync(
+    public async Task<User> UpdateUserDisplayNameAsync(
+        string userId,
+        string displayName,
+        CancellationToken cancellationToken)
+    {
+        var normalizedDisplayName = NormalizeDisplayName(displayName);
+
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellationToken)
+            ?? throw new NoUserException();
+
+        user.DisplayName = normalizedDisplayName;
+
+        await _context.SaveChangesAsync(cancellationToken);
+        return user;
+    }
+
+    public async Task<User> UpdateUserProfileAsync(
         string userId,
         string firstName,
         string? middleName,
         string lastName,
         CancellationToken cancellationToken)
     {
-        var normalizedFirstName = firstName.Trim();
-        var normalizedLastName = lastName.Trim();
-        var normalizedMiddleName = string.IsNullOrWhiteSpace(middleName) ? null : middleName.Trim();
-
-        if (string.IsNullOrWhiteSpace(normalizedFirstName) || string.IsNullOrWhiteSpace(normalizedLastName))
-        {
-            throw new InvalidUserNameException();
-        }
+        var (normalizedFirstName, normalizedMiddleName, normalizedLastName) = NormalizeProfileNames(firstName, middleName, lastName);
 
         var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellationToken)
             ?? throw new NoUserException();
@@ -129,5 +135,30 @@ public sealed class UserRepository : IUserRepository
             .Where(t => ids.Contains(t.Game.ParentGroupId) && t.AwardedDate != null)
             .ToListAsync(cancellationToken);
         return trophies.ToLookup(t => t.Game.ParentGroupId, t => t.Receiver);
+    }
+
+    private static string NormalizeDisplayName(string displayName)
+    {
+        var normalized = displayName.Trim();
+        if (normalized.Length is 0 or > DisplayNameMaxLength)
+        {
+            throw new InvalidDisplayNameException();
+        }
+        return normalized;
+    }
+
+    private static (string firstName, string? middleName, string lastName) NormalizeProfileNames(
+        string firstName, string? middleName, string lastName)
+    {
+        var normalizedFirstName = firstName.Trim();
+        var normalizedLastName = lastName.Trim();
+        var normalizedMiddleName = string.IsNullOrWhiteSpace(middleName) ? null : middleName.Trim();
+
+        if (string.IsNullOrWhiteSpace(normalizedFirstName) || string.IsNullOrWhiteSpace(normalizedLastName))
+        {
+            throw new InvalidUserNameException();
+        }
+
+        return (normalizedFirstName, normalizedMiddleName, normalizedLastName);
     }
 }

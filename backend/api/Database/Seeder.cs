@@ -18,11 +18,11 @@ public static class Seeder
         // ── Users ─────────────────────────────────────────────────────────
         // The dev user may already exist if they have registered via Clerk before seeding.
         var me = await db.Users.FindAsync(myUserId)
-                 ?? db.Users.Add(new User { Id = myUserId, FirstName = "Dev", LastName = "User" }).Entity;
-        var alice = new User { Id = "user_seed_alice001", FirstName = "Alice", LastName = "Andersen" };
-        var bob = new User { Id = "user_seed_bob001", FirstName = "Bob", LastName = "Bergström" };
-        var carol = new User { Id = "user_seed_carol001", FirstName = "Carol", LastName = "Chen" };
-        var hans = new User { Id = "user_seed_hans001", FirstName = "Hans", MiddleName = "Oluf", LastName = "Kristoph" };
+                 ?? db.Users.Add(new User { Id = myUserId, DisplayName = "Dev User", FirstName = "Dev", LastName = "User" }).Entity;
+        var alice = new User { Id = "user_seed_alice001", DisplayName = "Alice Andersen", FirstName = "Alice", LastName = "Andersen" };
+        var bob = new User { Id = "user_seed_bob001", DisplayName = "Bob Bergström", FirstName = "Bob", LastName = "Bergström" };
+        var carol = new User { Id = "user_seed_carol001", DisplayName = "Carol Chen", FirstName = "Carol", LastName = "Chen" };
+        var hans = new User { Id = "user_seed_hans001", DisplayName = "Hans Kristoph", FirstName = "Hans", MiddleName = "Oluf", LastName = "Kristoph" };
 
         db.Users.AddRange(alice, bob, carol, hans);
         await db.SaveChangesAsync();

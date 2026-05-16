@@ -27,6 +27,7 @@ public sealed class TrophyErrorFilter : IErrorFilter
             NoUserException or
             UserAlreadyRegisteredException or
             InvalidUserNameException or
+            InvalidDisplayNameException or
             GroupNotFoundException or
             NoAdminException or
             NoInviteException or

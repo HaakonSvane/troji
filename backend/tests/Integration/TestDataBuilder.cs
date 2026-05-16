@@ -9,9 +9,16 @@ public static class TestDataBuilder
         TrophyDbContext db,
         string userId,
         string firstName = "Test",
-        string lastName = "User")
+        string lastName = "User",
+        string? displayName = null)
     {
-        var user = new User { Id = userId, FirstName = firstName, LastName = lastName };
+        var user = new User
+        {
+            Id = userId,
+            DisplayName = displayName ?? $"{firstName} {lastName}",
+            FirstName = firstName,
+            LastName = lastName,
+        };
         db.Users.Add(user);
         await db.SaveChangesAsync();
         return user;

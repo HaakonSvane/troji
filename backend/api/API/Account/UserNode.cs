@@ -7,6 +7,10 @@ namespace api.API.Account;
 [ExtendObjectType(typeof(User))]
 public static class UserNode
 {
+    public static UserProfile GetProfile([Parent] User user)
+    {
+        return new UserProfile(user.FirstName, user.MiddleName, user.LastName);
+    }
 
     [UsePaging(IncludeTotalCount = true)]
     [UseSorting]

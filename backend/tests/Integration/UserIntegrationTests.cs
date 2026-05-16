@@ -36,10 +36,22 @@ public class UserIntegrationTests
         await _factory.DisposeAsync();
     }
 
-    private const string UpdateUserMutation = """
-        mutation UpdateUser($input: UpdateUserInput!) {
-          updateUser(input: $input) {
-            user { id firstName middleName lastName }
+    private const string UpdateDisplayNameMutation = """
+        mutation UpdateDisplayName($input: UpdateUserDisplayNameInput!) {
+          updateUserDisplayName(input: $input) {
+            user { id displayName profile { firstName middleName lastName } }
+            errors {
+              __typename
+              ... on Error { message }
+            }
+          }
+        }
+        """;
+
+    private const string UpdateProfileMutation = """
+        mutation UpdateProfile($input: UpdateUserProfileInput!) {
+          updateUserProfile(input: $input) {
+            user { id displayName profile { firstName middleName lastName } }
             errors {
               __typename
               ... on Error { message }
@@ -49,31 +61,102 @@ public class UserIntegrationTests
         """;
 
     [Test]
-    public async Task UpdateUser_WithValidInput_ShouldUpdateNameAndPersistToDatabase()
+    public async Task UpdateUserDisplayName_WithValidInput_ShouldUpdateAndPersist()
     {
-        const string userId = "user_update_001";
+        const string userId = "user_dn_001";
         using (var scope = _factory.CreateDbScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<TrophyDbContext>();
-            await TestDataBuilder.CreateUserAsync(db, userId, "Old", "Name");
+            await TestDataBuilder.CreateUserAsync(db, userId, displayName: "Original Name");
         }
 
         using var result = await GraphQLHelpers.ExecuteAsync(
-            _client, userId, UpdateUserMutation,
-            new { input = new { firstName = "New", middleName = "Q", lastName = "Surname" } });
+            _client, userId, UpdateDisplayNameMutation,
+            new { input = new { displayName = "NewHandle" } });
 
-        var updateUser = result.RootElement.GetProperty("data").GetProperty("updateUser");
+        var payload = result.RootElement.GetProperty("data").GetProperty("updateUserDisplayName");
 
-        var errors = updateUser.GetProperty("errors");
+        var errors = payload.GetProperty("errors");
         Assert.That(
             errors.ValueKind == JsonValueKind.Null || errors.GetArrayLength() == 0,
-            Is.True, "Expected no errors for a valid update");
+            Is.True, "Expected no errors for a valid display-name update");
 
-        var user = updateUser.GetProperty("user");
-        Assert.That(user.ValueKind, Is.Not.EqualTo(JsonValueKind.Null));
-        Assert.That(user.GetProperty("firstName").GetString(), Is.EqualTo("New"));
-        Assert.That(user.GetProperty("middleName").GetString(), Is.EqualTo("Q"));
-        Assert.That(user.GetProperty("lastName").GetString(), Is.EqualTo("Surname"));
+        var user = payload.GetProperty("user");
+        Assert.That(user.GetProperty("displayName").GetString(), Is.EqualTo("NewHandle"));
+
+        using var verifyScope = _factory.CreateDbScope();
+        var verifyDb = verifyScope.ServiceProvider.GetRequiredService<TrophyDbContext>();
+        var stored = await verifyDb.Users.SingleAsync(u => u.Id == userId);
+        Assert.That(stored.DisplayName, Is.EqualTo("NewHandle"));
+    }
+
+    [Test]
+    public async Task UpdateUserDisplayName_WithEmptyName_ShouldReturnInvalidDisplayNameError()
+    {
+        const string userId = "user_dn_002";
+        using (var scope = _factory.CreateDbScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<TrophyDbContext>();
+            await TestDataBuilder.CreateUserAsync(db, userId, displayName: "Original");
+        }
+
+        using var result = await GraphQLHelpers.ExecuteAsync(
+            _client, userId, UpdateDisplayNameMutation,
+            new { input = new { displayName = "   " } });
+
+        var payload = result.RootElement.GetProperty("data").GetProperty("updateUserDisplayName");
+
+        Assert.That(payload.GetProperty("user").ValueKind, Is.EqualTo(JsonValueKind.Null));
+
+        var errors = payload.GetProperty("errors");
+        Assert.That(errors.GetArrayLength(), Is.GreaterThan(0));
+        Assert.That(errors[0].GetProperty("__typename").GetString(), Is.EqualTo("InvalidDisplayNameError"));
+
+        using var verifyScope = _factory.CreateDbScope();
+        var verifyDb = verifyScope.ServiceProvider.GetRequiredService<TrophyDbContext>();
+        var stored = await verifyDb.Users.SingleAsync(u => u.Id == userId);
+        Assert.That(stored.DisplayName, Is.EqualTo("Original"), "Row should be unchanged on validation failure");
+    }
+
+    [Test]
+    public async Task UpdateUserDisplayName_WhenUserNotRegistered_ShouldReturnNoUserError()
+    {
+        using var result = await GraphQLHelpers.ExecuteAsync(
+            _client, "user_dn_ghost", UpdateDisplayNameMutation,
+            new { input = new { displayName = "Ghost" } });
+
+        var payload = result.RootElement.GetProperty("data").GetProperty("updateUserDisplayName");
+
+        Assert.That(payload.GetProperty("user").ValueKind, Is.EqualTo(JsonValueKind.Null));
+        var errors = payload.GetProperty("errors");
+        Assert.That(errors.GetArrayLength(), Is.GreaterThan(0));
+        Assert.That(errors[0].GetProperty("__typename").GetString(), Is.EqualTo("NoUserError"));
+    }
+
+    [Test]
+    public async Task UpdateUserProfile_WithValidInput_ShouldUpdateAndPersistAndExposeProfile()
+    {
+        const string userId = "user_pr_001";
+        using (var scope = _factory.CreateDbScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<TrophyDbContext>();
+            await TestDataBuilder.CreateUserAsync(db, userId, firstName: "Old", lastName: "Name");
+        }
+
+        using var result = await GraphQLHelpers.ExecuteAsync(
+            _client, userId, UpdateProfileMutation,
+            new { input = new { firstName = "New", middleName = "Q", lastName = "Surname" } });
+
+        var payload = result.RootElement.GetProperty("data").GetProperty("updateUserProfile");
+        var errors = payload.GetProperty("errors");
+        Assert.That(
+            errors.ValueKind == JsonValueKind.Null || errors.GetArrayLength() == 0,
+            Is.True, "Expected no errors for a valid profile update");
+
+        var profile = payload.GetProperty("user").GetProperty("profile");
+        Assert.That(profile.GetProperty("firstName").GetString(), Is.EqualTo("New"));
+        Assert.That(profile.GetProperty("middleName").GetString(), Is.EqualTo("Q"));
+        Assert.That(profile.GetProperty("lastName").GetString(), Is.EqualTo("Surname"));
 
         using var verifyScope = _factory.CreateDbScope();
         var verifyDb = verifyScope.ServiceProvider.GetRequiredService<TrophyDbContext>();
@@ -84,51 +167,73 @@ public class UserIntegrationTests
     }
 
     [Test]
-    public async Task UpdateUser_WithBlankFirstName_ShouldReturnInvalidUserNameError()
+    public async Task UpdateUserProfile_WithBlankFirstName_ShouldReturnInvalidUserNameError()
     {
-        const string userId = "user_update_002";
+        const string userId = "user_pr_002";
         using (var scope = _factory.CreateDbScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<TrophyDbContext>();
-            await TestDataBuilder.CreateUserAsync(db, userId, "Original", "Person");
+            await TestDataBuilder.CreateUserAsync(db, userId, firstName: "Keep", lastName: "Me");
         }
 
         using var result = await GraphQLHelpers.ExecuteAsync(
-            _client, userId, UpdateUserMutation,
-            new { input = new { firstName = "   ", middleName = (string?)null, lastName = "Person" } });
+            _client, userId, UpdateProfileMutation,
+            new { input = new { firstName = "   ", middleName = (string?)null, lastName = "Me" } });
 
-        var updateUser = result.RootElement.GetProperty("data").GetProperty("updateUser");
-
-        Assert.That(updateUser.GetProperty("user").ValueKind, Is.EqualTo(JsonValueKind.Null),
-            "Expected no user payload when the input is invalid");
-
-        var errors = updateUser.GetProperty("errors");
-        Assert.That(errors.ValueKind, Is.Not.EqualTo(JsonValueKind.Null));
+        var payload = result.RootElement.GetProperty("data").GetProperty("updateUserProfile");
+        Assert.That(payload.GetProperty("user").ValueKind, Is.EqualTo(JsonValueKind.Null));
+        var errors = payload.GetProperty("errors");
         Assert.That(errors.GetArrayLength(), Is.GreaterThan(0));
         Assert.That(errors[0].GetProperty("__typename").GetString(), Is.EqualTo("InvalidUserNameError"));
 
         using var verifyScope = _factory.CreateDbScope();
         var verifyDb = verifyScope.ServiceProvider.GetRequiredService<TrophyDbContext>();
         var stored = await verifyDb.Users.SingleAsync(u => u.Id == userId);
-        Assert.That(stored.FirstName, Is.EqualTo("Original"), "Row should be unchanged on validation failure");
+        Assert.That(stored.FirstName, Is.EqualTo("Keep"));
     }
 
     [Test]
-    public async Task UpdateUser_WhenUserNotRegistered_ShouldReturnNoUserError()
+    public async Task UpdateUserProfile_WhenUserNotRegistered_ShouldReturnNoUserError()
     {
-        const string unregisteredUserId = "user_update_unregistered";
-
         using var result = await GraphQLHelpers.ExecuteAsync(
-            _client, unregisteredUserId, UpdateUserMutation,
+            _client, "user_pr_ghost", UpdateProfileMutation,
             new { input = new { firstName = "Ghost", middleName = (string?)null, lastName = "User" } });
 
-        var updateUser = result.RootElement.GetProperty("data").GetProperty("updateUser");
-
-        Assert.That(updateUser.GetProperty("user").ValueKind, Is.EqualTo(JsonValueKind.Null));
-
-        var errors = updateUser.GetProperty("errors");
-        Assert.That(errors.ValueKind, Is.Not.EqualTo(JsonValueKind.Null));
+        var payload = result.RootElement.GetProperty("data").GetProperty("updateUserProfile");
+        Assert.That(payload.GetProperty("user").ValueKind, Is.EqualTo(JsonValueKind.Null));
+        var errors = payload.GetProperty("errors");
         Assert.That(errors.GetArrayLength(), Is.GreaterThan(0));
         Assert.That(errors[0].GetProperty("__typename").GetString(), Is.EqualTo("NoUserError"));
+    }
+
+    [Test]
+    public async Task Me_ReturnsDisplayNameAndProfile()
+    {
+        const string userId = "user_me_001";
+        using (var scope = _factory.CreateDbScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<TrophyDbContext>();
+            await TestDataBuilder.CreateUserAsync(db, userId, firstName: "Solo", lastName: "Player", displayName: "solomon");
+        }
+
+        const string query = """
+            query Me {
+              me {
+                id
+                displayName
+                profile { firstName middleName lastName }
+              }
+            }
+            """;
+
+        using var result = await GraphQLHelpers.ExecuteAsync(_client, userId, query);
+
+        var me = result.RootElement.GetProperty("data").GetProperty("me");
+        Assert.That(me.GetProperty("displayName").GetString(), Is.EqualTo("solomon"));
+
+        var profile = me.GetProperty("profile");
+        Assert.That(profile.GetProperty("firstName").GetString(), Is.EqualTo("Solo"));
+        Assert.That(profile.GetProperty("lastName").GetString(), Is.EqualTo("Player"));
+        Assert.That(profile.GetProperty("middleName").ValueKind, Is.EqualTo(JsonValueKind.Null));
     }
 }
