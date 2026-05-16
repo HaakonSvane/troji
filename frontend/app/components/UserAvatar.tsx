@@ -23,9 +23,9 @@ export function UserAvatar({
     className,
     title,
 }: UserAvatarProps) {
-    const initials =
-        ((firstName ?? "")[0] ?? "").toUpperCase() +
-        ((lastName ?? "")[0] ?? "").toUpperCase();
+    const firstInitial = Array.from(firstName ?? "")[0] ?? "";
+    const lastInitial = Array.from(lastName ?? "")[0] ?? "";
+    const initials = (firstInitial + lastInitial).toUpperCase();
 
     return (
         <span
