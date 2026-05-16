@@ -58,7 +58,8 @@ public sealed class TrophyWebAppFactory : WebApplicationFactory<Program>
             services.RemoveAll<TrophyDbContext>();
             services.RemoveAll<DbContextOptions<TrophyDbContext>>();
             services.AddDbContext<TrophyDbContext>(options =>
-                options.UseNpgsql(_postgres.GetConnectionString()));
+                options.UseNpgsql(_postgres.GetConnectionString())
+                    .UseSnakeCaseNamingConvention());
 
             // Replace JWT auth with the in-process FakeAuthHandler.
             // PostConfigure runs after all Configure actions, guaranteeing the override wins.

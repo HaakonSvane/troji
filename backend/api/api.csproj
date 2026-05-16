@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="EFCore.NamingConventions" Version="10.0.1" />
         <PackageReference Include="FlexLabs.EntityFrameworkCore.Upsert" Version="10.0.0" />
         <PackageReference Include="HotChocolate.AspNetCore" Version="16.1.0-p.1.2" />
         <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="16.1.0-p.1.2" />

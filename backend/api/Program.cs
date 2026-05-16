@@ -42,14 +42,16 @@ public class Program
             connectionStringBuilder.Password = config["Database:Password"];
 
             builder.Services.AddDbContextPool<TrophyDbContext>(options =>
-                options.UseNpgsql(connectionStringBuilder.ConnectionString));
+                options.UseNpgsql(connectionStringBuilder.ConnectionString)
+                    .UseSnakeCaseNamingConvention());
         }
         else
         {
             // Schema export builds the DI container and validates repository dependencies.
             // Register a dummy DbContext so export works without requiring local DB env vars.
             builder.Services.AddDbContextPool<TrophyDbContext>(options =>
-                options.UseNpgsql("Host=localhost;Port=5432;Database=schema_export;Username=none;Password=none"));
+                options.UseNpgsql("Host=localhost;Port=5432;Database=schema_export;Username=none;Password=none")
+                    .UseSnakeCaseNamingConvention());
         }
 
         builder.Services.AddCors(options =>
