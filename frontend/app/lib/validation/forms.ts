@@ -1,6 +1,6 @@
 import type { CreateGameInput } from "@/__generated__/NewGameFormMutation.graphql";
 import type { CreateGroupInput } from "@/__generated__/NewGroupFormMutation.graphql";
-import type { CreateTrophyRequestInput } from "@/__generated__/TrophyRequestFormMutation.graphql";
+import type { CreateTrophyRequestInput } from "@/__generated__/TrophyAwardJourneyMutation.graphql";
 import type { UpdateUserInput } from "@/__generated__/settingsMutation.graphql";
 import { z } from "zod";
 

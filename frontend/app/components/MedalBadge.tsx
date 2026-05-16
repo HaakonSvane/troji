@@ -139,6 +139,9 @@ export function MedalBadge({
         };
     }, [tone, baseShadow]);
 
+    // `overflow-hidden` clips the `-inset-px` glare to the rounded rect. Any
+    // future descendant that intentionally extends past the frame (raised rim,
+    // protruding stamp) needs this constraint reconsidered first.
     return (
         <span
             ref={frameRef}
@@ -146,7 +149,7 @@ export function MedalBadge({
             style={{ boxShadow: baseShadow }}
             className={cn(
                 "medal-badge",
-                "relative inline-flex shrink-0 items-center justify-center rounded-full border border-white/15 text-center",
+                "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/15 text-center",
                 toneFrameClass[tone],
                 frame,
                 awarded ? "" : "opacity-45 grayscale saturate-50",
@@ -173,7 +176,7 @@ export function MedalBadge({
             <span
                 ref={glareRef}
                 aria-hidden
-                className="absolute inset-0 rounded-full"
+                className="absolute -inset-px rounded-full"
                 style={{ mixBlendMode: "screen" }}
             />
             <span

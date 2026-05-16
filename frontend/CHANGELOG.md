@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/HaakonSvane/troji/compare/frontend-v0.7.0...frontend-v0.8.0) (2026-05-10)
+
+
+### Features
+
+* **groups:** settings sidesheet, consistent card titles outside containers, equal-height cards, smaller activity feed ([96d83cc](https://github.com/HaakonSvane/troji/commit/96d83cc4dbb4b629bddbd5b5005d55c407c45f3f))
+
 ## [0.7.0](https://github.com/HaakonSvane/troji/compare/frontend-v0.6.2...frontend-v0.7.0) (2026-05-10)
 
 
