@@ -1,6 +1,13 @@
 import { useRef, useState } from "react";
 import { useAuth } from "@clerk/react-router";
-import { graphql, loadQuery, useMutation, usePreloadedQuery } from "react-relay";
+import {
+    fetchQuery,
+    graphql,
+    loadQuery,
+    useMutation,
+    usePreloadedQuery,
+    useRelayEnvironment,
+} from "react-relay";
 import type { settingsQuery } from "@/__generated__/settingsQuery.graphql";
 import type { settingsDisplayNameMutation } from "@/__generated__/settingsDisplayNameMutation.graphql";
 import type { settingsProfileMutation } from "@/__generated__/settingsProfileMutation.graphql";
@@ -125,11 +132,11 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 interface AvatarFieldProps {
     displayName: string;
     avatarUrl: string | null | undefined;
-    onUploaded: () => void;
 }
 
-function AvatarField({ displayName, avatarUrl, onUploaded }: AvatarFieldProps) {
+function AvatarField({ displayName, avatarUrl }: AvatarFieldProps) {
     const { getToken } = useAuth();
+    const environment = useRelayEnvironment();
     const inputRef = useRef<HTMLInputElement>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const [busy, setBusy] = useState(false);
@@ -148,7 +155,9 @@ function AvatarField({ displayName, avatarUrl, onUploaded }: AvatarFieldProps) {
         setBusy(true);
         try {
             await uploadAvatar(file, () => getToken());
-            onUploaded();
+            await fetchQuery(environment, SettingsPageQuery, {}).toPromise();
+            setPreview(null);
+            URL.revokeObjectURL(localPreview);
         } catch (err) {
             setPreview(null);
             URL.revokeObjectURL(localPreview);
@@ -245,7 +254,6 @@ interface IdentityCardProps {
     initialDisplayName: string;
     avatarUrl: string | null | undefined;
     onChange: (next: string) => void;
-    onAvatarChanged: () => void;
 }
 
 function IdentityCard({
@@ -253,7 +261,6 @@ function IdentityCard({
     initialDisplayName,
     avatarUrl,
     onChange,
-    onAvatarChanged,
 }: IdentityCardProps) {
     const [commitDisplayName, isSubmitting] =
         useMutation<settingsDisplayNameMutation>(UpdateDisplayNameMutation);
@@ -313,11 +320,7 @@ function IdentityCard({
                     </p>
                 </div>
 
-                <AvatarField
-                    displayName={displayName}
-                    avatarUrl={avatarUrl}
-                    onUploaded={onAvatarChanged}
-                />
+                <AvatarField displayName={displayName} avatarUrl={avatarUrl} />
 
                 <div className="flex flex-col gap-1.5">
                     <Label
@@ -562,12 +565,6 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
     const [middleName, setMiddleName] = useState(initialMiddleName);
     const [lastName, setLastName] = useState(initialLastName);
 
-    const handleAvatarChanged = () => {
-        if (typeof window !== "undefined") {
-            window.location.reload();
-        }
-    };
-
     return (
         <main className="container mx-auto flex flex-col px-4 py-10 sm:py-14">
             <Breadcrumb segments={[{ label: "settings" }]} />
@@ -582,7 +579,6 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
                     initialDisplayName={initialDisplayName}
                     avatarUrl={data.me?.avatarUrl}
                     onChange={setDisplayName}
-                    onAvatarChanged={handleAvatarChanged}
                 />
                 <ProfileCard
                     firstName={firstName}

@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { initialsFromDisplayName } from "@/lib/format/names";
 import { cn } from "@/lib/utils";
 
-type UserAvatarSize = "sm" | "md" | "lg";
+export type UserAvatarSize = "xs" | "sm" | "md" | "lg";
 
 const sizeClass: Record<UserAvatarSize, string> = {
+    xs: "size-8 text-[11px]",
     sm: "size-9 text-xs",
-    md: "size-12 text-sm",
+    md: "size-14 text-base",
     lg: "size-20 text-2xl",
 };
 
@@ -25,31 +26,18 @@ export function UserAvatar({
     className,
     title,
 }: UserAvatarProps) {
-    const [imgFailed, setImgFailed] = useState(false);
     const initials = initialsFromDisplayName(displayName);
-    const showImage = avatarUrl && !imgFailed;
-
     return (
-        <span
+        <Avatar
             title={title}
             className={cn(
-                "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-medal-gold/30 bg-surface-muted font-medium text-foreground/85",
+                "border border-medal-gold/30 bg-surface-muted font-medium text-foreground/85",
                 sizeClass[size],
                 className
             )}
         >
-            {showImage ? (
-                <img
-                    src={avatarUrl}
-                    alt=""
-                    loading="lazy"
-                    decoding="async"
-                    onError={() => setImgFailed(true)}
-                    className="h-full w-full object-cover"
-                />
-            ) : (
-                initials
-            )}
-        </span>
+            {avatarUrl ? <AvatarImage src={avatarUrl} alt="" /> : null}
+            <AvatarFallback>{initials}</AvatarFallback>
+        </Avatar>
     );
 }

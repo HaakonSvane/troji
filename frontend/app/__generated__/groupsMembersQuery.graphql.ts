@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c0320dffad9fe858f8b007ac5b55eeee>>
+ * @generated SignedSource<<0acc52a3a989af04d53466896ec7b98a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -223,6 +223,19 @@ return {
                       },
                       {
                         "alias": null,
+                        "args": [
+                          {
+                            "kind": "Literal",
+                            "name": "size",
+                            "value": 64
+                          }
+                        ],
+                        "kind": "ScalarField",
+                        "name": "avatarUrl",
+                        "storageKey": "avatarUrl(size:64)"
+                      },
+                      {
+                        "alias": null,
                         "args": null,
                         "concreteType": "UserProfile",
                         "kind": "LinkedField",
@@ -269,12 +282,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "76fb86fa8d3e55f142141b239a82fa15",
+    "cacheID": "82d38c8fd45fb1f3c958013b6cad550a",
     "id": null,
     "metadata": {},
     "name": "groupsMembersQuery",
     "operationKind": "query",
-    "text": "query groupsMembersQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    name\n    admin {\n      id\n    }\n    members(first: 50) {\n      totalCount\n      edges {\n        node {\n          id\n          ...MemberRow_user\n        }\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n\nfragment MemberRow_user on User {\n  id\n  displayName\n  profile {\n    firstName\n    middleName\n    lastName\n  }\n}\n"
+    "text": "query groupsMembersQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    name\n    admin {\n      id\n    }\n    members(first: 50) {\n      totalCount\n      edges {\n        node {\n          id\n          ...MemberRow_user\n        }\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n\nfragment MemberRow_user on User {\n  id\n  displayName\n  avatarUrl(size: 64)\n  profile {\n    firstName\n    middleName\n    lastName\n  }\n}\n"
   }
 };
 })();

@@ -53,6 +53,7 @@ const GroupPageQuery = graphql`
                 user {
                     id
                     displayName
+                    avatarUrl(size: 128)
                     profile {
                         firstName
                         middleName

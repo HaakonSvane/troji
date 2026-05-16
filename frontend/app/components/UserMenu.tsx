@@ -14,12 +14,13 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
-import { initialsFromDisplayName } from "@/lib/format/names";
+import { UserAvatar } from "@/components/UserAvatar";
 
 export const UserMenuQuery = graphql`
     query UserMenuQuery {
         me {
             displayName
+            avatarUrl(size: 64)
         }
     }
 `;
@@ -33,7 +34,6 @@ function UserMenuContent({ queryRef }: UserMenuContentProps) {
     const { signOut } = useClerk();
 
     const displayName = data.me?.displayName ?? "Unknown";
-    const initials = initialsFromDisplayName(displayName);
 
     return (
         <DropdownMenu>
@@ -41,9 +41,13 @@ function UserMenuContent({ queryRef }: UserMenuContentProps) {
                 <button
                     type="button"
                     aria-label="Open user menu"
-                    className="flex size-8 cursor-pointer items-center justify-center rounded-full border border-medal-gold/30 bg-surface-muted font-mono text-[11px] font-medium text-foreground/85 transition-opacity hover:opacity-70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-medal-gold/50"
+                    className="cursor-pointer rounded-full font-mono transition-opacity hover:opacity-70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-medal-gold/50"
                 >
-                    {initials}
+                    <UserAvatar
+                        displayName={displayName}
+                        avatarUrl={data.me?.avatarUrl}
+                        size="xs"
+                    />
                 </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent

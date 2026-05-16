@@ -26,6 +26,12 @@ export default defineConfig({
         warmup: {
             clientFiles: ["./app/root.tsx", "./app/routes/**/*.tsx"],
         },
+        // Mirror prod Caddy routing in dev so signed image URLs (which are
+        // path-only `/api/images/...`) resolve against the backend instead of
+        // 404'ing on the frontend dev server.
+        proxy: {
+            "/api": "http://localhost:5063",
+        },
     },
     // Client-side pre-bundling: converts relay's CJS to ESM for the browser.
     // SSR is handled by relaySsrPlugin() instead — see that file for details.

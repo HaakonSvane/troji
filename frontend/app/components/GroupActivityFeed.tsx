@@ -4,7 +4,7 @@ import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import type { GroupActivityFeed_group$key } from "@/__generated__/GroupActivityFeed_group.graphql";
 import { MedalBadge } from "@/components/MedalBadge";
 import { DisplayName } from "@/components/DisplayName";
-import { initialsFromDisplayName } from "@/lib/format/names";
+import { UserAvatar } from "@/components/UserAvatar";
 import { formatRelativeTime, formatAbsoluteDateTime } from "@/lib/relativeTime";
 import { Button } from "@/components/ui/button";
 
@@ -48,6 +48,7 @@ const GroupActivityFeedFragment = graphql`
                 member {
                     id
                     displayName
+                    avatarUrl(size: 64)
                     profile {
                         firstName
                         middleName
@@ -161,15 +162,17 @@ export function GroupActivityFeed({ group, groupId, currentUserId }: GroupActivi
                         }
                         if (item.__typename === "MemberJoinedActivity" && item.member) {
                             const memberIsSelf = item.member.id === currentUserId;
-                            const initials = initialsFromDisplayName(item.member.displayName);
                             return (
                                 <li
                                     key={item.id}
                                     className="flex items-start gap-3 px-4 py-3 sm:gap-4 sm:px-5"
                                 >
-                                    <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full border border-medal-gold/30 bg-surface-muted text-xs font-medium text-foreground/85">
-                                        {initials}
-                                    </div>
+                                    <UserAvatar
+                                        displayName={item.member.displayName}
+                                        avatarUrl={item.member.avatarUrl}
+                                        size="sm"
+                                        className="mt-0.5"
+                                    />
                                     <div className="min-w-0 flex-1">
                                         <p className="text-sm leading-relaxed text-foreground/90">
                                             {memberIsSelf ? (

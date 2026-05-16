@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b7c54721d13a96eb154d6f342a74ffae>>
+ * @generated SignedSource<<fab9b2812399c9d85d3a06974ebc1098>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -133,59 +133,61 @@ v6 = {
   ],
   "storageKey": null
 },
-v7 = [
-  (v4/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "displayName",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "UserProfile",
-    "kind": "LinkedField",
-    "name": "profile",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "firstName",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "middleName",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "lastName",
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  }
-],
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "displayName",
+  "storageKey": null
+},
 v8 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "UserProfile",
+  "kind": "LinkedField",
+  "name": "profile",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "firstName",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "middleName",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "lastName",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v9 = [
+  (v4/*: any*/),
+  (v7/*: any*/),
+  (v8/*: any*/)
+],
+v10 = {
   "alias": null,
   "args": null,
   "concreteType": "User",
   "kind": "LinkedField",
   "name": "receiver",
   "plural": false,
-  "selections": (v7/*: any*/),
+  "selections": (v9/*: any*/),
   "storageKey": null
 },
-v9 = {
+v11 = {
   "alias": null,
   "args": null,
   "concreteType": "Trophy",
@@ -203,25 +205,25 @@ v9 = {
     },
     (v5/*: any*/),
     (v6/*: any*/),
-    (v8/*: any*/)
+    (v10/*: any*/)
   ],
   "storageKey": null
 },
-v10 = [
+v12 = [
   {
     "kind": "Variable",
     "name": "id",
     "variableName": "groupId"
   }
 ],
-v11 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "awardedTrophyCount",
   "storageKey": null
 },
-v12 = {
+v14 = {
   "alias": null,
   "args": null,
   "concreteType": "GroupTopPerformer",
@@ -236,7 +238,7 @@ v12 = {
       "kind": "LinkedField",
       "name": "user",
       "plural": false,
-      "selections": (v7/*: any*/),
+      "selections": (v9/*: any*/),
       "storageKey": null
     },
     {
@@ -249,14 +251,14 @@ v12 = {
   ],
   "storageKey": null
 },
-v13 = {
+v15 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v14 = {
+v16 = {
   "alias": null,
   "args": null,
   "concreteType": null,
@@ -264,7 +266,7 @@ v14 = {
   "name": "errors",
   "plural": true,
   "selections": [
-    (v13/*: any*/),
+    (v15/*: any*/),
     {
       "kind": "InlineFragment",
       "selections": [
@@ -301,7 +303,7 @@ return {
         "name": "createTrophyRequest",
         "plural": false,
         "selections": [
-          (v9/*: any*/),
+          (v11/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -312,7 +314,7 @@ return {
             "selections": [
               {
                 "alias": null,
-                "args": (v10/*: any*/),
+                "args": (v12/*: any*/),
                 "concreteType": "Group",
                 "kind": "LinkedField",
                 "name": "groupById",
@@ -323,15 +325,15 @@ return {
                     "kind": "FragmentSpread",
                     "name": "GroupActivityFeed_group"
                   },
-                  (v11/*: any*/),
-                  (v12/*: any*/)
+                  (v13/*: any*/),
+                  (v14/*: any*/)
                 ],
                 "storageKey": null
               }
             ],
             "storageKey": null
           },
-          (v14/*: any*/)
+          (v16/*: any*/)
         ],
         "storageKey": null
       }
@@ -357,7 +359,7 @@ return {
         "name": "createTrophyRequest",
         "plural": false,
         "selections": [
-          (v9/*: any*/),
+          (v11/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -389,7 +391,7 @@ return {
             "selections": [
               {
                 "alias": null,
-                "args": (v10/*: any*/),
+                "args": (v12/*: any*/),
                 "concreteType": "Group",
                 "kind": "LinkedField",
                 "name": "groupById",
@@ -416,7 +418,7 @@ return {
                     "name": "recentActivity",
                     "plural": true,
                     "selections": [
-                      (v13/*: any*/),
+                      (v15/*: any*/),
                       (v4/*: any*/),
                       {
                         "alias": null,
@@ -439,7 +441,7 @@ return {
                               (v4/*: any*/),
                               (v5/*: any*/),
                               (v6/*: any*/),
-                              (v8/*: any*/),
+                              (v10/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -447,7 +449,7 @@ return {
                                 "kind": "LinkedField",
                                 "name": "awardedBy",
                                 "plural": false,
-                                "selections": (v7/*: any*/),
+                                "selections": (v9/*: any*/),
                                 "storageKey": null
                               }
                             ],
@@ -467,7 +469,24 @@ return {
                             "kind": "LinkedField",
                             "name": "member",
                             "plural": false,
-                            "selections": (v7/*: any*/),
+                            "selections": [
+                              (v4/*: any*/),
+                              (v7/*: any*/),
+                              {
+                                "alias": null,
+                                "args": [
+                                  {
+                                    "kind": "Literal",
+                                    "name": "size",
+                                    "value": 64
+                                  }
+                                ],
+                                "kind": "ScalarField",
+                                "name": "avatarUrl",
+                                "storageKey": "avatarUrl(size:64)"
+                              },
+                              (v8/*: any*/)
+                            ],
                             "storageKey": null
                           }
                         ],
@@ -477,8 +496,8 @@ return {
                     ],
                     "storageKey": "recentActivity(first:5)"
                   },
-                  (v11/*: any*/),
-                  (v12/*: any*/),
+                  (v13/*: any*/),
+                  (v14/*: any*/),
                   (v4/*: any*/)
                 ],
                 "storageKey": null
@@ -486,19 +505,19 @@ return {
             ],
             "storageKey": null
           },
-          (v14/*: any*/)
+          (v16/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "36d78abc0288dadde2b0ba76d65974fb",
+    "cacheID": "9df34bf15d15a90378b9987447aa39a4",
     "id": null,
     "metadata": {},
     "name": "TrophyAwardJourneyMutation",
     "operationKind": "mutation",
-    "text": "mutation TrophyAwardJourneyMutation(\n  $input: CreateTrophyRequestInput!\n  $groupId: ID!\n) {\n  createTrophyRequest(input: $input) {\n    trophy {\n      id\n      isAwarded\n      description\n      game {\n        id\n        symbol\n        name\n      }\n      receiver {\n        id\n        displayName\n        profile {\n          firstName\n          middleName\n          lastName\n        }\n      }\n    }\n    query {\n      groupById(id: $groupId) {\n        ...GroupActivityFeed_group\n        awardedTrophyCount\n        topPerformer {\n          user {\n            id\n            displayName\n            profile {\n              firstName\n              middleName\n              lastName\n            }\n          }\n          awardCount\n        }\n        id\n      }\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n\nfragment GroupActivityFeed_group on Group {\n  recentActivityCount\n  recentActivity(first: 5) {\n    __typename\n    id\n    occurredAt\n    ... on TrophyAwardedActivity {\n      trophy {\n        id\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          displayName\n          profile {\n            firstName\n            middleName\n            lastName\n          }\n        }\n        awardedBy {\n          id\n          displayName\n          profile {\n            firstName\n            middleName\n            lastName\n          }\n        }\n      }\n    }\n    ... on MemberJoinedActivity {\n      member {\n        id\n        displayName\n        profile {\n          firstName\n          middleName\n          lastName\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation TrophyAwardJourneyMutation(\n  $input: CreateTrophyRequestInput!\n  $groupId: ID!\n) {\n  createTrophyRequest(input: $input) {\n    trophy {\n      id\n      isAwarded\n      description\n      game {\n        id\n        symbol\n        name\n      }\n      receiver {\n        id\n        displayName\n        profile {\n          firstName\n          middleName\n          lastName\n        }\n      }\n    }\n    query {\n      groupById(id: $groupId) {\n        ...GroupActivityFeed_group\n        awardedTrophyCount\n        topPerformer {\n          user {\n            id\n            displayName\n            profile {\n              firstName\n              middleName\n              lastName\n            }\n          }\n          awardCount\n        }\n        id\n      }\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n\nfragment GroupActivityFeed_group on Group {\n  recentActivityCount\n  recentActivity(first: 5) {\n    __typename\n    id\n    occurredAt\n    ... on TrophyAwardedActivity {\n      trophy {\n        id\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          displayName\n          profile {\n            firstName\n            middleName\n            lastName\n          }\n        }\n        awardedBy {\n          id\n          displayName\n          profile {\n            firstName\n            middleName\n            lastName\n          }\n        }\n      }\n    }\n    ... on MemberJoinedActivity {\n      member {\n        id\n        displayName\n        avatarUrl(size: 64)\n        profile {\n          firstName\n          middleName\n          lastName\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
