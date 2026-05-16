@@ -361,8 +361,8 @@ function Breadcrumb({
     return (
         <div
             className={cn(
-                "flex items-center justify-center gap-3 transition-[height] duration-200",
-                isSuccess ? "h-20" : "h-12"
+                "flex items-center justify-center transition-[height] duration-200",
+                isSuccess ? "h-28 gap-5" : "h-12 gap-3"
             )}
         >
             {showMedal && (
@@ -372,7 +372,7 @@ function Breadcrumb({
                 >
                     <MedalBadge
                         emoji={game!.symbol}
-                        size={isSuccess ? "md" : "sm"}
+                        size={isSuccess ? "lg" : "sm"}
                         title={game!.name}
                     />
                 </motion.span>
@@ -381,7 +381,7 @@ function Breadcrumb({
                 <span
                     className={cn(
                         "font-mono text-muted-foreground",
-                        isSuccess ? "text-2xl" : "text-sm"
+                        isSuccess ? "text-4xl" : "text-sm"
                     )}
                 >
                     ›
@@ -395,7 +395,7 @@ function Breadcrumb({
                     <UserAvatar
                         firstName={member!.firstName}
                         lastName={member!.lastName}
-                        size={isSuccess ? "md" : "sm"}
+                        size={isSuccess ? "lg" : "sm"}
                     />
                 </motion.span>
             )}
