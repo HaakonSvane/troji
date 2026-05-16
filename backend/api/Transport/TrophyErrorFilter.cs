@@ -41,7 +41,10 @@ public sealed class TrophyErrorFilter : IErrorFilter
             GroupLimitExceededException or
             GameLimitExceededException or
             DuplicateGameEmojiException or
-            SelfHandoutException)
+            SelfHandoutException or
+            InvalidGroupNameException or
+            CannotTransferToSelfException or
+            GroupNameMismatchException)
         {
             var code = error.Exception.GetType().Name.Replace("Exception", "Error", StringComparison.Ordinal);
 

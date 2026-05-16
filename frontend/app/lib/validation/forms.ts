@@ -4,7 +4,10 @@ import type { CreateTrophyRequestInput } from "@/__generated__/TrophyAwardJourne
 import type { RegisterUserInput } from "@/__generated__/registerUserMutation.graphql";
 import type { UpdateUserDisplayNameInput } from "@/__generated__/settingsDisplayNameMutation.graphql";
 import type { UpdateUserProfileInput } from "@/__generated__/settingsProfileMutation.graphql";
+import type { GroupHeroUpdateMutation$variables } from "@/__generated__/GroupHeroUpdateMutation.graphql";
 import { z } from "zod";
+
+type UpdateGroupInput = GroupHeroUpdateMutation$variables["input"];
 
 type ValidationResult<T> = { success: true; data: T } | { success: false; error: string };
 
@@ -29,6 +32,12 @@ const createGameInputSchema = z.object({
 
 const createGroupInputSchema = z.object({
     name: requiredText("Group name is required."),
+    description: optionalText,
+});
+
+const updateGroupInputSchema = z.object({
+    groupId: requiredText("Circle id is required."),
+    name: requiredText("Circle name is required."),
     description: optionalText,
 });
 
@@ -88,6 +97,17 @@ export function validateCreateGroupInput(values: {
     return toValidationResult<CreateGroupInput>(
         createGroupInputSchema.safeParse(values),
         "Could not validate group details."
+    );
+}
+
+export function validateUpdateGroupInput(values: {
+    groupId: string;
+    name: string;
+    description: string;
+}): ValidationResult<UpdateGroupInput> {
+    return toValidationResult<UpdateGroupInput>(
+        updateGroupInputSchema.safeParse(values),
+        "Could not validate circle details."
     );
 }
 
