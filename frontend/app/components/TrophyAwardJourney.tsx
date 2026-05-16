@@ -299,14 +299,14 @@ export function TrophyAwardJourney({
                     {step === "game" && (
                         <GameStep
                             games={availableGames}
-                            selectedGameId={selectedGameId}
+                            selectedGame={selectedGame}
                             onPick={pickGame}
                         />
                     )}
                     {step === "recipient" && (
                         <RecipientStep
                             members={groupMembers}
-                            selectedUserId={selectedUserId}
+                            selectedMember={selectedMember}
                             currentUserId={currentUserId}
                             onPick={pickRecipient}
                         />
@@ -379,14 +379,14 @@ function Breadcrumb({
 
 function GameStep({
     games,
-    selectedGameId,
+    selectedGame,
     onPick,
 }: {
     games: AvailableGame[];
-    selectedGameId: string;
+    selectedGame: AvailableGame | null;
     onPick: (id: string) => void;
 }) {
-    const selectedGame = games.find((g) => g.id === selectedGameId) ?? null;
+    const selectedGameId = selectedGame?.id ?? "";
     return (
         <div className="space-y-5">
             <div className="flex justify-center py-3">
@@ -423,16 +423,16 @@ function GameStep({
 
 function RecipientStep({
     members,
-    selectedUserId,
+    selectedMember,
     currentUserId,
     onPick,
 }: {
     members: Member[];
-    selectedUserId: string;
+    selectedMember: Member | null;
     currentUserId?: string | null;
     onPick: (id: string) => void;
 }) {
-    const selectedMember = members.find((m) => m.id === selectedUserId) ?? null;
+    const selectedUserId = selectedMember?.id ?? "";
     return (
         <div className="space-y-5">
             <div className="flex justify-center py-3">
