@@ -254,6 +254,14 @@ export function TrophyAwardJourney({
                             </Button>
                         )}
                         <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => closeDialog(false)}
+                            disabled={isSubmitting}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
                             busy={isSubmitting}
                             disabled={isSubmitting}
                             onClick={submit}
