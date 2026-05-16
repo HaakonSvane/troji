@@ -32,6 +32,14 @@ Internal layout and patterns for the API project. See `backend/AGENTS.md` for co
 - `FakeAuthHandler` is wired **only** by `TrophyWebAppFactory` in integration tests, never by production `Program.cs`. It reads `X-Test-User-Id` from the request.
 - `TrophyErrorFilter` is the centralized exception → GraphQL error converter. Domain exceptions get caught here.
 
+## Error Handling
+
+- **Throw domain exceptions only.** Domain failures use the typed exceptions in `API/Errors/` (e.g. `NoUserException`, `InvalidUserNameException`, `GroupNotFoundException`). Never throw raw `Exception`, `ArgumentException`, or `UnauthorizedAccessException` from mutations or repositories — those bypass the typed error union and either leak raw .NET messages or get scrubbed to `"Internal server error."` by the filter's catch-all.
+- **Declare every thrown exception with `[Error<T>]`.** Each mutation method must annotate every domain exception it (transitively) throws. HotChocolate uses these attributes to build the schema's per-mutation error union (e.g. `RegisterUserError = NoUserError | UserAlreadyRegisteredError | InvalidUserNameError`). If you add a new thrown exception, add the attribute or it won't appear in the union — the frontend then can't enumerate it statically.
+- **`TrophyErrorFilter` is a closed allowlist.** A new domain exception type must be added to the `is ... or ...` allowlist in `Transport/TrophyErrorFilter.cs`, otherwise the catch-all rewrites it to `"Internal server error."` with code `UnexpectedError` and logs the original. That catch-all is intentional for genuinely unexpected exceptions but wrong for new domain errors — keep the allowlist current.
+- **Stick to `message: String!`.** Adding structured fields to an error type (like `InviteResetTooSoonError.secondsToWait`) is fine when a concrete frontend consumer needs them, but don't add fields speculatively — the frontend already discriminates on `__typename`.
+- The filter's static `Logger` exists because HC's schema service container does not expose `ILogger<T>`; the comment in `TrophyErrorFilter.cs` is the canonical explanation. Don't replace it with constructor injection without first verifying schema-export still works.
+
 ## References
 
 - `backend/AGENTS.md` — commands, env, auth flow, schema-export.

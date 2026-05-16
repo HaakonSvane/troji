@@ -8,6 +8,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TerminalCursor } from "@/components/TerminalCursor";
+import {
+    getMutationErrorMessage,
+    getMutationNetworkErrorMessage,
+} from "@/lib/relay/mutationErrors";
 
 const RegisterUserMutation = graphql`
     mutation registerUserMutation($input: RegisterUserInput!) {
@@ -19,7 +23,7 @@ const RegisterUserMutation = graphql`
             }
             errors {
                 __typename
-                ... on UserAlreadyRegisteredError {
+                ... on Error {
                     message
                 }
             }
@@ -79,20 +83,16 @@ export default function RegisterPage() {
                     lastName: normalizedLastName,
                 },
             },
-            // @types/react-relay is v18 but react-relay is v20; onCompleted is typed as
-            // (response: {}) in the older types, so a cast is required here.
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            onCompleted: (response: any) => {
+            onCompleted: (response) => {
                 const payload = response.registerUser;
 
-                if (payload?.user) {
+                if (payload.user) {
                     navigate("/dashboard", { replace: true });
                     return;
                 }
 
-                const alreadyRegistered = payload?.errors?.some(
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    (error: any) => error?.__typename === "UserAlreadyRegisteredError"
+                const alreadyRegistered = payload.errors?.some(
+                    (error) => error.__typename === "UserAlreadyRegisteredError"
                 );
 
                 if (alreadyRegistered) {
@@ -100,10 +100,20 @@ export default function RegisterPage() {
                     return;
                 }
 
-                setFormError("Could not complete registration. Please try again.");
+                setFormError(
+                    getMutationErrorMessage(
+                        payload.errors,
+                        "Could not complete registration. Please try again."
+                    )
+                );
             },
-            onError: () => {
-                setFormError("Could not complete registration. Please try again.");
+            onError: (error) => {
+                setFormError(
+                    getMutationNetworkErrorMessage(
+                        error,
+                        "Could not complete registration. Please try again."
+                    )
+                );
             },
         });
     };

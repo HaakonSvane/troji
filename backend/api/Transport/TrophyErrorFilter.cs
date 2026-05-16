@@ -1,11 +1,21 @@
 using api.API.Errors;
 using HotChocolate;
 using HotChocolate.Execution;
+using Microsoft.Extensions.Logging;
 
 namespace api.Transport;
 
 public sealed class TrophyErrorFilter : IErrorFilter
 {
+    // HotChocolate's schema service container is isolated from application DI, so a
+    // standard ILogger<T> constructor injection fails at schema-export and at runtime.
+    // Resolving via a static factory keeps logging available everywhere (production,
+    // schema export, tests) at the cost of bypassing the host's logger configuration —
+    // acceptable here because this filter only logs unexpected exceptions.
+    private static readonly ILogger Logger =
+        LoggerFactory.Create(builder => builder.AddSimpleConsole())
+            .CreateLogger(typeof(TrophyErrorFilter).FullName!);
+
     public IError OnError(IError error)
     {
         if (error.Exception is null)
@@ -13,7 +23,7 @@ public sealed class TrophyErrorFilter : IErrorFilter
             return error;
         }
 
-        if (error.Exception is not (
+        if (error.Exception is
             NoUserException or
             UserAlreadyRegisteredException or
             InvalidUserNameException or
@@ -26,15 +36,29 @@ public sealed class TrophyErrorFilter : IErrorFilter
             NoGameException or
             NoTrophyRequestException or
             NoApprovalRequiredException or
-            NoMemberException))
+            NoMemberException or
+            GroupLimitExceededException or
+            GameLimitExceededException or
+            DuplicateGameEmojiException or
+            SelfHandoutException)
         {
-            return error;
+            var code = error.Exception.GetType().Name.Replace("Exception", "Error", StringComparison.Ordinal);
+
+            return error
+                .WithMessage(error.Exception.Message)
+                .WithCode(code);
         }
 
-        var code = error.Exception.GetType().Name.Replace("Exception", "Error", StringComparison.Ordinal);
+        Logger.LogError(
+            error.Exception,
+            "Unhandled exception in GraphQL operation at path {Path}: {ExceptionType}",
+            error.Path?.ToString() ?? "<unknown>",
+            error.Exception.GetType().FullName);
 
-        return error
-            .WithMessage(error.Exception.Message)
-            .WithCode(code);
+        return ErrorBuilder.FromError(error)
+            .SetMessage("Internal server error.")
+            .SetCode("UnexpectedError")
+            .SetException(null)
+            .Build();
     }
 }

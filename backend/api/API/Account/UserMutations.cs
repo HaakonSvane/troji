@@ -20,13 +20,15 @@ public static class UserMutations
     {
         if (user is null)
         {
-            throw new UnauthorizedAccessException("Not authenticated.");
+            throw new NoUserException();
         }
 
         return await repository.UpdateUserAsync(user.Id, firstName, middleName, lastName, cancellationToken);
     }
 
-    [Error(typeof(UserAlreadyRegisteredException))]
+    [Error<NoUserException>]
+    [Error<UserAlreadyRegisteredException>]
+    [Error<InvalidUserNameException>]
     public static async Task<User> RegisterUserAsync(
         [TokenUser] TokenUser? user,
         string firstName,
@@ -37,7 +39,7 @@ public static class UserMutations
     {
         if (user is null)
         {
-            throw new UnauthorizedAccessException("Not authenticated.");
+            throw new NoUserException();
         }
 
         return await repository.RegisterUserAsync(user.Id, firstName, middleName, lastName, cancellationToken);

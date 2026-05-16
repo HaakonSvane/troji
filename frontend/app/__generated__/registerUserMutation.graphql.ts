@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f26b3f290c52b1e04b6bf9831763c06a>>
+ * @generated SignedSource<<c8aaf3b89e061b6b37f9617b611676da>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,12 +20,8 @@ export type registerUserMutation$variables = {
 export type registerUserMutation$data = {
   readonly registerUser: {
     readonly errors: ReadonlyArray<{
-      readonly __typename: "UserAlreadyRegisteredError";
-      readonly message: string;
-    } | {
-      // This will never be '%other', but we need some
-      // value in case none of the concrete values match.
-      readonly __typename: "%other";
+      readonly __typename: string;
+      readonly message?: string;
     }> | null | undefined;
     readonly user: {
       readonly firstName: string;
@@ -120,8 +116,8 @@ v1 = [
                 "storageKey": null
               }
             ],
-            "type": "UserAlreadyRegisteredError",
-            "abstractKey": null
+            "type": "Error",
+            "abstractKey": "__isError"
           }
         ],
         "storageKey": null
@@ -148,16 +144,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "2ef530528c0223a0fc5dafd43daa9740",
+    "cacheID": "f225c8d21891c7678057f3176400136c",
     "id": null,
     "metadata": {},
     "name": "registerUserMutation",
     "operationKind": "mutation",
-    "text": "mutation registerUserMutation(\n  $input: RegisterUserInput!\n) {\n  registerUser(input: $input) {\n    user {\n      id\n      firstName\n      lastName\n    }\n    errors {\n      __typename\n      ... on UserAlreadyRegisteredError {\n        message\n      }\n    }\n  }\n}\n"
+    "text": "mutation registerUserMutation(\n  $input: RegisterUserInput!\n) {\n  registerUser(input: $input) {\n    user {\n      id\n      firstName\n      lastName\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d4e1b11ce5a27f3381795a9f170fb6fc";
+(node as any).hash = "ab1d5129375e96b1cea4a2a6b407faba";
 
 export default node;

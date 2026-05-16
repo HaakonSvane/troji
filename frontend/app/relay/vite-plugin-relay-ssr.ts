@@ -70,7 +70,9 @@ export function relaySsrPlugin(): Plugin {
 
         resolveId(id, _importer, options) {
             // In Vite 8 the ssr flag may live on options or on this.environment.
-            const isSsr = options?.ssr === true || (this as any).environment?.name === "ssr";
+            const isSsr =
+                options?.ssr === true ||
+                (this as { environment?: { name?: string } }).environment?.name === "ssr";
             if (!isSsr) return null;
 
             const pkg = packages.find((p) => p.specifier === id);

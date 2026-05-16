@@ -42,7 +42,7 @@ public sealed class UserRepository : IUserRepository
         if (string.IsNullOrWhiteSpace(normalizedFirstName) ||
             string.IsNullOrWhiteSpace(normalizedLastName))
         {
-            throw new ArgumentException("First name and last name are required.");
+            throw new InvalidUserNameException();
         }
 
         var existing = await _context.Users
