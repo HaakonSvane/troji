@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2bea945b0b8c95cc9f1c7932b4864a6e>>
+ * @generated SignedSource<<b3074b2349dd5dae96935ad89509f4f1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,6 +19,7 @@ export type settingsClearAvatarMutation$data = {
     readonly user: {
       readonly avatarUrl: string | null | undefined;
       readonly id: string;
+      readonly navAvatarUrl: string | null | undefined;
     } | null | undefined;
   };
 };
@@ -64,6 +65,19 @@ var v0 = [
             "kind": "ScalarField",
             "name": "avatarUrl",
             "storageKey": "avatarUrl(size:256)"
+          },
+          {
+            "alias": "navAvatarUrl",
+            "args": [
+              {
+                "kind": "Literal",
+                "name": "size",
+                "value": 64
+              }
+            ],
+            "kind": "ScalarField",
+            "name": "avatarUrl",
+            "storageKey": "avatarUrl(size:64)"
           }
         ],
         "storageKey": null
@@ -122,16 +136,16 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "cacheID": "8e3310bca24d2564605aff62b5e06df0",
+    "cacheID": "c79d1dafd5a89da3f279d665e2957516",
     "id": null,
     "metadata": {},
     "name": "settingsClearAvatarMutation",
     "operationKind": "mutation",
-    "text": "mutation settingsClearAvatarMutation {\n  clearUserAvatar {\n    user {\n      id\n      avatarUrl(size: 256)\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n"
+    "text": "mutation settingsClearAvatarMutation {\n  clearUserAvatar {\n    user {\n      id\n      avatarUrl(size: 256)\n      navAvatarUrl: avatarUrl(size: 64)\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "3f3253e7f1b4463d8c34c62768aef63b";
+(node as any).hash = "f50916f3b86d91c1e64a6f8c5b51ee6e";
 
 export default node;

@@ -35,6 +35,7 @@ const SettingsPageQuery = graphql`
             id
             displayName
             avatarUrl(size: 256)
+            navAvatarUrl: avatarUrl(size: 64)
             profile {
                 firstName
                 middleName
@@ -88,6 +89,7 @@ const ClearAvatarMutation = graphql`
             user {
                 id
                 avatarUrl(size: 256)
+                navAvatarUrl: avatarUrl(size: 64)
             }
             errors {
                 __typename

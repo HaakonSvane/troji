@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<023dba4df0e8b68bfe0a29e722cc0ee4>>
+ * @generated SignedSource<<aa4aea7db68b3397d41f171baf350f6b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type settingsQuery$data = {
     readonly avatarUrl: string | null | undefined;
     readonly displayName: string;
     readonly id: string;
+    readonly navAvatarUrl: string | null | undefined;
     readonly profile: {
       readonly firstName: string;
       readonly lastName: string;
@@ -63,6 +64,19 @@ var v0 = [
         "kind": "ScalarField",
         "name": "avatarUrl",
         "storageKey": "avatarUrl(size:256)"
+      },
+      {
+        "alias": "navAvatarUrl",
+        "args": [
+          {
+            "kind": "Literal",
+            "name": "size",
+            "value": 64
+          }
+        ],
+        "kind": "ScalarField",
+        "name": "avatarUrl",
+        "storageKey": "avatarUrl(size:64)"
       },
       {
         "alias": null,
@@ -118,16 +132,16 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "cacheID": "fb4f17745e44fce465e7dfc9d61a0164",
+    "cacheID": "8e1e4fd0771f38bbc5c2326d0dcc1160",
     "id": null,
     "metadata": {},
     "name": "settingsQuery",
     "operationKind": "query",
-    "text": "query settingsQuery {\n  me {\n    id\n    displayName\n    avatarUrl(size: 256)\n    profile {\n      firstName\n      middleName\n      lastName\n    }\n  }\n}\n"
+    "text": "query settingsQuery {\n  me {\n    id\n    displayName\n    avatarUrl(size: 256)\n    navAvatarUrl: avatarUrl(size: 64)\n    profile {\n      firstName\n      middleName\n      lastName\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "91a8702c7b466de271edb686352f47ea";
+(node as any).hash = "99805057edbcea740f16dac5810f7898";
 
 export default node;
