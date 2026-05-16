@@ -42,6 +42,7 @@ public static class UserMutations
         return await repository.UpdateUserProfileAsync(user.Id, firstName, middleName, lastName, cancellationToken);
     }
 
+    [Error<NoUserException>]
     [Error<UserAlreadyRegisteredException>]
     [Error<InvalidUserNameException>]
     [Error<InvalidDisplayNameException>]
