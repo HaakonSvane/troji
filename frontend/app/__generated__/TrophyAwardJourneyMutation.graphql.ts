@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<04d9b428075f4bd6700e3ecd7da2b84e>>
+ * @generated SignedSource<<b7c54721d13a96eb154d6f342a74ffae>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,6 +34,11 @@ export type TrophyAwardJourneyMutation$data = {
           readonly user: {
             readonly displayName: string;
             readonly id: string;
+            readonly profile: {
+              readonly firstName: string;
+              readonly lastName: string;
+              readonly middleName: string | null | undefined;
+            };
           };
         } | null | undefined;
         readonly " $fragmentSpreads": FragmentRefs<"GroupActivityFeed_group">;
@@ -51,6 +56,11 @@ export type TrophyAwardJourneyMutation$data = {
       readonly receiver: {
         readonly displayName: string;
         readonly id: string;
+        readonly profile: {
+          readonly firstName: string;
+          readonly lastName: string;
+          readonly middleName: string | null | undefined;
+        };
       };
     } | null | undefined;
   };
@@ -130,6 +140,38 @@ v7 = [
     "args": null,
     "kind": "ScalarField",
     "name": "displayName",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "UserProfile",
+    "kind": "LinkedField",
+    "name": "profile",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "firstName",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "middleName",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "lastName",
+        "storageKey": null
+      }
+    ],
     "storageKey": null
   }
 ],
@@ -451,16 +493,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7475e176c82b754bc9c15312e42d12ae",
+    "cacheID": "36d78abc0288dadde2b0ba76d65974fb",
     "id": null,
     "metadata": {},
     "name": "TrophyAwardJourneyMutation",
     "operationKind": "mutation",
-    "text": "mutation TrophyAwardJourneyMutation(\n  $input: CreateTrophyRequestInput!\n  $groupId: ID!\n) {\n  createTrophyRequest(input: $input) {\n    trophy {\n      id\n      isAwarded\n      description\n      game {\n        id\n        symbol\n        name\n      }\n      receiver {\n        id\n        displayName\n      }\n    }\n    query {\n      groupById(id: $groupId) {\n        ...GroupActivityFeed_group\n        awardedTrophyCount\n        topPerformer {\n          user {\n            id\n            displayName\n          }\n          awardCount\n        }\n        id\n      }\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n\nfragment GroupActivityFeed_group on Group {\n  recentActivityCount\n  recentActivity(first: 5) {\n    __typename\n    id\n    occurredAt\n    ... on TrophyAwardedActivity {\n      trophy {\n        id\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          displayName\n        }\n        awardedBy {\n          id\n          displayName\n        }\n      }\n    }\n    ... on MemberJoinedActivity {\n      member {\n        id\n        displayName\n      }\n    }\n  }\n}\n"
+    "text": "mutation TrophyAwardJourneyMutation(\n  $input: CreateTrophyRequestInput!\n  $groupId: ID!\n) {\n  createTrophyRequest(input: $input) {\n    trophy {\n      id\n      isAwarded\n      description\n      game {\n        id\n        symbol\n        name\n      }\n      receiver {\n        id\n        displayName\n        profile {\n          firstName\n          middleName\n          lastName\n        }\n      }\n    }\n    query {\n      groupById(id: $groupId) {\n        ...GroupActivityFeed_group\n        awardedTrophyCount\n        topPerformer {\n          user {\n            id\n            displayName\n            profile {\n              firstName\n              middleName\n              lastName\n            }\n          }\n          awardCount\n        }\n        id\n      }\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n\nfragment GroupActivityFeed_group on Group {\n  recentActivityCount\n  recentActivity(first: 5) {\n    __typename\n    id\n    occurredAt\n    ... on TrophyAwardedActivity {\n      trophy {\n        id\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          displayName\n          profile {\n            firstName\n            middleName\n            lastName\n          }\n        }\n        awardedBy {\n          id\n          displayName\n          profile {\n            firstName\n            middleName\n            lastName\n          }\n        }\n      }\n    }\n    ... on MemberJoinedActivity {\n      member {\n        id\n        displayName\n        profile {\n          firstName\n          middleName\n          lastName\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b96985b3ad1e65a6008e16d439f02d8e";
+(node as any).hash = "63a093d1dd6f61489d1538cab9a2e3a7";
 
 export default node;

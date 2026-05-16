@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<88559e7d460e963f52fcfb101fe7fbfd>>
+ * @generated SignedSource<<60b3526c1755b1e875fdbaf2100f9f72>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,6 +26,11 @@ export type groupsGameDetail_game$data = {
         readonly receiver: {
           readonly displayName: string;
           readonly id: string;
+          readonly profile: {
+            readonly firstName: string;
+            readonly lastName: string;
+            readonly middleName: string | null | undefined;
+          };
         };
       };
     }> | null | undefined;
@@ -182,6 +187,38 @@ return {
                       "kind": "ScalarField",
                       "name": "displayName",
                       "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "UserProfile",
+                      "kind": "LinkedField",
+                      "name": "profile",
+                      "plural": false,
+                      "selections": [
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "firstName",
+                          "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "middleName",
+                          "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "lastName",
+                          "storageKey": null
+                        }
+                      ],
+                      "storageKey": null
                     }
                   ],
                   "storageKey": null
@@ -241,6 +278,6 @@ return {
 };
 })();
 
-(node as any).hash = "8d89384469c3a6cbb6eadf8d19d8ab8b";
+(node as any).hash = "2003edfcad534217d2a2c76338588d66";
 
 export default node;

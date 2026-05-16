@@ -1,8 +1,14 @@
+import { DisplayName } from "@/components/DisplayName";
 import { initialsFromDisplayName } from "@/lib/format/names";
 
 interface TopPerformerUser {
     id: string;
     displayName: string;
+    profile?: {
+        firstName: string;
+        middleName?: string | null;
+        lastName: string;
+    } | null;
 }
 
 interface GroupTopPerformerProps {
@@ -32,12 +38,12 @@ export function GroupTopPerformer({
                         {initialsFromDisplayName(user.displayName)}
                     </div>
                     <div className="flex min-w-0 flex-1 flex-col gap-1">
-                        <span className="inline-flex items-baseline gap-1 truncate font-heading text-2xl font-medium tracking-[0.015em] text-foreground sm:text-3xl">
-                            <span>{user.displayName}</span>
-                            {user.id === currentUserId ? (
-                                <span className="text-muted-foreground">(you)</span>
-                            ) : null}
-                        </span>
+                        <DisplayName
+                            user={user}
+                            isSelf={user.id === currentUserId}
+                            showFullName
+                            className="truncate font-heading text-2xl font-medium tracking-[0.015em] text-foreground sm:text-3xl"
+                        />
                         <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
                             <span className="text-medal-gold">{count}</span>{" "}
                             <span>{count === 1 ? "award" : "awards"}</span>

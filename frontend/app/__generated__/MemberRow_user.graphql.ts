@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<96c022a79b20891de9317f1ce71e8aa8>>
+ * @generated SignedSource<<41bae53576d2cd0cce83feaae5a85a35>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,11 @@ import { FragmentRefs } from "relay-runtime";
 export type MemberRow_user$data = {
   readonly displayName: string;
   readonly id: string;
+  readonly profile: {
+    readonly firstName: string;
+    readonly lastName: string;
+    readonly middleName: string | null | undefined;
+  };
   readonly " $fragmentType": "MemberRow_user";
 };
 export type MemberRow_user$key = {
@@ -39,12 +44,44 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "displayName",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "UserProfile",
+      "kind": "LinkedField",
+      "name": "profile",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "firstName",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "middleName",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "lastName",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
     }
   ],
   "type": "User",
   "abstractKey": null
 };
 
-(node as any).hash = "a1d8bf723b5394db4882fa726b3554ca";
+(node as any).hash = "c1459c5815dbed14db1c8d462f313f9a";
 
 export default node;

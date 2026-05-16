@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5ebc2f00848f09f523ebabac9b38f504>>
+ * @generated SignedSource<<93d3cf5b951578edc7768b0d662e0f9a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -278,6 +278,38 @@ return {
                             "kind": "ScalarField",
                             "name": "displayName",
                             "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "UserProfile",
+                            "kind": "LinkedField",
+                            "name": "profile",
+                            "plural": false,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "firstName",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "middleName",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "lastName",
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
                           }
                         ],
                         "storageKey": null
@@ -346,12 +378,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ebe98522201fea21348bb37e16972672",
+    "cacheID": "4f245767c8b86ba26294d2137fb6fada",
     "id": null,
     "metadata": {},
     "name": "groupsGameDetailQuery",
     "operationKind": "query",
-    "text": "query groupsGameDetailQuery(\n  $groupId: ID!\n  $gameId: ID!\n) {\n  groupById(id: $groupId) {\n    id\n    name\n    members {\n      totalCount\n    }\n  }\n  gameById(id: $gameId) {\n    id\n    group {\n      id\n    }\n    name\n    symbol\n    description\n    ...groupsGameDetail_game\n  }\n  me {\n    id\n  }\n}\n\nfragment groupsGameDetail_game on Game {\n  trophies(first: 25) {\n    totalCount\n    edges {\n      node {\n        id\n        isAwarded\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          displayName\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n"
+    "text": "query groupsGameDetailQuery(\n  $groupId: ID!\n  $gameId: ID!\n) {\n  groupById(id: $groupId) {\n    id\n    name\n    members {\n      totalCount\n    }\n  }\n  gameById(id: $gameId) {\n    id\n    group {\n      id\n    }\n    name\n    symbol\n    description\n    ...groupsGameDetail_game\n  }\n  me {\n    id\n  }\n}\n\nfragment groupsGameDetail_game on Game {\n  trophies(first: 25) {\n    totalCount\n    edges {\n      node {\n        id\n        isAwarded\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          displayName\n          profile {\n            firstName\n            middleName\n            lastName\n          }\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n"
   }
 };
 })();

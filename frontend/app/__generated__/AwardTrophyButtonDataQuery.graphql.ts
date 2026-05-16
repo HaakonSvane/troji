@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ad700e5379df279bc1d1f66b3511daaa>>
+ * @generated SignedSource<<4a63887328f4beaf61fef24bbaa26dc6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -28,6 +28,11 @@ export type AwardTrophyButtonDataQuery$data = {
         readonly node: {
           readonly displayName: string;
           readonly id: string;
+          readonly profile: {
+            readonly firstName: string;
+            readonly lastName: string;
+            readonly middleName: string | null | undefined;
+          };
         };
       }> | null | undefined;
     } | null | undefined;
@@ -146,6 +151,38 @@ v5 = {
               "kind": "ScalarField",
               "name": "displayName",
               "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "UserProfile",
+              "kind": "LinkedField",
+              "name": "profile",
+              "plural": false,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "firstName",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "middleName",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "lastName",
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
             }
           ],
           "storageKey": null
@@ -203,16 +240,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1a7ca47a7a30f6ef2f3d960e63c13ce9",
+    "cacheID": "362bde502ab82931c8a4fd9fc607416f",
     "id": null,
     "metadata": {},
     "name": "AwardTrophyButtonDataQuery",
     "operationKind": "query",
-    "text": "query AwardTrophyButtonDataQuery(\n  $groupId: ID!\n) {\n  groupById(id: $groupId) {\n    games(first: 50) {\n      edges {\n        node {\n          id\n          name\n          symbol\n        }\n      }\n    }\n    members(first: 50) {\n      edges {\n        node {\n          id\n          displayName\n        }\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query AwardTrophyButtonDataQuery(\n  $groupId: ID!\n) {\n  groupById(id: $groupId) {\n    games(first: 50) {\n      edges {\n        node {\n          id\n          name\n          symbol\n        }\n      }\n    }\n    members(first: 50) {\n      edges {\n        node {\n          id\n          displayName\n          profile {\n            firstName\n            middleName\n            lastName\n          }\n        }\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "556ca6ab531c87a9b89cc687d48bcc2d";
+(node as any).hash = "1004d1d82af8361dfa5eae69c3310e7a";
 
 export default node;

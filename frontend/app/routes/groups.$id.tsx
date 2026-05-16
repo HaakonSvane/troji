@@ -53,6 +53,11 @@ const GroupPageQuery = graphql`
                 user {
                     id
                     displayName
+                    profile {
+                        firstName
+                        middleName
+                        lastName
+                    }
                 }
                 awardCount
             }

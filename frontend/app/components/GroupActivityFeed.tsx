@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import type { GroupActivityFeed_group$key } from "@/__generated__/GroupActivityFeed_group.graphql";
 import { MedalBadge } from "@/components/MedalBadge";
+import { DisplayName } from "@/components/DisplayName";
 import { initialsFromDisplayName } from "@/lib/format/names";
 import { formatRelativeTime, formatAbsoluteDateTime } from "@/lib/relativeTime";
 import { Button } from "@/components/ui/button";
@@ -26,10 +27,20 @@ const GroupActivityFeedFragment = graphql`
                     receiver {
                         id
                         displayName
+                        profile {
+                            firstName
+                            middleName
+                            lastName
+                        }
                     }
                     awardedBy {
                         id
                         displayName
+                        profile {
+                            firstName
+                            middleName
+                            lastName
+                        }
                     }
                 }
             }
@@ -37,6 +48,11 @@ const GroupActivityFeedFragment = graphql`
                 member {
                     id
                     displayName
+                    profile {
+                        firstName
+                        middleName
+                        lastName
+                    }
                 }
             }
         }
@@ -105,9 +121,15 @@ export function GroupActivityFeed({ group, groupId, currentUserId }: GroupActivi
                                         <p className="text-sm leading-relaxed text-foreground/90">
                                             {t.awardedBy ? (
                                                 <>
-                                                    <span className="text-foreground">
-                                                        {awarderIsSelf ? "You" : t.awardedBy.displayName}
-                                                    </span>{" "}
+                                                    {awarderIsSelf ? (
+                                                        <span className="text-foreground">You</span>
+                                                    ) : (
+                                                        <DisplayName
+                                                            user={t.awardedBy}
+                                                            showFullName
+                                                            className="text-foreground"
+                                                        />
+                                                    )}{" "}
                                                     awarded{" "}
                                                 </>
                                             ) : null}
@@ -115,9 +137,17 @@ export function GroupActivityFeed({ group, groupId, currentUserId }: GroupActivi
                                                 {t.game?.name ?? "trophy"}
                                             </em>{" "}
                                             to{" "}
-                                            <span className="text-foreground">
-                                                {receiverIsSelf ? "you" : (t.receiver?.displayName ?? "Unknown")}
-                                            </span>
+                                            {receiverIsSelf ? (
+                                                <span className="text-foreground">you</span>
+                                            ) : t.receiver ? (
+                                                <DisplayName
+                                                    user={t.receiver}
+                                                    showFullName
+                                                    className="text-foreground"
+                                                />
+                                            ) : (
+                                                <span className="text-foreground">Unknown</span>
+                                            )}
                                         </p>
                                         {t.description ? (
                                             <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">
@@ -142,9 +172,15 @@ export function GroupActivityFeed({ group, groupId, currentUserId }: GroupActivi
                                     </div>
                                     <div className="min-w-0 flex-1">
                                         <p className="text-sm leading-relaxed text-foreground/90">
-                                            <span className="text-foreground">
-                                                {memberIsSelf ? "You" : item.member.displayName}
-                                            </span>{" "}
+                                            {memberIsSelf ? (
+                                                <span className="text-foreground">You</span>
+                                            ) : (
+                                                <DisplayName
+                                                    user={item.member}
+                                                    showFullName
+                                                    className="text-foreground"
+                                                />
+                                            )}{" "}
                                             joined the circle
                                         </p>
                                     </div>

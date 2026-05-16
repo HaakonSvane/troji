@@ -5,6 +5,7 @@ import type { groupsGameDetail_game$key } from "@/__generated__/groupsGameDetail
 import { AwardTrophyButton } from "@/components/AwardTrophyButton";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { Button } from "@/components/ui/button";
+import { DisplayName } from "@/components/DisplayName";
 import { getRelayEnvironment } from "@/relay/environment";
 import type { Route } from "./+types/groups.$id.games.$gameId";
 
@@ -55,6 +56,11 @@ const GroupGameDetailTrophiesFragment = graphql`
                     receiver {
                         id
                         displayName
+                        profile {
+                            firstName
+                            middleName
+                            lastName
+                        }
                     }
                 }
             }
@@ -167,7 +173,12 @@ function TrophyHistory({ game }: { game: groupsGameDetail_game$key }) {
                                 <span aria-hidden className="mr-2">
                                     ▸
                                 </span>
-                                awarded to {trophy.receiver?.displayName ?? "—"}
+                                awarded to{" "}
+                                {trophy.receiver ? (
+                                    <DisplayName user={trophy.receiver} showFullName />
+                                ) : (
+                                    "—"
+                                )}
                             </p>
                         </div>
                         {!trophy.isAwarded ? (

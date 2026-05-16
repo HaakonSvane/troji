@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { MedalBadge } from "@/components/MedalBadge";
 import { UserAvatar } from "@/components/UserAvatar";
+import { DisplayName } from "@/components/DisplayName";
 import { cn } from "@/lib/utils";
 import {
     getMutationErrorMessage,
@@ -35,6 +36,11 @@ const CreateTrophyRequestMutation = graphql`
                 receiver {
                     id
                     displayName
+                    profile {
+                        firstName
+                        middleName
+                        lastName
+                    }
                 }
             }
             query {
@@ -45,6 +51,11 @@ const CreateTrophyRequestMutation = graphql`
                         user {
                             id
                             displayName
+                            profile {
+                                firstName
+                                middleName
+                                lastName
+                            }
                         }
                         awardCount
                     }
@@ -65,6 +76,11 @@ type Step = "game" | "recipient" | "comment" | "success";
 interface Member {
     id: string;
     displayName: string;
+    profile?: {
+        firstName: string;
+        middleName?: string | null;
+        lastName: string;
+    } | null;
 }
 
 interface AvailableGame {
@@ -549,12 +565,12 @@ function RecipientStep({
                                 className={cn(radioOptionClass, "w-full")}
                             >
                                 <UserAvatar displayName={m.displayName} size="sm" />
-                                <span className="inline-flex items-baseline gap-1 font-sans text-sm">
-                                    <span>{m.displayName}</span>
-                                    {isSelf ? (
-                                        <span className="text-muted-foreground">(you)</span>
-                                    ) : null}
-                                </span>
+                                <DisplayName
+                                    user={m}
+                                    isSelf={isSelf}
+                                    showFullName
+                                    className="font-sans text-sm"
+                                />
                             </button>
                         );
                     })}
@@ -605,12 +621,12 @@ function SuccessStep({
                     <span className="mr-1">{game.symbol}</span>
                     <span className="font-medium text-foreground/90">{game.name}</span>
                     <span className="mx-1.5 text-muted-foreground">to</span>
-                    <span className="inline-flex items-baseline gap-1 font-medium text-foreground/90">
-                        <span>{member.displayName}</span>
-                        {member.id === currentUserId ? (
-                            <span className="text-muted-foreground">(you)</span>
-                        ) : null}
-                    </span>
+                    <DisplayName
+                        user={member}
+                        isSelf={member.id === currentUserId}
+                        showFullName
+                        className="font-medium text-foreground/90"
+                    />
                 </p>
             )}
         </div>

@@ -5,6 +5,7 @@ import { getRelayEnvironment } from "@/relay/environment";
 import { MedalBadge } from "@/components/MedalBadge";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { Button } from "@/components/ui/button";
+import { DisplayName } from "@/components/DisplayName";
 import { initialsFromDisplayName } from "@/lib/format/names";
 import { formatRelativeTime, formatAbsoluteDateTime } from "@/lib/relativeTime";
 import type { Route } from "./+types/groups.$id.activities";
@@ -31,10 +32,20 @@ const GroupActivitiesPageQuery = graphql`
                         receiver {
                             id
                             displayName
+                            profile {
+                                firstName
+                                middleName
+                                lastName
+                            }
                         }
                         awardedBy {
                             id
                             displayName
+                            profile {
+                                firstName
+                                middleName
+                                lastName
+                            }
                         }
                     }
                 }
@@ -42,6 +53,11 @@ const GroupActivitiesPageQuery = graphql`
                     member {
                         id
                         displayName
+                        profile {
+                            firstName
+                            middleName
+                            lastName
+                        }
                     }
                 }
             }
@@ -165,9 +181,15 @@ export default function GroupActivities({ loaderData }: Route.ComponentProps) {
                                         <p className="text-sm leading-relaxed text-foreground/90">
                                             {t.awardedBy ? (
                                                 <>
-                                                    <span className="text-foreground">
-                                                        {awarderIsSelf ? "You" : t.awardedBy.displayName}
-                                                    </span>{" "}
+                                                    {awarderIsSelf ? (
+                                                        <span className="text-foreground">You</span>
+                                                    ) : (
+                                                        <DisplayName
+                                                            user={t.awardedBy}
+                                                            showFullName
+                                                            className="text-foreground"
+                                                        />
+                                                    )}{" "}
                                                     awarded{" "}
                                                 </>
                                             ) : null}
@@ -175,9 +197,17 @@ export default function GroupActivities({ loaderData }: Route.ComponentProps) {
                                                 {t.game?.name ?? "trophy"}
                                             </em>{" "}
                                             to{" "}
-                                            <span className="text-foreground">
-                                                {receiverIsSelf ? "you" : (t.receiver?.displayName ?? "Unknown")}
-                                            </span>
+                                            {receiverIsSelf ? (
+                                                <span className="text-foreground">you</span>
+                                            ) : t.receiver ? (
+                                                <DisplayName
+                                                    user={t.receiver}
+                                                    showFullName
+                                                    className="text-foreground"
+                                                />
+                                            ) : (
+                                                <span className="text-foreground">Unknown</span>
+                                            )}
                                         </p>
                                         {t.description ? (
                                             <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">
@@ -202,9 +232,15 @@ export default function GroupActivities({ loaderData }: Route.ComponentProps) {
                                     </div>
                                     <div className="min-w-0 flex-1">
                                         <p className="text-sm leading-relaxed text-foreground/90">
-                                            <span className="text-foreground">
-                                                {memberIsSelf ? "You" : item.member.displayName}
-                                            </span>{" "}
+                                            {memberIsSelf ? (
+                                                <span className="text-foreground">You</span>
+                                            ) : (
+                                                <DisplayName
+                                                    user={item.member}
+                                                    showFullName
+                                                    className="text-foreground"
+                                                />
+                                            )}{" "}
                                             joined the circle
                                         </p>
                                     </div>

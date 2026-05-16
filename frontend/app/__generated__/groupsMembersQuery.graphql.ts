@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d38954ee8530c190da7822b4bc074cd4>>
+ * @generated SignedSource<<c0320dffad9fe858f8b007ac5b55eeee>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -220,6 +220,38 @@ return {
                         "kind": "ScalarField",
                         "name": "displayName",
                         "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "UserProfile",
+                        "kind": "LinkedField",
+                        "name": "profile",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "firstName",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "middleName",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "lastName",
+                            "storageKey": null
+                          }
+                        ],
+                        "storageKey": null
                       }
                     ],
                     "storageKey": null
@@ -237,12 +269,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "17c1c329bf9875aa57ca2e35e576626f",
+    "cacheID": "76fb86fa8d3e55f142141b239a82fa15",
     "id": null,
     "metadata": {},
     "name": "groupsMembersQuery",
     "operationKind": "query",
-    "text": "query groupsMembersQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    name\n    admin {\n      id\n    }\n    members(first: 50) {\n      totalCount\n      edges {\n        node {\n          id\n          ...MemberRow_user\n        }\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n\nfragment MemberRow_user on User {\n  id\n  displayName\n}\n"
+    "text": "query groupsMembersQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    name\n    admin {\n      id\n    }\n    members(first: 50) {\n      totalCount\n      edges {\n        node {\n          id\n          ...MemberRow_user\n        }\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n\nfragment MemberRow_user on User {\n  id\n  displayName\n  profile {\n    firstName\n    middleName\n    lastName\n  }\n}\n"
   }
 };
 })();

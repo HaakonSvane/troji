@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<944c0af70bb5693897656cc08ae83eb8>>
+ * @generated SignedSource<<4f010ec2541c57e09829b0563920f296>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -50,6 +50,11 @@ export type groupsDetailQuery$data = {
       readonly user: {
         readonly displayName: string;
         readonly id: string;
+        readonly profile: {
+          readonly firstName: string;
+          readonly lastName: string;
+          readonly middleName: string | null | undefined;
+        };
       };
     } | null | undefined;
     readonly " $fragmentSpreads": FragmentRefs<"GroupActivityFeed_group" | "GroupHero_group">;
@@ -196,7 +201,39 @@ v13 = {
 },
 v14 = [
   (v2/*: any*/),
-  (v11/*: any*/)
+  (v11/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "UserProfile",
+    "kind": "LinkedField",
+    "name": "profile",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "firstName",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "middleName",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "lastName",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  }
 ],
 v15 = {
   "alias": null,
@@ -398,7 +435,10 @@ return {
             "kind": "LinkedField",
             "name": "admin",
             "plural": false,
-            "selections": (v14/*: any*/),
+            "selections": [
+              (v2/*: any*/),
+              (v11/*: any*/)
+            ],
             "storageKey": null
           },
           (v5/*: any*/),
@@ -619,7 +659,7 @@ return {
     ]
   },
   "params": {
-    "cacheID": "62c7cab018d39941f2b7fb4841258611",
+    "cacheID": "1cceccc9b7fb7f10de6f77e1104916c8",
     "id": null,
     "metadata": {
       "connection": [
@@ -636,11 +676,11 @@ return {
     },
     "name": "groupsDetailQuery",
     "operationKind": "query",
-    "text": "query groupsDetailQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    admin {\n      id\n    }\n    ...GroupHero_group\n    ...GroupActivityFeed_group\n    games(first: 3) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          symbol\n          ...GroupGamesTableRow_game\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    members(first: 3) {\n      totalCount\n      edges {\n        node {\n          id\n          displayName\n          ...MemberRow_user\n        }\n      }\n    }\n    invite {\n      inviteCode\n      expirationDate\n    }\n    awardedTrophyCount\n    topPerformer {\n      user {\n        id\n        displayName\n      }\n      awardCount\n    }\n  }\n  me {\n    id\n  }\n}\n\nfragment GroupActivityFeed_group on Group {\n  recentActivityCount\n  recentActivity(first: 5) {\n    __typename\n    id\n    occurredAt\n    ... on TrophyAwardedActivity {\n      trophy {\n        id\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          displayName\n        }\n        awardedBy {\n          id\n          displayName\n        }\n      }\n    }\n    ... on MemberJoinedActivity {\n      member {\n        id\n        displayName\n      }\n    }\n  }\n}\n\nfragment GroupGamesTableRow_game on Game {\n  id\n  name\n  symbol\n  description\n  trophies {\n    totalCount\n  }\n}\n\nfragment GroupHero_group on Group {\n  id\n  name\n  description\n  createdDate\n  admin {\n    id\n    displayName\n  }\n}\n\nfragment MemberRow_user on User {\n  id\n  displayName\n}\n"
+    "text": "query groupsDetailQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    admin {\n      id\n    }\n    ...GroupHero_group\n    ...GroupActivityFeed_group\n    games(first: 3) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          symbol\n          ...GroupGamesTableRow_game\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    members(first: 3) {\n      totalCount\n      edges {\n        node {\n          id\n          displayName\n          ...MemberRow_user\n        }\n      }\n    }\n    invite {\n      inviteCode\n      expirationDate\n    }\n    awardedTrophyCount\n    topPerformer {\n      user {\n        id\n        displayName\n        profile {\n          firstName\n          middleName\n          lastName\n        }\n      }\n      awardCount\n    }\n  }\n  me {\n    id\n  }\n}\n\nfragment GroupActivityFeed_group on Group {\n  recentActivityCount\n  recentActivity(first: 5) {\n    __typename\n    id\n    occurredAt\n    ... on TrophyAwardedActivity {\n      trophy {\n        id\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          displayName\n          profile {\n            firstName\n            middleName\n            lastName\n          }\n        }\n        awardedBy {\n          id\n          displayName\n          profile {\n            firstName\n            middleName\n            lastName\n          }\n        }\n      }\n    }\n    ... on MemberJoinedActivity {\n      member {\n        id\n        displayName\n        profile {\n          firstName\n          middleName\n          lastName\n        }\n      }\n    }\n  }\n}\n\nfragment GroupGamesTableRow_game on Game {\n  id\n  name\n  symbol\n  description\n  trophies {\n    totalCount\n  }\n}\n\nfragment GroupHero_group on Group {\n  id\n  name\n  description\n  createdDate\n  admin {\n    id\n    displayName\n  }\n}\n\nfragment MemberRow_user on User {\n  id\n  displayName\n  profile {\n    firstName\n    middleName\n    lastName\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "edc9a89a64dfd622142fde085764fde0";
+(node as any).hash = "f0d095b465552aacb9da99661cbd0508";
 
 export default node;
