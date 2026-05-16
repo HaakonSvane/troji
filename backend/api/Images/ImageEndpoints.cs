@@ -51,7 +51,8 @@ public static class ImageEndpoints
             return Results.NotFound();
         }
 
-        context.Response.Headers.CacheControl = "private, max-age=900, immutable";
+        var remaining = Math.Max(0, exp - DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+        context.Response.Headers.CacheControl = $"private, max-age={remaining}";
         return Results.Stream(opened.Value.Stream, opened.Value.ContentType);
     }
 
