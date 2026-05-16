@@ -354,21 +354,38 @@ function Breadcrumb({
 }) {
     const showMedal = step !== "game" && game != null;
     const showAvatar = (step === "comment" || step === "success") && member != null;
+    const isSuccess = step === "success";
     if (!showMedal && !showAvatar) {
         return <div className="h-12" aria-hidden />;
     }
     return (
-        <div className="flex h-12 items-center justify-center gap-3">
+        <div
+            className={cn(
+                "flex items-center justify-center gap-3 transition-[height] duration-200",
+                isSuccess ? "h-20" : "h-12"
+            )}
+        >
             {showMedal && (
                 <motion.span
                     layoutId="award-medal"
                     className="inline-flex rounded-full"
                 >
-                    <MedalBadge emoji={game!.symbol} size="sm" title={game!.name} />
+                    <MedalBadge
+                        emoji={game!.symbol}
+                        size={isSuccess ? "md" : "sm"}
+                        title={game!.name}
+                    />
                 </motion.span>
             )}
             {showMedal && showAvatar && (
-                <span className="font-mono text-sm text-muted-foreground">›</span>
+                <span
+                    className={cn(
+                        "font-mono text-muted-foreground",
+                        isSuccess ? "text-2xl" : "text-sm"
+                    )}
+                >
+                    ›
+                </span>
             )}
             {showAvatar && (
                 <motion.span
@@ -378,7 +395,7 @@ function Breadcrumb({
                     <UserAvatar
                         firstName={member!.firstName}
                         lastName={member!.lastName}
-                        size="sm"
+                        size={isSuccess ? "md" : "sm"}
                     />
                 </motion.span>
             )}
