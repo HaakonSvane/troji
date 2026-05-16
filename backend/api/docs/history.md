@@ -1,5 +1,18 @@
 # Changelog
 
+## Version 0.5.0, released 2026-05-16
+
+
+### New features
+
+* **trophy-award:** animate award flow as a three-step journey ([206c3f5](https://github.com/HaakonSvane/troji/commit/206c3f5382bbfd020b5c9435a5a13b565004e864))
+* **trophy-award:** immersive three-step award journey ([#53](https://github.com/HaakonSvane/troji/issues/53)) ([206c3f5](https://github.com/HaakonSvane/troji/commit/206c3f5382bbfd020b5c9435a5a13b565004e864))
+
+
+### Documentation improvements
+
+* add nested AGENTS.md context for the most-touched subsystems ([206c3f5](https://github.com/HaakonSvane/troji/commit/206c3f5382bbfd020b5c9435a5a13b565004e864))
+
 ## Version 0.4.4, released 2026-05-10
 
 
