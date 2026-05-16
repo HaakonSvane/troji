@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<561c19778691340b4a618010cc7202ae>>
+ * @generated SignedSource<<ad3d3c05e5dfe586b5b1f342e56066bc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,6 +19,14 @@ export type GroupHero_group$data = {
   readonly description: string | null | undefined;
   readonly id: string;
   readonly name: string;
+  readonly transferableMembers: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly displayName: string;
+        readonly id: string;
+      };
+    }> | null | undefined;
+  } | null | undefined;
   readonly " $fragmentType": "GroupHero_group";
 };
 export type GroupHero_group$key = {
@@ -33,7 +41,17 @@ var v0 = {
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
-};
+},
+v1 = [
+  (v0/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "displayName",
+    "storageKey": null
+  }
+];
 return {
   "argumentDefinitions": [],
   "kind": "Fragment",
@@ -69,17 +87,46 @@ return {
       "kind": "LinkedField",
       "name": "admin",
       "plural": false,
+      "selections": (v1/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": "transferableMembers",
+      "args": [
+        {
+          "kind": "Literal",
+          "name": "first",
+          "value": 50
+        }
+      ],
+      "concreteType": "MembersConnection",
+      "kind": "LinkedField",
+      "name": "members",
+      "plural": false,
       "selections": [
-        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "displayName",
+          "concreteType": "MembersEdge",
+          "kind": "LinkedField",
+          "name": "edges",
+          "plural": true,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "User",
+              "kind": "LinkedField",
+              "name": "node",
+              "plural": false,
+              "selections": (v1/*: any*/),
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
-      "storageKey": null
+      "storageKey": "members(first:50)"
     }
   ],
   "type": "Group",
@@ -87,6 +134,6 @@ return {
 };
 })();
 
-(node as any).hash = "1b25c2000db5faf8bf0bcf5fe35f3086";
+(node as any).hash = "a485dc4bd8b8a77ed5299afe8b41f191";
 
 export default node;

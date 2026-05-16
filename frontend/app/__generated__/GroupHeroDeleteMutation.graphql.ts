@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b45370b06037d84a76f4afc7010ec94d>>
+ * @generated SignedSource<<42a481854b3bda0b07530e33d3f74fd8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -42,80 +42,82 @@ var v0 = [
 ],
 v1 = [
   {
-    "alias": null,
-    "args": [
-      {
-        "kind": "Variable",
-        "name": "input",
-        "variableName": "input"
-      }
-    ],
-    "concreteType": "DeleteGroupPayload",
-    "kind": "LinkedField",
-    "name": "deleteGroup",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "DeletedGroupPayload",
-        "kind": "LinkedField",
-        "name": "deletedGroupPayload",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "deletedId",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": null,
-        "kind": "LinkedField",
-        "name": "errors",
-        "plural": true,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "__typename",
-            "storageKey": null
-          },
-          {
-            "kind": "InlineFragment",
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "message",
-                "storageKey": null
-              }
-            ],
-            "type": "Error",
-            "abstractKey": "__isError"
-          }
-        ],
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
+    "kind": "Variable",
+    "name": "input",
+    "variableName": "input"
   }
-];
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "deletedId",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "concreteType": null,
+  "kind": "LinkedField",
+  "name": "errors",
+  "plural": true,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "__typename",
+      "storageKey": null
+    },
+    {
+      "kind": "InlineFragment",
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "message",
+          "storageKey": null
+        }
+      ],
+      "type": "Error",
+      "abstractKey": "__isError"
+    }
+  ],
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "GroupHeroDeleteMutation",
-    "selections": (v1/*: any*/),
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "DeleteGroupPayload",
+        "kind": "LinkedField",
+        "name": "deleteGroup",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "DeletedGroupPayload",
+            "kind": "LinkedField",
+            "name": "deletedGroupPayload",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/)
+            ],
+            "storageKey": null
+          },
+          (v3/*: any*/)
+        ],
+        "storageKey": null
+      }
+    ],
     "type": "Mutation",
     "abstractKey": null
   },
@@ -124,7 +126,41 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "GroupHeroDeleteMutation",
-    "selections": (v1/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "DeleteGroupPayload",
+        "kind": "LinkedField",
+        "name": "deleteGroup",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "DeletedGroupPayload",
+            "kind": "LinkedField",
+            "name": "deletedGroupPayload",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "filters": null,
+                "handle": "deleteRecord",
+                "key": "",
+                "kind": "ScalarHandle",
+                "name": "deletedId"
+              }
+            ],
+            "storageKey": null
+          },
+          (v3/*: any*/)
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
     "cacheID": "9d703d71bf5a780805e6bc20f879d586",
@@ -137,6 +173,6 @@ return {
 };
 })();
 
-(node as any).hash = "69e14c5bdcfbec96ef1da7e5999b0fd8";
+(node as any).hash = "5da8d9179e53bbbe000a11432128273d";
 
 export default node;
