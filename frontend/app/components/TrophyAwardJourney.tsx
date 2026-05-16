@@ -503,47 +503,53 @@ function RecipientStep({
                     />
                 </motion.span>
             </div>
-            <div
-                ref={groupRef}
-                role="radiogroup"
-                aria-label="Recipient"
-                onKeyDown={(e) => handleRadioGroupKeyDown(e, groupRef.current, onPick)}
-                className="space-y-1.5"
-            >
-                {members.map((m) => {
-                    const fallback = formatPersonName({
-                        firstName: m.firstName,
-                        lastName: m.lastName,
-                        fallback: m.id,
-                    });
-                    const isSelected = m.id === selectedUserId;
-                    return (
-                        <button
-                            key={m.id}
-                            type="button"
-                            role="radio"
-                            aria-checked={isSelected}
-                            data-value={m.id}
-                            tabIndex={m.id === tabStopId ? 0 : -1}
-                            onClick={() => onPick(m.id)}
-                            className={cn(radioOptionClass, "w-full")}
-                        >
-                            <UserAvatar
-                                firstName={m.firstName}
-                                lastName={m.lastName}
-                                size="sm"
-                            />
-                            <PersonName
-                                firstName={m.firstName}
-                                lastName={m.lastName}
-                                isSelf={m.id === currentUserId}
-                                fallback={fallback}
-                                className="font-sans text-sm"
-                            />
-                        </button>
-                    );
-                })}
-            </div>
+            {members.length === 0 ? (
+                <p className="py-6 text-center text-sm text-muted-foreground">
+                    No one else to award. Invite a member to get started.
+                </p>
+            ) : (
+                <div
+                    ref={groupRef}
+                    role="radiogroup"
+                    aria-label="Recipient"
+                    onKeyDown={(e) => handleRadioGroupKeyDown(e, groupRef.current, onPick)}
+                    className="space-y-1.5"
+                >
+                    {members.map((m) => {
+                        const fallback = formatPersonName({
+                            firstName: m.firstName,
+                            lastName: m.lastName,
+                            fallback: m.id,
+                        });
+                        const isSelected = m.id === selectedUserId;
+                        return (
+                            <button
+                                key={m.id}
+                                type="button"
+                                role="radio"
+                                aria-checked={isSelected}
+                                data-value={m.id}
+                                tabIndex={m.id === tabStopId ? 0 : -1}
+                                onClick={() => onPick(m.id)}
+                                className={cn(radioOptionClass, "w-full")}
+                            >
+                                <UserAvatar
+                                    firstName={m.firstName}
+                                    lastName={m.lastName}
+                                    size="sm"
+                                />
+                                <PersonName
+                                    firstName={m.firstName}
+                                    lastName={m.lastName}
+                                    isSelf={m.id === currentUserId}
+                                    fallback={fallback}
+                                    className="font-sans text-sm"
+                                />
+                            </button>
+                        );
+                    })}
+                </div>
+            )}
         </div>
     );
 }

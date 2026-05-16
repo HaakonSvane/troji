@@ -38,6 +38,13 @@ interface AwardTrophyButtonProps extends VariantProps<typeof buttonVariants> {
     groupId: string;
     currentUserId?: string | null;
     label?: string;
+    /**
+     * Number of group members excluding the current user. When `0`, the
+     * trigger renders disabled with an explanatory tooltip. When `null` or
+     * omitted, the trigger always renders enabled (the dialog itself shows
+     * an empty state if the loaded data turns out to be empty).
+     */
+    otherMemberCount?: number | null;
 }
 
 function AwardDialogWithData({
@@ -83,8 +90,17 @@ export function AwardTrophyButton({
     label = "Award trophy",
     variant,
     size,
+    otherMemberCount,
 }: AwardTrophyButtonProps) {
     const [queryRef, setQueryRef] = useState<PreloadedQuery<AwardTrophyButtonDataQuery> | null>(null);
+
+    const noOneToAward = otherMemberCount != null && otherMemberCount <= 0;
+    const disabled = noOneToAward
+        ? {
+              isDisabled: true,
+              reason: "No one else in this circle to award yet — invite a member first.",
+          }
+        : undefined;
 
     const handleClick = () => {
         const ref = loadQuery<AwardTrophyButtonDataQuery>(
@@ -101,6 +117,7 @@ export function AwardTrophyButton({
                 variant={variant}
                 size={size}
                 leadingIcon={<GiftIcon />}
+                disabled={disabled}
                 onClick={handleClick}
             >
                 {label}
