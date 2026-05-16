@@ -5,6 +5,8 @@ services:
     environment:
       POSTGRES_USER: ${Database__User}
       POSTGRES_PASSWORD: ${Database__Password}
+    volumes:
+      - db_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
       interval: 1s
@@ -21,6 +23,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    volumes:
+      - ./images:/data/images
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Database__Host: db
@@ -28,6 +32,10 @@ services:
       Database__User: ${Database__User}
       Database__Password: ${Database__Password}
       Cors__Origins: ${Cors__Origins:-https://troji.me}
+      Images__StoragePath: /data/images
+      Images__MaxBytes: "8388608"
+      Images__UrlTtlSeconds: "900"
+      Images__UrlSigningKey: ${IMAGE_URL_SIGNING_KEY}
 
   frontend:
     image: haakonsvane/troji:frontend-${FRONTEND_VERSION:-latest}
@@ -68,3 +76,4 @@ services:
 volumes:
   caddy_data:
   caddy_config:
+  db_data:
