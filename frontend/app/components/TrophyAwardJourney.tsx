@@ -221,7 +221,7 @@ export function TrophyAwardJourney({
                 ? "Add a note"
                 : "Awarded";
 
-    const description_ =
+    const dialogDescription =
         step === "game"
             ? "Which game earned them a medal?"
             : step === "recipient"
@@ -235,7 +235,7 @@ export function TrophyAwardJourney({
             open={open}
             onOpenChange={closeDialog}
             title={title}
-            description={description_}
+            description={dialogDescription}
             footer={
                 step === "success" ? (
                     <div className="flex justify-end">
