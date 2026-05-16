@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { graphql, useMutation, useRelayEnvironment } from "react-relay";
 import { ConnectionHandler } from "relay-runtime";
 import { LayoutGroup, motion } from "motion/react";
@@ -377,6 +377,48 @@ function Breadcrumb({
     );
 }
 
+// Roving-tabindex keyboard handler for a `role="radiogroup"`. Arrow / Home /
+// End move focus through the radios; Enter / Space commit the focused option.
+function handleRadioGroupKeyDown(
+    event: KeyboardEvent<HTMLDivElement>,
+    container: HTMLDivElement | null,
+    onCommit: (id: string) => void
+) {
+    if (!container) return;
+    const items = Array.from(
+        container.querySelectorAll<HTMLElement>('[role="radio"]')
+    );
+    if (items.length === 0) return;
+    const activeIdx = items.findIndex((el) => el === document.activeElement);
+    if (activeIdx === -1) return;
+
+    let nextIdx: number | null = null;
+    if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+        nextIdx = (activeIdx + 1) % items.length;
+    } else if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+        nextIdx = (activeIdx - 1 + items.length) % items.length;
+    } else if (event.key === "Home") {
+        nextIdx = 0;
+    } else if (event.key === "End") {
+        nextIdx = items.length - 1;
+    } else if (event.key === "Enter" || event.key === " ") {
+        const id = items[activeIdx].dataset.value;
+        if (id) {
+            event.preventDefault();
+            onCommit(id);
+        }
+        return;
+    } else {
+        return;
+    }
+
+    event.preventDefault();
+    items[nextIdx]?.focus();
+}
+
+const radioOptionClass =
+    "flex items-center gap-3 rounded-md border border-medal-gold/20 bg-surface-muted/60 p-3 text-left transition-colors outline-none hover:border-medal-gold/60 hover:bg-surface-muted focus-visible:ring-2 focus-visible:ring-medal-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background aria-checked:border-medal-gold/70";
+
 function GameStep({
     games,
     selectedGame,
@@ -387,6 +429,8 @@ function GameStep({
     onPick: (id: string) => void;
 }) {
     const selectedGameId = selectedGame?.id ?? "";
+    const groupRef = useRef<HTMLDivElement>(null);
+    const tabStopId = selectedGameId || games[0]?.id;
     return (
         <div className="space-y-5">
             <div className="flex justify-center py-3">
@@ -401,21 +445,31 @@ function GameStep({
                     />
                 </motion.span>
             </div>
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {games.map((g) => (
-                    <button
-                        key={g.id}
-                        type="button"
-                        onClick={() => onPick(g.id)}
-                        className={cn(
-                            "flex items-center gap-3 rounded-md border border-medal-gold/20 bg-surface-muted/60 p-3 text-left transition-colors hover:border-medal-gold/60 hover:bg-surface-muted",
-                            g.id === selectedGameId && "border-medal-gold/70"
-                        )}
-                    >
-                        <span className="shrink-0 text-2xl">{g.symbol}</span>
-                        <span className="font-sans text-sm">{g.name}</span>
-                    </button>
-                ))}
+            <div
+                ref={groupRef}
+                role="radiogroup"
+                aria-label="Game"
+                onKeyDown={(e) => handleRadioGroupKeyDown(e, groupRef.current, onPick)}
+                className="grid grid-cols-1 gap-2 sm:grid-cols-2"
+            >
+                {games.map((g) => {
+                    const isSelected = g.id === selectedGameId;
+                    return (
+                        <button
+                            key={g.id}
+                            type="button"
+                            role="radio"
+                            aria-checked={isSelected}
+                            data-value={g.id}
+                            tabIndex={g.id === tabStopId ? 0 : -1}
+                            onClick={() => onPick(g.id)}
+                            className={radioOptionClass}
+                        >
+                            <span className="shrink-0 text-2xl">{g.symbol}</span>
+                            <span className="font-sans text-sm">{g.name}</span>
+                        </button>
+                    );
+                })}
             </div>
         </div>
     );
@@ -433,6 +487,8 @@ function RecipientStep({
     onPick: (id: string) => void;
 }) {
     const selectedUserId = selectedMember?.id ?? "";
+    const groupRef = useRef<HTMLDivElement>(null);
+    const tabStopId = selectedUserId || members[0]?.id;
     return (
         <div className="space-y-5">
             <div className="flex justify-center py-3">
@@ -447,22 +503,30 @@ function RecipientStep({
                     />
                 </motion.span>
             </div>
-            <div className="space-y-1.5">
+            <div
+                ref={groupRef}
+                role="radiogroup"
+                aria-label="Recipient"
+                onKeyDown={(e) => handleRadioGroupKeyDown(e, groupRef.current, onPick)}
+                className="space-y-1.5"
+            >
                 {members.map((m) => {
                     const fallback = formatPersonName({
                         firstName: m.firstName,
                         lastName: m.lastName,
                         fallback: m.id,
                     });
+                    const isSelected = m.id === selectedUserId;
                     return (
                         <button
                             key={m.id}
                             type="button"
+                            role="radio"
+                            aria-checked={isSelected}
+                            data-value={m.id}
+                            tabIndex={m.id === tabStopId ? 0 : -1}
                             onClick={() => onPick(m.id)}
-                            className={cn(
-                                "flex w-full items-center gap-3 rounded-md border border-medal-gold/20 bg-surface-muted/60 p-3 text-left transition-colors hover:border-medal-gold/60 hover:bg-surface-muted",
-                                m.id === selectedUserId && "border-medal-gold/70"
-                            )}
+                            className={cn(radioOptionClass, "w-full")}
                         >
                             <UserAvatar
                                 firstName={m.firstName}
