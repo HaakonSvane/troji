@@ -11,6 +11,10 @@ import { MedalBadge } from "@/components/MedalBadge";
 import { UserAvatar } from "@/components/UserAvatar";
 import { PersonName, formatPersonName } from "@/components/PersonName";
 import { cn } from "@/lib/utils";
+import {
+    getMutationErrorMessage,
+    getMutationNetworkErrorMessage,
+} from "@/lib/relay/mutationErrors";
 import { validateCreateTrophyRequestInput } from "@/lib/validation/forms";
 
 const CreateTrophyRequestMutation = graphql`
@@ -52,6 +56,9 @@ const CreateTrophyRequestMutation = graphql`
             }
             errors {
                 __typename
+                ... on Error {
+                    message
+                }
             }
         }
     }
@@ -191,24 +198,26 @@ export function TrophyAwardJourney({
             "GameTrophies_trophies"
         );
         const connectionExists = environment.getStore().getSource().has(gameConnectionId);
+        const fallbackError = "Could not submit trophy request. Please try again.";
         commitRequest({
             variables: {
                 input: validation.data,
                 connections: connectionExists ? [gameConnectionId] : [],
                 groupId,
             },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            onCompleted: (response: any) => {
+            onCompleted: (response) => {
                 const payload = response.createTrophyRequest;
                 if (payload?.trophy?.id) {
                     setStep("success");
                     onRequested?.();
                     return;
                 }
-                setFormError("Could not submit trophy request. Please try again.");
+                setFormError(
+                    getMutationErrorMessage(payload?.errors, fallbackError)
+                );
             },
-            onError: () =>
-                setFormError("Could not submit trophy request. Please try again."),
+            onError: (error) =>
+                setFormError(getMutationNetworkErrorMessage(error, fallbackError)),
         });
     };
 
