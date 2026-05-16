@@ -359,7 +359,7 @@ function Breadcrumb({
                 </motion.span>
             )}
             {showMedal && showAvatar && (
-                <span className="font-mono text-sm text-medal-gold/70">›</span>
+                <span className="font-mono text-sm text-muted-foreground">›</span>
             )}
             {showAvatar && (
                 <motion.span
