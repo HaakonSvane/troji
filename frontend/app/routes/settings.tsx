@@ -5,6 +5,10 @@ import type { settingsMutation } from "@/__generated__/settingsMutation.graphql"
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { getRelayEnvironment } from "@/relay/environment";
 import { validateUpdateUserInput } from "@/lib/validation/forms";
+import {
+    getMutationErrorMessage,
+    getMutationNetworkErrorMessage,
+} from "@/lib/relay/mutationErrors";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -81,19 +85,20 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
             return;
         }
 
+        const fallbackError = "Could not save changes. Please try again.";
+
         commitUpdateUser({
             variables: { input: validation.data },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            onCompleted: (response: any) => {
+            onCompleted: (response) => {
                 const payload = response.updateUser;
                 if (payload?.user) {
                     setSaved(true);
                     return;
                 }
-                setFormError("Could not save changes. Please try again.");
+                setFormError(getMutationErrorMessage(payload?.errors, fallbackError));
             },
-            onError: () => {
-                setFormError("Could not save changes. Please try again.");
+            onError: (error) => {
+                setFormError(getMutationNetworkErrorMessage(error, fallbackError));
             },
         });
     };
