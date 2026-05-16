@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a18b2c2bdf4ee9d48bbbf71979b02423>>
+ * @generated SignedSource<<023dba4df0e8b68bfe0a29e722cc0ee4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,9 +12,9 @@ import { ConcreteRequest } from 'relay-runtime';
 export type settingsQuery$variables = Record<PropertyKey, never>;
 export type settingsQuery$data = {
   readonly me: {
+    readonly avatarUrl: string | null | undefined;
     readonly displayName: string;
     readonly id: string;
-    readonly imageId: string | null | undefined;
     readonly profile: {
       readonly firstName: string;
       readonly lastName: string;
@@ -53,10 +53,16 @@ var v0 = [
       },
       {
         "alias": null,
-        "args": null,
+        "args": [
+          {
+            "kind": "Literal",
+            "name": "size",
+            "value": 256
+          }
+        ],
         "kind": "ScalarField",
-        "name": "imageId",
-        "storageKey": null
+        "name": "avatarUrl",
+        "storageKey": "avatarUrl(size:256)"
       },
       {
         "alias": null,
@@ -112,16 +118,16 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "cacheID": "b8f7fd6d3bc4e2eda5ea2e94043b371a",
+    "cacheID": "fb4f17745e44fce465e7dfc9d61a0164",
     "id": null,
     "metadata": {},
     "name": "settingsQuery",
     "operationKind": "query",
-    "text": "query settingsQuery {\n  me {\n    id\n    displayName\n    imageId\n    profile {\n      firstName\n      middleName\n      lastName\n    }\n  }\n}\n"
+    "text": "query settingsQuery {\n  me {\n    id\n    displayName\n    avatarUrl(size: 256)\n    profile {\n      firstName\n      middleName\n      lastName\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a96875ff0827638439be06aef12eadfa";
+(node as any).hash = "91a8702c7b466de271edb686352f47ea";
 
 export default node;

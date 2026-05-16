@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<50f127d5aeaf4ad81e266e2d058724ad>>
+ * @generated SignedSource<<47a2f8339a9a2d1ab32b915334526d0a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -177,6 +177,19 @@ return {
                 "kind": "ScalarField",
                 "name": "description",
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": [
+                  {
+                    "kind": "Literal",
+                    "name": "size",
+                    "value": 128
+                  }
+                ],
+                "kind": "ScalarField",
+                "name": "imageUrl",
+                "storageKey": "imageUrl(size:128)"
               }
             ],
             "storageKey": null
@@ -209,12 +222,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "8fc046a67344759a16f48e688a35ec4b",
+    "cacheID": "7f80b055271971739cdf121515632a25",
     "id": null,
     "metadata": {},
     "name": "NewGroupFormMutation",
     "operationKind": "mutation",
-    "text": "mutation NewGroupFormMutation(\n  $input: CreateGroupInput!\n) {\n  createGroup(input: $input) {\n    group {\n      id\n      name\n      ...GroupBox_group\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n\nfragment GroupBox_group on Group {\n  id\n  name\n  description\n}\n"
+    "text": "mutation NewGroupFormMutation(\n  $input: CreateGroupInput!\n) {\n  createGroup(input: $input) {\n    group {\n      id\n      name\n      ...GroupBox_group\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n\nfragment GroupBox_group on Group {\n  id\n  name\n  description\n  imageUrl(size: 128)\n}\n"
   }
 };
 })();

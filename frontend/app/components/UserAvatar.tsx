@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { initialsFromDisplayName } from "@/lib/format/names";
 import { cn } from "@/lib/utils";
 
@@ -11,7 +12,7 @@ const sizeClass: Record<UserAvatarSize, string> = {
 
 interface UserAvatarProps {
     displayName?: string | null;
-    imageId?: string | null;
+    avatarUrl?: string | null;
     size?: UserAvatarSize;
     className?: string;
     title?: string;
@@ -19,23 +20,36 @@ interface UserAvatarProps {
 
 export function UserAvatar({
     displayName,
-    imageId: _imageId,
+    avatarUrl,
     size = "sm",
     className,
     title,
 }: UserAvatarProps) {
+    const [imgFailed, setImgFailed] = useState(false);
     const initials = initialsFromDisplayName(displayName);
+    const showImage = avatarUrl && !imgFailed;
 
     return (
         <span
             title={title}
             className={cn(
-                "inline-flex shrink-0 items-center justify-center rounded-full border border-medal-gold/30 bg-surface-muted font-medium text-foreground/85",
+                "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-medal-gold/30 bg-surface-muted font-medium text-foreground/85",
                 sizeClass[size],
                 className
             )}
         >
-            {initials}
+            {showImage ? (
+                <img
+                    src={avatarUrl}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    onError={() => setImgFailed(true)}
+                    className="h-full w-full object-cover"
+                />
+            ) : (
+                initials
+            )}
         </span>
     );
 }
