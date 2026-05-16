@@ -49,13 +49,13 @@ update-snapshot:
 
 # ── Infrastructure ───────────────────────────────────────
 
-# Start PostgreSQL via Docker Compose
+# Start PostgreSQL via Docker Compose (dev: exposes 5432 on 127.0.0.1)
 db-up:
-    docker compose up -d db
+    docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d db
 
 # Stop PostgreSQL
 db-down:
-    docker compose down db
+    docker compose -f docker-compose.yml -f docker-compose.dev.yml down db
 
 # Run EF Core migration (usage: just migrate AddNewTable)
 migrate name:
