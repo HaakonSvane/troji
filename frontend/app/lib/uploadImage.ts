@@ -56,10 +56,13 @@ export async function uploadAvatar(file: File, getToken: TokenGetter): Promise<{
 }
 
 export async function uploadGroupImage(
-    groupId: string,
+    groupId: number,
     file: File,
     getToken: TokenGetter
 ): Promise<{ imageId: string }> {
+    if (!Number.isInteger(groupId) || groupId <= 0) {
+        throw new UploadImageError("Invalid group id.");
+    }
     validate(file);
-    return postFile(`/api/images/group/${encodeURIComponent(groupId)}`, file, getToken);
+    return postFile(`/api/images/group/${groupId}`, file, getToken);
 }
