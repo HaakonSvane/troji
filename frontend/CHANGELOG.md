@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.0](https://github.com/HaakonSvane/troji/compare/frontend-v0.8.0...frontend-v0.9.0) (2026-05-16)
+
+
+### Features
+
+* **trophy-award:** animate award flow as a three-step journey ([206c3f5](https://github.com/HaakonSvane/troji/commit/206c3f5382bbfd020b5c9435a5a13b565004e864))
+* **trophy-award:** immersive three-step award journey ([#53](https://github.com/HaakonSvane/troji/issues/53)) ([206c3f5](https://github.com/HaakonSvane/troji/commit/206c3f5382bbfd020b5c9435a5a13b565004e864))
+
 ## [0.8.0](https://github.com/HaakonSvane/troji/compare/frontend-v0.7.0...frontend-v0.8.0) (2026-05-10)
 
 
