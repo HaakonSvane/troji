@@ -82,6 +82,7 @@ export function GroupHero({
                         preselectedGameId={null}
                         groupId={data.id}
                         currentUserId={currentUserId}
+                        otherMemberCount={Math.max(0, memberCount - 1)}
                         variant="gold"
                         size="terminal"
                         label="Award trophy"

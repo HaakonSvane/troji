@@ -36,6 +36,10 @@
 - Do not hand-edit `app/__generated__/`.
 - Regenerate Relay artifacts after schema changes or query/mutation text changes.
 
+## Animations
+
+- `motion` (imported from `motion/react`) is the project's animation library — the modern successor to `framer-motion`. Do not reach for `framer-motion`, `react-spring`, or other libraries. CSS transitions (`tw-animate-css`) are still preferred for simple hover/state changes; reserve `motion` for layout/shared-element animations (`layoutId`, `LayoutGroup`) and multi-step UI choreography. First use: `app/components/TrophyAwardJourney.tsx`.
+
 ## Design
 
 - The full design language — palette, typography, recipes, voice, mobile rules, anti-patterns — lives in [`app/DESIGN.md`](app/DESIGN.md). Read it before styling any new surface.
@@ -52,7 +56,10 @@
 
 ## References
 
-- Read `backend/AGENTS.md` before changing backend-facing GraphQL assumptions.
+- `app/routes/AGENTS.md` — data-loading triplet, HydrateFallback, pagination, route naming.
+- `app/relay/AGENTS.md` — environment singleton, boot phase, NoUserError redirect.
+- `app/components/AGENTS.md` — DrawerDialog, form pattern, MedalBadge exception.
+- `backend/AGENTS.md` — backend-facing GraphQL assumptions.
 
 ## Server-Only Secrets
 

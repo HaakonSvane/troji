@@ -5,7 +5,7 @@ The single source of truth for visual decisions. If you're styling a new surface
 ## Principles
 
 1. **Gold is reserved for reward.** Use `--medal-gold` for the brand wordmark, the active state of primary controls, the cursor, the "ready" indicator, and rank emphasis. Nothing else gets gold. Other accents (blue, green, purple) are banned in UI surfaces; only `--destructive`, `--success`, and `--warning` exist and only fire on real status (validation, toasts).
-2. **Terminal as a performance signal.** Mono chrome (status bars, version pills, prompt prefixes, command-style CTA labels) tells users the app is fast and serious. Use it sparingly — never on body paragraphs or long copy.
+2. **Mono is chrome and action.** Status bars, version pills, prompt prefixes, breadcrumbs, and every `<Button>` label read in Geist Mono — buttons inherit it from the component base, no opt-in needed. SHOUTY mono (uppercase + wide tracking) stays reserved for marquee command-style CTAs (`size="terminal"`). Never apply mono to body paragraphs or long copy.
 3. **Flat over layered.** No gradient backgrounds. No glassmorphism. No backdrop blur. No drop shadows beyond `shadow-sm`. A 1px border is the canonical separator.
 4. **Mobile is first-class.** 360px is the design floor. Tap targets ≥44×44px. Single column below `sm` (640px). Anything else is a regression.
 5. **3D medals are the contrast.** When we render a medal, it's allowed to look 3D, gradient-rich, and tactile. That's the deliberate counter-beat to the flat terminal — don't extend the medal aesthetic to the rest of the UI.
@@ -42,11 +42,11 @@ Three families, loaded via Google Fonts in `root.tsx`. Each has one job.
 |---|---|---|
 | `font-heading` | IBM Plex Serif | Display: marquee headlines, italic blockquotes, group/game names in detail headers. Always `tracking-[0.025em]` (or `[0.015em]` for body-sized italic), `font-medium` (500). Italic earns `text-foreground` (not gold — gold is the wordmark only). |
 | `font-sans` | Inter | Body, paragraphs, table cells, form fields, labels, dense UI. Default for everything not explicitly chrome. |
-| `font-mono` | Geist Mono | System chrome ONLY — status bars, version pills, prompt prefixes (`$`, `▸`, `›`), command-style CTA labels, breadcrumbs, mono pills, role badges. Always uppercase + `tracking-[0.18em]–[0.28em]`. Never on body paragraphs. |
+| `font-mono` | Geist Mono | System chrome AND all `<Button>` labels. Buttons inherit mono from the component base — do not opt out. Uppercase + `tracking-[0.18em]–[0.28em]` is reserved for `size="terminal"`, breadcrumbs, mono pills, role badges, and section labels. Never on body paragraphs. |
 
 **Do**: `font-heading text-3xl italic tracking-[0.015em] text-foreground` for an empty-state quote. `font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground` for a section breadcrumb.
 
-**Don't**: don't use `font-mono` for paragraphs of explanatory copy. Don't use the wordmark gold on any italic line.
+**Don't**: don't use `font-mono` for paragraphs of explanatory copy. Don't use the wordmark gold on any italic line. Don't apply `font-sans` to a `<Button>` action label — the unified mono is intentional.
 
 ## Shape and chrome
 
@@ -99,7 +99,7 @@ For the `troji` wordmark specifically, use `text-medal-gold` instead of `text-fo
 
 ### Primary CTA (gold prompt button)
 
-Use `<Button variant="gold">` for marquee surfaces. The gold variant bakes in mono uppercase tracking.
+Use `<Button variant="gold" size="terminal">` for marquee surfaces. The `terminal` size adds uppercase + tracking; mono is the button default across all sizes.
 
 ```tsx
 <Button variant="gold" onClick={...}>
@@ -234,7 +234,7 @@ Non-negotiables:
 - Glassmorphism (`backdrop-blur-*`, `bg-white/10` over busy backgrounds).
 - Drop shadows beyond `shadow-sm`.
 - Oversized rounding (`rounded-xl`, `rounded-2xl`, `rounded-3xl`).
-- Mono on body paragraphs.
+- Mono on body paragraphs (button labels are not body — they get mono by default).
 - Italic gold (gold is the wordmark; italic serif is the marquee headline tone).
 - Light-mode fallbacks. The app is dark-only.
 - Inventing new accent colors. Add a token to this file before reaching for one.

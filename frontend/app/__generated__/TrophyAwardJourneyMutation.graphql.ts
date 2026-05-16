@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d672835589c628dd8e859f5a7a24af76>>
+ * @generated SignedSource<<82e91848d0cf84895e86f4cda315e916>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,15 +15,16 @@ export type CreateTrophyRequestInput = {
   gameId: string;
   userId: string;
 };
-export type TrophyRequestFormMutation$variables = {
+export type TrophyAwardJourneyMutation$variables = {
   connections: ReadonlyArray<string>;
   groupId: string;
   input: CreateTrophyRequestInput;
 };
-export type TrophyRequestFormMutation$data = {
+export type TrophyAwardJourneyMutation$data = {
   readonly createTrophyRequest: {
     readonly errors: ReadonlyArray<{
       readonly __typename: string;
+      readonly message?: string;
     }> | null | undefined;
     readonly query: {
       readonly groupById: {
@@ -57,9 +58,9 @@ export type TrophyRequestFormMutation$data = {
     } | null | undefined;
   };
 };
-export type TrophyRequestFormMutation = {
-  response: TrophyRequestFormMutation$data;
-  variables: TrophyRequestFormMutation$variables;
+export type TrophyAwardJourneyMutation = {
+  response: TrophyAwardJourneyMutation$data;
+  variables: TrophyAwardJourneyMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -243,7 +244,21 @@ v15 = {
   "name": "errors",
   "plural": true,
   "selections": [
-    (v14/*: any*/)
+    (v14/*: any*/),
+    {
+      "kind": "InlineFragment",
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "message",
+          "storageKey": null
+        }
+      ],
+      "type": "Error",
+      "abstractKey": "__isError"
+    }
   ],
   "storageKey": null
 };
@@ -256,7 +271,7 @@ return {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "TrophyRequestFormMutation",
+    "name": "TrophyAwardJourneyMutation",
     "selections": [
       {
         "alias": null,
@@ -312,7 +327,7 @@ return {
       (v1/*: any*/)
     ],
     "kind": "Operation",
-    "name": "TrophyRequestFormMutation",
+    "name": "TrophyAwardJourneyMutation",
     "selections": [
       {
         "alias": null,
@@ -467,16 +482,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "88482a6db432280393dc68c08de04343",
+    "cacheID": "7bee7958425c700f7d568064c4b16c8f",
     "id": null,
     "metadata": {},
-    "name": "TrophyRequestFormMutation",
+    "name": "TrophyAwardJourneyMutation",
     "operationKind": "mutation",
-    "text": "mutation TrophyRequestFormMutation(\n  $input: CreateTrophyRequestInput!\n  $groupId: ID!\n) {\n  createTrophyRequest(input: $input) {\n    trophy {\n      id\n      isAwarded\n      description\n      game {\n        id\n        symbol\n        name\n      }\n      receiver {\n        id\n        firstName\n        lastName\n      }\n    }\n    query {\n      groupById(id: $groupId) {\n        ...GroupActivityFeed_group\n        awardedTrophyCount\n        topPerformer {\n          user {\n            id\n            firstName\n            middleName\n            lastName\n          }\n          awardCount\n        }\n        id\n      }\n    }\n    errors {\n      __typename\n    }\n  }\n}\n\nfragment GroupActivityFeed_group on Group {\n  recentActivityCount\n  recentActivity(first: 5) {\n    __typename\n    id\n    occurredAt\n    ... on TrophyAwardedActivity {\n      trophy {\n        id\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          firstName\n          middleName\n          lastName\n        }\n        awardedBy {\n          id\n          firstName\n          middleName\n          lastName\n        }\n      }\n    }\n    ... on MemberJoinedActivity {\n      member {\n        id\n        firstName\n        middleName\n        lastName\n      }\n    }\n  }\n}\n"
+    "text": "mutation TrophyAwardJourneyMutation(\n  $input: CreateTrophyRequestInput!\n  $groupId: ID!\n) {\n  createTrophyRequest(input: $input) {\n    trophy {\n      id\n      isAwarded\n      description\n      game {\n        id\n        symbol\n        name\n      }\n      receiver {\n        id\n        firstName\n        lastName\n      }\n    }\n    query {\n      groupById(id: $groupId) {\n        ...GroupActivityFeed_group\n        awardedTrophyCount\n        topPerformer {\n          user {\n            id\n            firstName\n            middleName\n            lastName\n          }\n          awardCount\n        }\n        id\n      }\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n\nfragment GroupActivityFeed_group on Group {\n  recentActivityCount\n  recentActivity(first: 5) {\n    __typename\n    id\n    occurredAt\n    ... on TrophyAwardedActivity {\n      trophy {\n        id\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          firstName\n          middleName\n          lastName\n        }\n        awardedBy {\n          id\n          firstName\n          middleName\n          lastName\n        }\n      }\n    }\n    ... on MemberJoinedActivity {\n      member {\n        id\n        firstName\n        middleName\n        lastName\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "900971cdd8ab8bf0abb33a57e7c09da2";
+(node as any).hash = "dbe3ea4d3020b8da6d2a309471eed4ea";
 
 export default node;
