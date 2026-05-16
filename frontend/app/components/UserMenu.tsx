@@ -41,6 +41,7 @@ function UserMenuContent({ queryRef }: UserMenuContentProps) {
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <button
+                    type="button"
                     aria-label="Open user menu"
                     className="flex size-8 cursor-pointer items-center justify-center rounded-full border border-medal-gold/30 bg-surface-muted font-mono text-[11px] font-medium text-foreground/85 transition-opacity hover:opacity-70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-medal-gold/50"
                 >
