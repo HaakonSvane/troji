@@ -155,24 +155,25 @@ public sealed class GroupRepository : IGroupRepository
         return tracked;
     }
 
+    public async Task<bool> IsMemberAsync(int groupId, string userId, CancellationToken cancellationToken)
+    {
+        return await _context.UserGroups
+            .AnyAsync(ug => ug.GroupId == groupId && ug.UserId == userId, cancellationToken);
+    }
+
     public async Task<Group> TransferAdminAsync(
         Group group,
         string newAdminId,
         CancellationToken cancellationToken)
     {
-        var isMember = await _context.UserGroups
-            .AnyAsync(ug => ug.GroupId == group.Id && ug.UserId == newAdminId, cancellationToken);
-        if (!isMember)
-        {
-            throw new NoMemberException(newAdminId, group.Id.ToString());
-        }
-
         var tracked = await _context.Groups
             .SingleAsync(g => g.Id == group.Id, cancellationToken);
         tracked.AdminId = newAdminId;
         await _context.SaveChangesAsync(cancellationToken);
 
-        await _context.Entry(tracked).Reference(g => g.Admin).LoadAsync(cancellationToken);
+        var adminReference = _context.Entry(tracked).Reference(g => g.Admin);
+        adminReference.IsLoaded = false;
+        await adminReference.LoadAsync(cancellationToken);
         return tracked;
     }
 

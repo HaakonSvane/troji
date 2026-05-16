@@ -198,6 +198,14 @@ public static class GroupMutations
             throw new CannotTransferToSelfException();
         }
 
+        var isMember = await groupRepository.IsMemberAsync(groupId, newAdminId, cancellationToken);
+        if (!isMember)
+        {
+            throw new NoMemberException(
+                serializer.Format("User", newAdminId),
+                serializer.Format("Group", groupId));
+        }
+
         var previousAdminId = group.AdminId;
         var transferred = await groupRepository.TransferAdminAsync(group, newAdminId, cancellationToken);
         groupsByIdsDataLoader.RemoveCacheEntry(groupId);

@@ -2,7 +2,7 @@ namespace api.API.Errors;
 
 public sealed class InvalidGroupNameException : Exception
 {
-    public InvalidGroupNameException() : base("Group name is required.")
+    public InvalidGroupNameException() : base("Circle name is required.")
     {
     }
 }

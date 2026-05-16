@@ -316,6 +316,54 @@ public class GroupIntegrationTests
     }
 
     [Test]
+    public async Task UpdateGroup_WithBlankName_ShouldReturnInvalidGroupNameError()
+    {
+        // Arrange
+        const string adminId = "user_update_admin_003";
+        int groupId;
+        using (var scope = _factory.CreateDbScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<TrophyDbContext>();
+            await TestDataBuilder.CreateUserAsync(db, adminId, "Update", "Blank");
+            var group = await TestDataBuilder.CreateGroupAsync(db, adminId, "Named Group");
+            groupId = group.Id;
+        }
+
+        string relayGroupId;
+        using (var idScope = _factory.CreateDbScope())
+        {
+            var serializer = idScope.ServiceProvider.GetRequiredService<INodeIdSerializer>();
+            relayGroupId = serializer.Format("Group", groupId);
+        }
+
+        const string mutation = """
+            mutation UpdateGroup($input: UpdateGroupInput!) {
+              updateGroup(input: $input) {
+                group { id }
+                errors { __typename ... on Error { message } }
+              }
+            }
+            """;
+
+        // Act
+        using var result = await GraphQLHelpers.ExecuteAsync(
+            _client, adminId, mutation,
+            new { input = new { groupId = relayGroupId, name = "   ", description = (string?)null } });
+
+        // Assert
+        var updateGroup = result.RootElement.GetProperty("data").GetProperty("updateGroup");
+        Assert.That(updateGroup.GetProperty("group").ValueKind, Is.EqualTo(JsonValueKind.Null));
+        var errors = updateGroup.GetProperty("errors");
+        Assert.That(errors.GetArrayLength(), Is.EqualTo(1));
+        Assert.That(errors[0].GetProperty("__typename").GetString(), Is.EqualTo("InvalidGroupNameError"));
+
+        using var verifyScope = _factory.CreateDbScope();
+        var verifyDb = verifyScope.ServiceProvider.GetRequiredService<TrophyDbContext>();
+        var persisted = await verifyDb.Groups.SingleAsync(g => g.Id == groupId);
+        Assert.That(persisted.Name, Is.EqualTo("Named Group"));
+    }
+
+    [Test]
     public async Task TransferGroupAdmin_AsAdmin_ShouldPromoteMemberAndKeepOldAdminAsMember()
     {
         // Arrange
