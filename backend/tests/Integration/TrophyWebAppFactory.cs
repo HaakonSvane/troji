@@ -1,5 +1,6 @@
 using api;
 using api.Database;
+using api.Images;
 using api.Transport;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
@@ -20,15 +21,31 @@ public sealed class TrophyWebAppFactory : WebApplicationFactory<Program>
         .WithPassword("test")
         .Build();
 
+    public string ImageStorageRoot { get; } =
+        Path.Combine(Path.GetTempPath(), $"troji-images-{Guid.NewGuid():N}");
+
+    public const string TestSigningKey = "test-signing-key-do-not-use-in-prod";
+
     public async Task InitializeAsync()
     {
         await _postgres.StartAsync();
+        Directory.CreateDirectory(ImageStorageRoot);
     }
 
     public override async ValueTask DisposeAsync()
     {
         await _postgres.DisposeAsync();
         await base.DisposeAsync();
+        try
+        {
+            if (Directory.Exists(ImageStorageRoot))
+            {
+                Directory.Delete(ImageStorageRoot, recursive: true);
+            }
+        }
+        catch
+        {
+        }
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -55,6 +72,12 @@ public sealed class TrophyWebAppFactory : WebApplicationFactory<Program>
             services.AddAuthentication()
                 .AddScheme<FakeAuthHandlerOptions, FakeAuthHandler>(
                     FakeAuthHandler.AuthenticationScheme, _ => { });
+
+            services.PostConfigure<ImageOptions>(opts =>
+            {
+                opts.StoragePath = ImageStorageRoot;
+                opts.UrlSigningKey = TestSigningKey;
+            });
         });
     }
 
