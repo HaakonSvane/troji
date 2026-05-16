@@ -14,7 +14,7 @@ export async function loader(args: Route.LoaderArgs) {
     if (!isAuthenticated) {
         throw redirect("/sign-in");
     }
-    return {};
+    return { queryRef: undefined };
 }
 
 export function clientLoader(_args: Route.ClientLoaderArgs) {

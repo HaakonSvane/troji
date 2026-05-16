@@ -63,6 +63,7 @@ Integration/
  GroupIntegrationTests.cs
  TestDataBuilder.cs
  TrophyWebAppFactory.cs
+ UserIntegrationTests.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
  tests.AssemblyInfo.cs

@@ -65,6 +65,7 @@ API/Errors/
  GameLimitExceededException.cs
  GroupLimitExceededException.cs
  GroupNotFoundException.cs
+ InvalidUserNameException.cs
  InviteExpiredException.cs
  InviteResetTooSoonException.cs
  NoAdminException.cs
