@@ -1,9 +1,11 @@
 import type { registerUserMutation } from "@/__generated__/registerUserMutation.graphql";
+import { getAuth } from "@clerk/react-router/server";
 import { useUser } from "@clerk/react-router";
 import { useEffect, useState } from "react";
 import { graphql, useMutation } from "react-relay";
-import { useNavigate } from "react-router";
+import { redirect, useNavigate } from "react-router";
 import { AuthShell } from "@/components/AuthShell";
+import type { Route } from "./+types/register";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,6 +32,14 @@ const RegisterUserMutation = graphql`
         }
     }
 `;
+
+export async function loader(args: Route.LoaderArgs) {
+    const { isAuthenticated } = await getAuth(args);
+    if (!isAuthenticated) {
+        throw redirect("/sign-in");
+    }
+    return {};
+}
 
 export function meta() {
     return [
