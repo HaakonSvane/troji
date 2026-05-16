@@ -1,8 +1,11 @@
 using api.API.Errors;
+using api.Database;
 using api.Database.Models;
+using api.Images;
 using api.Repository;
 using api.Transport;
 using HotChocolate.Types.Relay;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.API.Group;
 
@@ -90,6 +93,44 @@ public static class GroupMutations
 
     }
 
+
+    [Error<NoUserException>]
+    [Error<GroupNotFoundException>]
+    [Error<NoAdminException>]
+    public static async Task<Database.Models.Group> ClearGroupImageAsync(
+        [TokenUser] TokenUser? tokenUser,
+        [ID] int groupId,
+        [Service] TrophyDbContext db,
+        [Service] IImageService images,
+        [Service] INodeIdSerializer serializer,
+        CancellationToken cancellationToken)
+    {
+        if (tokenUser is null)
+        {
+            throw new NoUserException();
+        }
+
+        var group = await db.Groups.FirstOrDefaultAsync(g => g.Id == groupId, cancellationToken);
+        if (group is null)
+        {
+            throw new GroupNotFoundException(serializer.Format("Group", groupId));
+        }
+        if (group.AdminId != tokenUser.Id)
+        {
+            throw new NoAdminException();
+        }
+
+        var oldImageId = group.ImageId;
+        if (oldImageId is null)
+        {
+            return group;
+        }
+
+        group.ImageId = null;
+        await db.SaveChangesAsync(cancellationToken);
+        await images.DeleteAsync("groups", oldImageId, cancellationToken);
+        return group;
+    }
 
     [Error<NoUserException>]
     [Error<GroupLimitExceededException>]

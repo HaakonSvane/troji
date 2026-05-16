@@ -3,10 +3,12 @@ using System.Security.Claims;
 using api.Auth.Handlers;
 using api.Auth.Requirements;
 using api.Database;
+using api.Images;
 using api.Repository;
 using api.Transport;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql;
@@ -94,6 +96,18 @@ public class Program
             .AddScoped<IGroupRepository, GroupRepository>()
             .AddScoped<IGameRepository, GameRepository>();
 
+        builder.Services.Configure<ImageOptions>(config.GetSection(ImageOptions.SectionName));
+        builder.Services.AddSingleton<IImageService, ImageService>();
+
+        builder.Services.Configure<FormOptions>(options =>
+        {
+            options.MultipartBodyLengthLimit = 10_000_000;
+        });
+        builder.WebHost.ConfigureKestrel(options =>
+        {
+            options.Limits.MaxRequestBodySize = 10_000_000;
+        });
+
         builder.Services
             .AddGraphQLServer()
             .AddAuthorization()
@@ -138,6 +152,8 @@ public class Program
 
         app.MapGraphQLHttp().RequireAuthorization();
         app.MapGraphQLWebSocket();
+
+        app.MapImageEndpoints();
 
         if (isSchemaExport)
         {
