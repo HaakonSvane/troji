@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<eb4469cd8150237d610ef204c15cab77>>
+ * @generated SignedSource<<cb8658e9077b0ad09fe27baba6127afb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,18 +15,14 @@ export type GroupActivityFeed_group$data = {
     readonly __typename: string;
     readonly id: string;
     readonly member?: {
-      readonly firstName: string;
+      readonly displayName: string;
       readonly id: string;
-      readonly lastName: string;
-      readonly middleName: string | null | undefined;
     };
     readonly occurredAt: any;
     readonly trophy?: {
       readonly awardedBy: {
-        readonly firstName: string;
+        readonly displayName: string;
         readonly id: string;
-        readonly lastName: string;
-        readonly middleName: string | null | undefined;
       } | null | undefined;
       readonly description: string | null | undefined;
       readonly game: {
@@ -36,10 +32,8 @@ export type GroupActivityFeed_group$data = {
       };
       readonly id: string;
       readonly receiver: {
-        readonly firstName: string;
+        readonly displayName: string;
         readonly id: string;
-        readonly lastName: string;
-        readonly middleName: string | null | undefined;
       };
     };
   }>;
@@ -65,21 +59,7 @@ v1 = [
     "alias": null,
     "args": null,
     "kind": "ScalarField",
-    "name": "firstName",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "middleName",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "lastName",
+    "name": "displayName",
     "storageKey": null
   }
 ];
@@ -223,6 +203,6 @@ return {
 };
 })();
 
-(node as any).hash = "784a6bc7fb490627b8ec1663280ac1d0";
+(node as any).hash = "51cc0de7b845ded3cdf91a037bb28e67";
 
 export default node;

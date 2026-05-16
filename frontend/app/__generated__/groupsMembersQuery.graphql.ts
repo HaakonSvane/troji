@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<621a1f6ef6c5b15d7922519cfd6ae89d>>
+ * @generated SignedSource<<d38954ee8530c190da7822b4bc074cd4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -218,21 +218,7 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "firstName",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "middleName",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "lastName",
+                        "name": "displayName",
                         "storageKey": null
                       }
                     ],
@@ -251,12 +237,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b5720d5d0d3d625eb98f1f1fb1bb62b7",
+    "cacheID": "17c1c329bf9875aa57ca2e35e576626f",
     "id": null,
     "metadata": {},
     "name": "groupsMembersQuery",
     "operationKind": "query",
-    "text": "query groupsMembersQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    name\n    admin {\n      id\n    }\n    members(first: 50) {\n      totalCount\n      edges {\n        node {\n          id\n          ...MemberRow_user\n        }\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n\nfragment MemberRow_user on User {\n  id\n  firstName\n  middleName\n  lastName\n}\n"
+    "text": "query groupsMembersQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    name\n    admin {\n      id\n    }\n    members(first: 50) {\n      totalCount\n      edges {\n        node {\n          id\n          ...MemberRow_user\n        }\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n\nfragment MemberRow_user on User {\n  id\n  displayName\n}\n"
   }
 };
 })();

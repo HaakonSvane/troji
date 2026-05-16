@@ -14,12 +14,12 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
+import { initialsFromDisplayName } from "@/lib/format/names";
 
 export const UserMenuQuery = graphql`
     query UserMenuQuery {
         me {
-            firstName
-            lastName
+            displayName
         }
     }
 `;
@@ -32,10 +32,8 @@ function UserMenuContent({ queryRef }: UserMenuContentProps) {
     const data = usePreloadedQuery(UserMenuQuery, queryRef);
     const { signOut } = useClerk();
 
-    const firstName = data.me?.firstName ?? "";
-    const lastName = data.me?.lastName ?? "";
-    const initials = [firstName[0], lastName[0]].filter(Boolean).join("").toUpperCase() || "?";
-    const fullName = [firstName, lastName].filter(Boolean).join(" ") || "Unknown";
+    const displayName = data.me?.displayName ?? "Unknown";
+    const initials = initialsFromDisplayName(displayName);
 
     return (
         <DropdownMenu>
@@ -54,7 +52,7 @@ function UserMenuContent({ queryRef }: UserMenuContentProps) {
                 className="min-w-44 border-border bg-background p-1"
             >
                 <DropdownMenuLabel className="px-3 py-2 font-sans text-xs text-foreground/70">
-                    {fullName}
+                    {displayName}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild className="min-h-8 cursor-pointer gap-2 px-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground focus:text-foreground">

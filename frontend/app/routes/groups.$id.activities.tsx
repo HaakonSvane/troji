@@ -5,7 +5,7 @@ import { getRelayEnvironment } from "@/relay/environment";
 import { MedalBadge } from "@/components/MedalBadge";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { Button } from "@/components/ui/button";
-import { formatPersonName } from "@/components/PersonName";
+import { initialsFromDisplayName } from "@/lib/format/names";
 import { formatRelativeTime, formatAbsoluteDateTime } from "@/lib/relativeTime";
 import type { Route } from "./+types/groups.$id.activities";
 
@@ -30,24 +30,18 @@ const GroupActivitiesPageQuery = graphql`
                         }
                         receiver {
                             id
-                            firstName
-                            middleName
-                            lastName
+                            displayName
                         }
                         awardedBy {
                             id
-                            firstName
-                            middleName
-                            lastName
+                            displayName
                         }
                     }
                 }
                 ... on MemberJoinedActivity {
                     member {
                         id
-                        firstName
-                        middleName
-                        lastName
+                        displayName
                     }
                 }
             }
@@ -156,18 +150,6 @@ export default function GroupActivities({ loaderData }: Route.ComponentProps) {
                             const t = item.trophy;
                             const receiverIsSelf = t.receiver?.id === myId;
                             const awarderIsSelf = t.awardedBy?.id === myId;
-                            const receiverName = formatPersonName({
-                                firstName: t.receiver?.firstName,
-                                middleName: t.receiver?.middleName,
-                                lastName: t.receiver?.lastName,
-                            });
-                            const awarderName = t.awardedBy
-                                ? formatPersonName({
-                                      firstName: t.awardedBy.firstName,
-                                      middleName: t.awardedBy.middleName,
-                                      lastName: t.awardedBy.lastName,
-                                  })
-                                : null;
                             return (
                                 <li
                                     key={item.id}
@@ -181,10 +163,10 @@ export default function GroupActivities({ loaderData }: Route.ComponentProps) {
                                     />
                                     <div className="min-w-0 flex-1">
                                         <p className="text-sm leading-relaxed text-foreground/90">
-                                            {awarderName ? (
+                                            {t.awardedBy ? (
                                                 <>
                                                     <span className="text-foreground">
-                                                        {awarderIsSelf ? "You" : awarderName}
+                                                        {awarderIsSelf ? "You" : t.awardedBy.displayName}
                                                     </span>{" "}
                                                     awarded{" "}
                                                 </>
@@ -194,7 +176,7 @@ export default function GroupActivities({ loaderData }: Route.ComponentProps) {
                                             </em>{" "}
                                             to{" "}
                                             <span className="text-foreground">
-                                                {receiverIsSelf ? "you" : receiverName}
+                                                {receiverIsSelf ? "you" : (t.receiver?.displayName ?? "Unknown")}
                                             </span>
                                         </p>
                                         {t.description ? (
@@ -209,15 +191,7 @@ export default function GroupActivities({ loaderData }: Route.ComponentProps) {
                         }
                         if (item.__typename === "MemberJoinedActivity" && item.member) {
                             const memberIsSelf = item.member.id === myId;
-                            const memberName = formatPersonName({
-                                firstName: item.member.firstName,
-                                middleName: item.member.middleName,
-                                lastName: item.member.lastName,
-                            });
-                            const initials = (
-                                (item.member.firstName?.[0] ?? "") +
-                                (item.member.lastName?.[0] ?? "")
-                            ).toUpperCase() || "?";
+                            const initials = initialsFromDisplayName(item.member.displayName);
                             return (
                                 <li
                                     key={item.id}
@@ -229,7 +203,7 @@ export default function GroupActivities({ loaderData }: Route.ComponentProps) {
                                     <div className="min-w-0 flex-1">
                                         <p className="text-sm leading-relaxed text-foreground/90">
                                             <span className="text-foreground">
-                                                {memberIsSelf ? "You" : memberName}
+                                                {memberIsSelf ? "You" : item.member.displayName}
                                             </span>{" "}
                                             joined the circle
                                         </p>

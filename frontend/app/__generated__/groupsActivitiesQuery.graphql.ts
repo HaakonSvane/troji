@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<87b2d4e6d8545fb2085d45a0923f433e>>
+ * @generated SignedSource<<a26da42be74f9a1d2b8baa523b129254>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,18 +20,14 @@ export type groupsActivitiesQuery$data = {
       readonly __typename: string;
       readonly id: string;
       readonly member?: {
-        readonly firstName: string;
+        readonly displayName: string;
         readonly id: string;
-        readonly lastName: string;
-        readonly middleName: string | null | undefined;
       };
       readonly occurredAt: any;
       readonly trophy?: {
         readonly awardedBy: {
-          readonly firstName: string;
+          readonly displayName: string;
           readonly id: string;
-          readonly lastName: string;
-          readonly middleName: string | null | undefined;
         } | null | undefined;
         readonly description: string | null | undefined;
         readonly game: {
@@ -41,10 +37,8 @@ export type groupsActivitiesQuery$data = {
         };
         readonly id: string;
         readonly receiver: {
-          readonly firstName: string;
+          readonly displayName: string;
           readonly id: string;
-          readonly lastName: string;
-          readonly middleName: string | null | undefined;
         };
       };
     }>;
@@ -87,21 +81,7 @@ v3 = [
     "alias": null,
     "args": null,
     "kind": "ScalarField",
-    "name": "firstName",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "middleName",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "lastName",
+    "name": "displayName",
     "storageKey": null
   }
 ],
@@ -278,16 +258,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "a2b581f6e4fc73b3fd5085da3f31ec02",
+    "cacheID": "dd5506e779e9466d3c9f58d5b2a3e81f",
     "id": null,
     "metadata": {},
     "name": "groupsActivitiesQuery",
     "operationKind": "query",
-    "text": "query groupsActivitiesQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    name\n    recentActivityCount\n    recentActivity(first: 50) {\n      __typename\n      id\n      occurredAt\n      ... on TrophyAwardedActivity {\n        trophy {\n          id\n          description\n          game {\n            id\n            symbol\n            name\n          }\n          receiver {\n            id\n            firstName\n            middleName\n            lastName\n          }\n          awardedBy {\n            id\n            firstName\n            middleName\n            lastName\n          }\n        }\n      }\n      ... on MemberJoinedActivity {\n        member {\n          id\n          firstName\n          middleName\n          lastName\n        }\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n"
+    "text": "query groupsActivitiesQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    name\n    recentActivityCount\n    recentActivity(first: 50) {\n      __typename\n      id\n      occurredAt\n      ... on TrophyAwardedActivity {\n        trophy {\n          id\n          description\n          game {\n            id\n            symbol\n            name\n          }\n          receiver {\n            id\n            displayName\n          }\n          awardedBy {\n            id\n            displayName\n          }\n        }\n      }\n      ... on MemberJoinedActivity {\n        member {\n          id\n          displayName\n        }\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "99d7a85aef6d799c4d5fc2197532029a";
+(node as any).hash = "04c91869fc01fc3a395fd0afafb1d47f";
 
 export default node;

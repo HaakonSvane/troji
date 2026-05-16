@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3ca2e7d16c95bda4381b7855aafdc3e8>>
+ * @generated SignedSource<<ad700e5379df279bc1d1f66b3511daaa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,9 +26,8 @@ export type AwardTrophyButtonDataQuery$data = {
     readonly members: {
       readonly edges: ReadonlyArray<{
         readonly node: {
-          readonly firstName: string;
+          readonly displayName: string;
           readonly id: string;
-          readonly lastName: string;
         };
       }> | null | undefined;
     } | null | undefined;
@@ -145,14 +144,7 @@ v5 = {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "firstName",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "lastName",
+              "name": "displayName",
               "storageKey": null
             }
           ],
@@ -211,16 +203,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "025ee17fce112067f98bfcf7757d3f50",
+    "cacheID": "1a7ca47a7a30f6ef2f3d960e63c13ce9",
     "id": null,
     "metadata": {},
     "name": "AwardTrophyButtonDataQuery",
     "operationKind": "query",
-    "text": "query AwardTrophyButtonDataQuery(\n  $groupId: ID!\n) {\n  groupById(id: $groupId) {\n    games(first: 50) {\n      edges {\n        node {\n          id\n          name\n          symbol\n        }\n      }\n    }\n    members(first: 50) {\n      edges {\n        node {\n          id\n          firstName\n          lastName\n        }\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query AwardTrophyButtonDataQuery(\n  $groupId: ID!\n) {\n  groupById(id: $groupId) {\n    games(first: 50) {\n      edges {\n        node {\n          id\n          name\n          symbol\n        }\n      }\n    }\n    members(first: 50) {\n      edges {\n        node {\n          id\n          displayName\n        }\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e5016b87e392551103c7220a5acf1707";
+(node as any).hash = "556ca6ab531c87a9b89cc687d48bcc2d";
 
 export default node;

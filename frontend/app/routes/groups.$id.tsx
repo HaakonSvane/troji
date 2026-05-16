@@ -39,9 +39,7 @@ const GroupPageQuery = graphql`
                 edges {
                     node {
                         id
-                        firstName
-                        middleName
-                        lastName
+                        displayName
                         ...MemberRow_user
                     }
                 }
@@ -54,9 +52,7 @@ const GroupPageQuery = graphql`
             topPerformer {
                 user {
                     id
-                    firstName
-                    middleName
-                    lastName
+                    displayName
                 }
                 awardCount
             }

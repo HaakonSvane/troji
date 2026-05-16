@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1b4de3f939e367cef757e6eed0472d28>>
+ * @generated SignedSource<<bb02964ad58cc79e6e4f777a5e54ce23>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,8 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 export type UserMenuQuery$variables = Record<PropertyKey, never>;
 export type UserMenuQuery$data = {
   readonly me: {
-    readonly firstName: string;
-    readonly lastName: string;
+    readonly displayName: string;
   };
 };
 export type UserMenuQuery = {
@@ -26,14 +25,7 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "firstName",
-  "storageKey": null
-},
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "lastName",
+  "name": "displayName",
   "storageKey": null
 };
 return {
@@ -51,8 +43,7 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/)
+          (v0/*: any*/)
         ],
         "storageKey": null
       }
@@ -75,7 +66,6 @@ return {
         "plural": false,
         "selections": [
           (v0/*: any*/),
-          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -89,16 +79,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "064d9a06576e2fc70dc2df2712e3d7af",
+    "cacheID": "1d6862c578da6da8d26dfec201a43ce8",
     "id": null,
     "metadata": {},
     "name": "UserMenuQuery",
     "operationKind": "query",
-    "text": "query UserMenuQuery {\n  me {\n    firstName\n    lastName\n    id\n  }\n}\n"
+    "text": "query UserMenuQuery {\n  me {\n    displayName\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8ad25c70b00f4c62003d966b98abd341";
+(node as any).hash = "be0150d293065ce0350f1ac97bf52a5d";
 
 export default node;

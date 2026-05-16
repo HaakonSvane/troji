@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<30a905ae94b8b00a8fb954c13c25eef0>>
+ * @generated SignedSource<<88559e7d460e963f52fcfb101fe7fbfd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,9 +24,8 @@ export type groupsGameDetail_game$data = {
         readonly id: string;
         readonly isAwarded: boolean;
         readonly receiver: {
-          readonly firstName: string;
+          readonly displayName: string;
           readonly id: string;
-          readonly lastName: string;
         };
       };
     }> | null | undefined;
@@ -181,14 +180,7 @@ return {
                       "alias": null,
                       "args": null,
                       "kind": "ScalarField",
-                      "name": "firstName",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "lastName",
+                      "name": "displayName",
                       "storageKey": null
                     }
                   ],
@@ -249,6 +241,6 @@ return {
 };
 })();
 
-(node as any).hash = "d7a0bcf401b7862bba5281e3c209074c";
+(node as any).hash = "8d89384469c3a6cbb6eadf8d19d8ab8b";
 
 export default node;

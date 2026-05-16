@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { graphql, loadQuery, useMutation, usePreloadedQuery } from "react-relay";
 import type { settingsQuery } from "@/__generated__/settingsQuery.graphql";
-import type { settingsMutation } from "@/__generated__/settingsMutation.graphql";
+import type { settingsDisplayNameMutation } from "@/__generated__/settingsDisplayNameMutation.graphql";
+import type { settingsProfileMutation } from "@/__generated__/settingsProfileMutation.graphql";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { getRelayEnvironment } from "@/relay/environment";
-import { validateUpdateUserInput } from "@/lib/validation/forms";
+import {
+    validateUpdateDisplayNameInput,
+    validateUpdateProfileInput,
+} from "@/lib/validation/forms";
 import {
     getMutationErrorMessage,
     getMutationNetworkErrorMessage,
@@ -18,21 +22,43 @@ const SettingsPageQuery = graphql`
     query settingsQuery {
         me {
             id
-            firstName
-            middleName
-            lastName
+            displayName
+            profile {
+                firstName
+                middleName
+                lastName
+            }
         }
     }
 `;
 
-const UpdateUserMutation = graphql`
-    mutation settingsMutation($input: UpdateUserInput!) {
-        updateUser(input: $input) {
+const UpdateDisplayNameMutation = graphql`
+    mutation settingsDisplayNameMutation($input: UpdateUserDisplayNameInput!) {
+        updateUserDisplayName(input: $input) {
             user {
                 id
-                firstName
-                middleName
-                lastName
+                displayName
+            }
+            errors {
+                __typename
+                ... on Error {
+                    message
+                }
+            }
+        }
+    }
+`;
+
+const UpdateProfileMutation = graphql`
+    mutation settingsProfileMutation($input: UpdateUserProfileInput!) {
+        updateUserProfile(input: $input) {
+            user {
+                id
+                profile {
+                    firstName
+                    middleName
+                    lastName
+                }
             }
             errors {
                 __typename
@@ -67,40 +93,96 @@ export function meta() {
 
 export default function SettingsPage({ loaderData }: Route.ComponentProps) {
     const data = usePreloadedQuery(SettingsPageQuery, loaderData.queryRef);
-    const [commitUpdateUser, isSubmitting] = useMutation<settingsMutation>(UpdateUserMutation);
+    const [commitDisplayName, isSavingDisplayName] =
+        useMutation<settingsDisplayNameMutation>(UpdateDisplayNameMutation);
+    const [commitProfile, isSavingProfile] =
+        useMutation<settingsProfileMutation>(UpdateProfileMutation);
 
-    const [firstName, setFirstName] = useState(data.me?.firstName ?? "");
-    const [middleName, setMiddleName] = useState(data.me?.middleName ?? "");
-    const [lastName, setLastName] = useState(data.me?.lastName ?? "");
+    const initialDisplayName = data.me?.displayName ?? "";
+    const initialFirstName = data.me?.profile?.firstName ?? "";
+    const initialMiddleName = data.me?.profile?.middleName ?? "";
+    const initialLastName = data.me?.profile?.lastName ?? "";
+
+    const [displayName, setDisplayName] = useState(initialDisplayName);
+    const [firstName, setFirstName] = useState(initialFirstName);
+    const [middleName, setMiddleName] = useState(initialMiddleName);
+    const [lastName, setLastName] = useState(initialLastName);
     const [formError, setFormError] = useState<string | null>(null);
     const [saved, setSaved] = useState(false);
+
+    const isSubmitting = isSavingDisplayName || isSavingProfile;
 
     const onSubmit = () => {
         setFormError(null);
         setSaved(false);
 
-        const validation = validateUpdateUserInput({ firstName, middleName, lastName });
-        if (!validation.success) {
-            setFormError(validation.error);
+        const fallbackError = "Could not save changes. Please try again.";
+        const displayNameDirty = displayName.trim() !== initialDisplayName.trim();
+        const profileDirty =
+            firstName.trim() !== initialFirstName.trim() ||
+            middleName.trim() !== (initialMiddleName ?? "").trim() ||
+            lastName.trim() !== initialLastName.trim();
+
+        if (!displayNameDirty && !profileDirty) {
+            setSaved(true);
             return;
         }
 
-        const fallbackError = "Could not save changes. Please try again.";
+        const displayNameValidation = displayNameDirty
+            ? validateUpdateDisplayNameInput({ displayName })
+            : null;
+        if (displayNameValidation && !displayNameValidation.success) {
+            setFormError(displayNameValidation.error);
+            return;
+        }
 
-        commitUpdateUser({
-            variables: { input: validation.data },
-            onCompleted: (response) => {
-                const payload = response.updateUser;
-                if (payload?.user) {
-                    setSaved(true);
-                    return;
-                }
-                setFormError(getMutationErrorMessage(payload?.errors, fallbackError));
-            },
-            onError: (error) => {
-                setFormError(getMutationNetworkErrorMessage(error, fallbackError));
-            },
-        });
+        const profileValidation = profileDirty
+            ? validateUpdateProfileInput({ firstName, middleName, lastName })
+            : null;
+        if (profileValidation && !profileValidation.success) {
+            setFormError(profileValidation.error);
+            return;
+        }
+
+        const runProfile = () => {
+            if (!profileValidation?.success) {
+                setSaved(true);
+                return;
+            }
+            commitProfile({
+                variables: { input: profileValidation.data },
+                onCompleted: (response) => {
+                    const payload = response.updateUserProfile;
+                    if (payload?.user) {
+                        setSaved(true);
+                        return;
+                    }
+                    setFormError(getMutationErrorMessage(payload?.errors, fallbackError));
+                },
+                onError: (error) => {
+                    setFormError(getMutationNetworkErrorMessage(error, fallbackError));
+                },
+            });
+        };
+
+        if (displayNameValidation?.success) {
+            commitDisplayName({
+                variables: { input: displayNameValidation.data },
+                onCompleted: (response) => {
+                    const payload = response.updateUserDisplayName;
+                    if (!payload?.user) {
+                        setFormError(getMutationErrorMessage(payload?.errors, fallbackError));
+                        return;
+                    }
+                    runProfile();
+                },
+                onError: (error) => {
+                    setFormError(getMutationNetworkErrorMessage(error, fallbackError));
+                },
+            });
+        } else {
+            runProfile();
+        }
     };
 
     return (
@@ -118,6 +200,24 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
                     onSubmit();
                 }}
             >
+                <div className="flex flex-col gap-1.5">
+                    <Label
+                        htmlFor="displayName"
+                        className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground"
+                    >
+                        Display name
+                    </Label>
+                    <Input
+                        id="displayName"
+                        name="displayName"
+                        value={displayName}
+                        onChange={(e) => { setDisplayName(e.target.value); setSaved(false); }}
+                        autoComplete="nickname"
+                        maxLength={32}
+                        required
+                    />
+                </div>
+
                 <div className="flex flex-col gap-1.5">
                     <Label
                         htmlFor="firstName"

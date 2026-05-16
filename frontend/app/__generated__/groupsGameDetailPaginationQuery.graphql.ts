@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7a719f4c8e00d0e39398b2fa805a5e5d>>
+ * @generated SignedSource<<98958c656ab14a84fd76952ff33eb410>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -207,14 +207,7 @@ return {
                                 "alias": null,
                                 "args": null,
                                 "kind": "ScalarField",
-                                "name": "firstName",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "lastName",
+                                "name": "displayName",
                                 "storageKey": null
                               }
                             ],
@@ -281,16 +274,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4993a3e5a5d0bd96639f39b7391a343a",
+    "cacheID": "5547f778ce1da51e5a403512fa741da6",
     "id": null,
     "metadata": {},
     "name": "groupsGameDetailPaginationQuery",
     "operationKind": "query",
-    "text": "query groupsGameDetailPaginationQuery(\n  $after: String\n  $first: Int = 25\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...groupsGameDetail_game_2HEEH6\n    id\n  }\n}\n\nfragment groupsGameDetail_game_2HEEH6 on Game {\n  trophies(first: $first, after: $after) {\n    totalCount\n    edges {\n      node {\n        id\n        isAwarded\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          firstName\n          lastName\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n"
+    "text": "query groupsGameDetailPaginationQuery(\n  $after: String\n  $first: Int = 25\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...groupsGameDetail_game_2HEEH6\n    id\n  }\n}\n\nfragment groupsGameDetail_game_2HEEH6 on Game {\n  trophies(first: $first, after: $after) {\n    totalCount\n    edges {\n      node {\n        id\n        isAwarded\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          displayName\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d7a0bcf401b7862bba5281e3c209074c";
+(node as any).hash = "8d89384469c3a6cbb6eadf8d19d8ab8b";
 
 export default node;

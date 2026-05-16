@@ -54,8 +54,7 @@ const GroupGameDetailTrophiesFragment = graphql`
                     }
                     receiver {
                         id
-                        firstName
-                        lastName
+                        displayName
                     }
                 }
             }
@@ -168,8 +167,7 @@ function TrophyHistory({ game }: { game: groupsGameDetail_game$key }) {
                                 <span aria-hidden className="mr-2">
                                     ▸
                                 </span>
-                                awarded to {trophy.receiver?.firstName}{" "}
-                                {trophy.receiver?.lastName}
+                                awarded to {trophy.receiver?.displayName ?? "—"}
                             </p>
                         </div>
                         {!trophy.isAwarded ? (

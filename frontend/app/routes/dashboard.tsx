@@ -2,7 +2,6 @@ import { graphql, usePreloadedQuery, loadQuery } from "react-relay";
 import { Link } from "react-router";
 import type { dashboardQuery } from "@/__generated__/dashboardQuery.graphql";
 import { Breadcrumb } from "@/components/Breadcrumb";
-import { PersonName } from "@/components/PersonName";
 import { Button } from "@/components/ui/button";
 import { getRelayEnvironment } from "@/relay/environment";
 import type { Route } from "./+types/dashboard";
@@ -11,7 +10,7 @@ const DashboardQuery = graphql`
     query dashboardQuery {
         me {
             id
-            firstName
+            displayName
         }
     }
 `;
@@ -49,11 +48,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
 
             <h1 className="mt-6 font-heading text-4xl font-medium leading-tight tracking-[0.015em] text-foreground sm:text-5xl">
                 Welcome back,{" "}
-                <PersonName
-                    firstName={data.me?.firstName}
-                    fallback="champion"
-                    className="text-medal-gold"
-                />
+                <span className="text-medal-gold">{data.me?.displayName ?? "champion"}</span>
                 .
             </h1>
             <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-muted-foreground">

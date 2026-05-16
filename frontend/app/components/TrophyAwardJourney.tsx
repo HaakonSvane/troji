@@ -9,7 +9,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { MedalBadge } from "@/components/MedalBadge";
 import { UserAvatar } from "@/components/UserAvatar";
-import { PersonName, formatPersonName } from "@/components/PersonName";
 import { cn } from "@/lib/utils";
 import {
     getMutationErrorMessage,
@@ -35,8 +34,7 @@ const CreateTrophyRequestMutation = graphql`
                 }
                 receiver {
                     id
-                    firstName
-                    lastName
+                    displayName
                 }
             }
             query {
@@ -46,9 +44,7 @@ const CreateTrophyRequestMutation = graphql`
                     topPerformer {
                         user {
                             id
-                            firstName
-                            middleName
-                            lastName
+                            displayName
                         }
                         awardCount
                     }
@@ -68,8 +64,7 @@ type Step = "game" | "recipient" | "comment" | "success";
 
 interface Member {
     id: string;
-    firstName?: string | null;
-    lastName?: string | null;
+    displayName: string;
 }
 
 interface AvailableGame {
@@ -393,8 +388,7 @@ function Breadcrumb({
                     className="inline-flex rounded-full"
                 >
                     <UserAvatar
-                        firstName={member!.firstName}
-                        lastName={member!.lastName}
+                        displayName={member!.displayName}
                         size={isSuccess ? "lg" : "sm"}
                     />
                 </motion.span>
@@ -523,8 +517,7 @@ function RecipientStep({
                     className="inline-flex rounded-full"
                 >
                     <UserAvatar
-                        firstName={selectedMember?.firstName}
-                        lastName={selectedMember?.lastName}
+                        displayName={selectedMember?.displayName}
                         size="lg"
                     />
                 </motion.span>
@@ -542,12 +535,8 @@ function RecipientStep({
                     className="space-y-1.5"
                 >
                     {members.map((m) => {
-                        const fallback = formatPersonName({
-                            firstName: m.firstName,
-                            lastName: m.lastName,
-                            fallback: m.id,
-                        });
                         const isSelected = m.id === selectedUserId;
+                        const isSelf = m.id === currentUserId;
                         return (
                             <button
                                 key={m.id}
@@ -559,18 +548,13 @@ function RecipientStep({
                                 onClick={() => onPick(m.id)}
                                 className={cn(radioOptionClass, "w-full")}
                             >
-                                <UserAvatar
-                                    firstName={m.firstName}
-                                    lastName={m.lastName}
-                                    size="sm"
-                                />
-                                <PersonName
-                                    firstName={m.firstName}
-                                    lastName={m.lastName}
-                                    isSelf={m.id === currentUserId}
-                                    fallback={fallback}
-                                    className="font-sans text-sm"
-                                />
+                                <UserAvatar displayName={m.displayName} size="sm" />
+                                <span className="inline-flex items-baseline gap-1 font-sans text-sm">
+                                    <span>{m.displayName}</span>
+                                    {isSelf ? (
+                                        <span className="text-muted-foreground">(you)</span>
+                                    ) : null}
+                                </span>
                             </button>
                         );
                     })}
@@ -621,13 +605,12 @@ function SuccessStep({
                     <span className="mr-1">{game.symbol}</span>
                     <span className="font-medium text-foreground/90">{game.name}</span>
                     <span className="mx-1.5 text-muted-foreground">to</span>
-                    <PersonName
-                        firstName={member.firstName}
-                        lastName={member.lastName}
-                        isSelf={member.id === currentUserId}
-                        fallback={member.id}
-                        className="font-medium text-foreground/90"
-                    />
+                    <span className="inline-flex items-baseline gap-1 font-medium text-foreground/90">
+                        <span>{member.displayName}</span>
+                        {member.id === currentUserId ? (
+                            <span className="text-muted-foreground">(you)</span>
+                        ) : null}
+                    </span>
                 </p>
             )}
         </div>

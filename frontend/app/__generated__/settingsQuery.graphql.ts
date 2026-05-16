@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<355cfe4b19e9893f07df0d7ebf7562d7>>
+ * @generated SignedSource<<c00c4f726a2fc396ade8ce9a10157d11>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,10 +12,13 @@ import { ConcreteRequest } from 'relay-runtime';
 export type settingsQuery$variables = Record<PropertyKey, never>;
 export type settingsQuery$data = {
   readonly me: {
-    readonly firstName: string;
+    readonly displayName: string;
     readonly id: string;
-    readonly lastName: string;
-    readonly middleName: string | null | undefined;
+    readonly profile: {
+      readonly firstName: string;
+      readonly lastName: string;
+      readonly middleName: string | null | undefined;
+    };
   };
 };
 export type settingsQuery = {
@@ -44,21 +47,39 @@ var v0 = [
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "firstName",
+        "name": "displayName",
         "storageKey": null
       },
       {
         "alias": null,
         "args": null,
-        "kind": "ScalarField",
-        "name": "middleName",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "lastName",
+        "concreteType": "UserProfile",
+        "kind": "LinkedField",
+        "name": "profile",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "firstName",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "middleName",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "lastName",
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       }
     ],
@@ -83,16 +104,16 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "cacheID": "e12b029b623230a221497d4e38da74b6",
+    "cacheID": "5a658ab619ebcbb55431314dc994efe1",
     "id": null,
     "metadata": {},
     "name": "settingsQuery",
     "operationKind": "query",
-    "text": "query settingsQuery {\n  me {\n    id\n    firstName\n    middleName\n    lastName\n  }\n}\n"
+    "text": "query settingsQuery {\n  me {\n    id\n    displayName\n    profile {\n      firstName\n      middleName\n      lastName\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "834013f0ea2c0def5400d792dce830da";
+(node as any).hash = "d90ba7bd2ccc83197d6f2ed2322d1172";
 
 export default node;
