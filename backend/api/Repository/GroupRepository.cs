@@ -138,6 +138,60 @@ public sealed class GroupRepository : IGroupRepository
         return group;
     }
 
+    public async Task<Group> UpdateGroupAsync(
+        Group group,
+        string name,
+        string? description,
+        CancellationToken cancellationToken)
+    {
+        var tracked = await _context.Groups
+            .Include(g => g.Admin)
+            .SingleAsync(g => g.Id == group.Id, cancellationToken);
+
+        tracked.Name = name.Trim();
+        var trimmedDescription = description?.Trim();
+        tracked.Description = string.IsNullOrEmpty(trimmedDescription) ? null : trimmedDescription;
+        await _context.SaveChangesAsync(cancellationToken);
+        return tracked;
+    }
+
+    public async Task<Group> TransferAdminAsync(
+        Group group,
+        string newAdminId,
+        CancellationToken cancellationToken)
+    {
+        var isMember = await _context.UserGroups
+            .AnyAsync(ug => ug.GroupId == group.Id && ug.UserId == newAdminId, cancellationToken);
+        if (!isMember)
+        {
+            throw new NoMemberException(newAdminId, group.Id.ToString());
+        }
+
+        var tracked = await _context.Groups
+            .SingleAsync(g => g.Id == group.Id, cancellationToken);
+        tracked.AdminId = newAdminId;
+        await _context.SaveChangesAsync(cancellationToken);
+
+        await _context.Entry(tracked).Reference(g => g.Admin).LoadAsync(cancellationToken);
+        return tracked;
+    }
+
+    public async Task<IReadOnlyList<string>> DeleteGroupAsync(
+        Group group,
+        CancellationToken cancellationToken)
+    {
+        var memberIds = await _context.UserGroups
+            .Where(ug => ug.GroupId == group.Id)
+            .Select(ug => ug.UserId)
+            .ToListAsync(cancellationToken);
+
+        var tracked = await _context.Groups
+            .SingleAsync(g => g.Id == group.Id, cancellationToken);
+        _context.Groups.Remove(tracked);
+        await _context.SaveChangesAsync(cancellationToken);
+        return memberIds;
+    }
+
     public async Task<int> GetRecentActivityCountAsync(int groupId, CancellationToken cancellationToken)
     {
         var awards = await _context.Trophies
