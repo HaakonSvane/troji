@@ -1,5 +1,19 @@
 # Changelog
 
+## Version 0.6.0, released 2026-05-17
+
+
+### New features
+
+* **group-admin:** admins can edit, transfer, and delete circles ([#56](https://github.com/HaakonSvane/troji/issues/56)) ([84bc1c4](https://github.com/HaakonSvane/troji/commit/84bc1c457e69ff61925d4cc2a656cee5d68f634a))
+* **group-image:** any member can upload or clear ([0ee0080](https://github.com/HaakonSvane/troji/commit/0ee00803b55a291c38670734f89d3edb22553b7d))
+* image uploads, snake_case schema, avatar primitive ([#57](https://github.com/HaakonSvane/troji/issues/57)) ([6e29a0f](https://github.com/HaakonSvane/troji/commit/6e29a0f3e0cbed8aa151aba7f99442138ac479a1))
+
+
+### Bug fixes
+
+* **images:** require signing key at startup ([5cc0481](https://github.com/HaakonSvane/troji/commit/5cc0481e14d0cf1ffbaa433f16564013245e1716))
+
 ## Version 0.5.0, released 2026-05-16
 
 

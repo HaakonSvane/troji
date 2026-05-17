@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.10.0](https://github.com/HaakonSvane/troji/compare/frontend-v0.9.0...frontend-v0.10.0) (2026-05-17)
+
+
+### Features
+
+* **avatar:** gold ring outline, loading skeleton, and reset on clear ([53e326f](https://github.com/HaakonSvane/troji/commit/53e326f3b3f247dadaaf4e768c5ffbf64a54f4ac))
+* **group-admin:** admins can edit, transfer, and delete circles ([#56](https://github.com/HaakonSvane/troji/issues/56)) ([84bc1c4](https://github.com/HaakonSvane/troji/commit/84bc1c457e69ff61925d4cc2a656cee5d68f634a))
+* **group-hero:** circular image, member-editable in drawer ([4545df7](https://github.com/HaakonSvane/troji/commit/4545df7f456eee3f5679e669733eef84302860a4))
+* **group-image:** any member can upload or clear ([0ee0080](https://github.com/HaakonSvane/troji/commit/0ee00803b55a291c38670734f89d3edb22553b7d))
+* **groups-list:** redesign cards with member avatar stack ([bf89db8](https://github.com/HaakonSvane/troji/commit/bf89db8d2827ad5377d925f22fa934761abc3c54))
+* image uploads, snake_case schema, avatar primitive ([#57](https://github.com/HaakonSvane/troji/issues/57)) ([6e29a0f](https://github.com/HaakonSvane/troji/commit/6e29a0f3e0cbed8aa151aba7f99442138ac479a1))
+* **image-upload-field:** shared compound primitive for image uploads ([8fb81c2](https://github.com/HaakonSvane/troji/commit/8fb81c23a717dfcd269b854be499500033386cb3))
+* **settings:** smoother avatar upload and confirm before remove ([a5166e4](https://github.com/HaakonSvane/troji/commit/a5166e44744b6be680637f6addaf5f15b0573b7c))
+* **top-performer:** emphasize group leader with gold-toned card ([07fe6ae](https://github.com/HaakonSvane/troji/commit/07fe6ae2a0e900664a852507f96caa263f88b9cd))
+
 ## [0.9.0](https://github.com/HaakonSvane/troji/compare/frontend-v0.8.0...frontend-v0.9.0) (2026-05-16)
 
 
