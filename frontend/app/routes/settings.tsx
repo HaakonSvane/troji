@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "@clerk/react-router";
 import {
     fetchQuery,
@@ -13,7 +13,10 @@ import type { settingsDisplayNameMutation } from "@/__generated__/settingsDispla
 import type { settingsProfileMutation } from "@/__generated__/settingsProfileMutation.graphql";
 import type { settingsClearAvatarMutation } from "@/__generated__/settingsClearAvatarMutation.graphql";
 import { Breadcrumb } from "@/components/Breadcrumb";
-import { DrawerDialog } from "@/components/DrawerDialog";
+import {
+    ImageUploadField,
+    useImageUploadFieldStatus,
+} from "@/components/ImageUploadField";
 import { UserAvatar } from "@/components/UserAvatar";
 import { getRelayEnvironment } from "@/relay/environment";
 import {
@@ -24,7 +27,8 @@ import {
     getMutationErrorMessage,
     getMutationNetworkErrorMessage,
 } from "@/lib/relay/mutationErrors";
-import { uploadAvatar, UploadImageError } from "@/lib/uploadImage";
+import { uploadAvatar } from "@/lib/uploadImage";
+import { preloadImage } from "@/lib/preloadImage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -137,43 +141,34 @@ interface AvatarFieldProps {
     avatarUrl: string | null | undefined;
 }
 
-function preloadImage(url: string): Promise<void> {
-    return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => resolve();
-        img.onerror = () => resolve();
-        img.src = url;
-    });
+function AvatarDisplay({
+    displayName,
+    avatarUrl,
+}: {
+    displayName: string;
+    avatarUrl: string | null | undefined;
+}) {
+    const { busy } = useImageUploadFieldStatus();
+    return (
+        <UserAvatar
+            displayName={displayName}
+            avatarUrl={avatarUrl}
+            size="lg"
+            loading={busy}
+        />
+    );
 }
 
 function AvatarField({ displayName, avatarUrl }: AvatarFieldProps) {
     const { getToken } = useAuth();
     const environment = useRelayEnvironment();
-    const inputRef = useRef<HTMLInputElement>(null);
-    const [busy, setBusy] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [removeConfirmOpen, setRemoveConfirmOpen] = useState(false);
-
-    const [commitClear, clearing] =
+    const [commitClear] =
         useMutation<settingsClearAvatarMutation>(ClearAvatarMutation);
 
     const hasImage = avatarUrl != null;
 
-    const handleFile = async (file: File) => {
-        setError(null);
-        setBusy(true);
-        try {
-            await uploadAvatar(file, () => getToken());
-        } catch (err) {
-            setError(
-                err instanceof UploadImageError
-                    ? err.message
-                    : "Upload failed. Please try again."
-            );
-            setBusy(false);
-            return;
-        }
-
+    const handleUpload = async (file: File) => {
+        await uploadAvatar(file, () => getToken());
         // Refetch the canonical signed URL, then preload it into the browser
         // cache so the skeleton can flip straight to the rendered image
         // without Radix's fallback initials flashing in between.
@@ -189,131 +184,66 @@ function AvatarField({ displayName, avatarUrl }: AvatarFieldProps) {
             }
         } catch (err) {
             console.error("Avatar refetch failed after successful upload", err);
-        } finally {
-            setBusy(false);
         }
     };
 
-    const handleConfirmRemove = () => {
-        setError(null);
-        commitClear({
-            variables: {},
-            onCompleted: (response) => {
-                const payload = response.clearUserAvatar;
-                if (!payload?.user) {
-                    setError(
-                        getMutationErrorMessage(
-                            payload?.errors,
-                            "Could not remove avatar."
+    const handleRemove = () =>
+        new Promise<void>((resolve, reject) => {
+            commitClear({
+                variables: {},
+                onCompleted: (response) => {
+                    const payload = response.clearUserAvatar;
+                    if (!payload?.user) {
+                        reject(
+                            new Error(
+                                getMutationErrorMessage(
+                                    payload?.errors,
+                                    "Could not remove avatar."
+                                )
+                            )
+                        );
+                        return;
+                    }
+                    resolve();
+                },
+                onError: (err) => {
+                    reject(
+                        new Error(
+                            getMutationNetworkErrorMessage(err, "Could not remove avatar.")
                         )
                     );
-                    return;
-                }
-                setRemoveConfirmOpen(false);
-            },
-            onError: (err) => {
-                setError(getMutationNetworkErrorMessage(err, "Could not remove avatar."));
-            },
+                },
+            });
         });
-    };
 
     return (
-        <div className="flex items-center gap-4">
-            <UserAvatar
-                displayName={displayName}
-                avatarUrl={avatarUrl}
-                size="lg"
-                loading={busy}
-            />
-            <div className="flex flex-col gap-2">
-                <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-                    avatar
-                </p>
-                <div className="flex flex-wrap gap-2">
-                    <input
-                        ref={inputRef}
-                        type="file"
-                        accept="image/png,image/jpeg,image/webp"
-                        hidden
-                        onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) void handleFile(file);
-                            e.target.value = "";
-                        }}
-                    />
-                    <Button
-                        type="button"
-                        variant="outline"
-                        size="terminal"
-                        disabled={busy || clearing}
-                        onClick={() => inputRef.current?.click()}
-                    >
-                        <span aria-hidden>▸</span>
-                        <span>{busy ? "uploading" : hasImage ? "change" : "upload"}</span>
-                    </Button>
-                    {hasImage ? (
-                        <Button
-                            type="button"
-                            variant="destructive"
-                            size="terminal"
-                            disabled={busy || clearing}
-                            onClick={() => {
-                                setError(null);
-                                setRemoveConfirmOpen(true);
-                            }}
-                        >
-                            <span aria-hidden>✕</span>
-                            <span>remove</span>
-                        </Button>
-                    ) : null}
-                </div>
-                {error ? (
-                    <p
-                        className="font-mono text-[11px] uppercase tracking-[0.18em] text-destructive"
-                        role="alert"
-                    >
-                        <span aria-hidden className="mr-2">!</span>
-                        {error}
+        <ImageUploadField
+            hasImage={hasImage}
+            onUpload={handleUpload}
+            onRemove={handleRemove}
+            confirmRemove={{
+                title: "Remove avatar?",
+                description:
+                    "Your initials will be shown instead. You can upload a new image any time.",
+                confirmLabel: "Remove avatar",
+            }}
+        >
+            <div className="flex items-center gap-4">
+                <ImageUploadField.Display>
+                    <AvatarDisplay displayName={displayName} avatarUrl={avatarUrl} />
+                </ImageUploadField.Display>
+                <div className="flex flex-col gap-2">
+                    <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                        avatar
                     </p>
-                ) : null}
-            </div>
-
-            <DrawerDialog
-                open={removeConfirmOpen}
-                onOpenChange={(next) => {
-                    if (clearing) return;
-                    setRemoveConfirmOpen(next);
-                    if (!next) setError(null);
-                }}
-                title="Remove avatar?"
-                description="Your initials will be shown instead. You can upload a new image any time."
-                footer={
-                    <div className="flex justify-end gap-2">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            disabled={clearing}
-                            onClick={() => setRemoveConfirmOpen(false)}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            type="button"
-                            variant="destructive"
-                            busy={clearing}
-                            disabled={clearing}
-                            onClick={handleConfirmRemove}
-                        >
-                            Remove avatar
-                        </Button>
+                    <div className="flex flex-wrap gap-2">
+                        <ImageUploadField.UploadTrigger />
+                        <ImageUploadField.RemoveTrigger />
                     </div>
-                }
-            >
-                {error ? (
-                    <p className="text-sm text-destructive">{error}</p>
-                ) : null}
-            </DrawerDialog>
-        </div>
+                    <ImageUploadField.Error />
+                </div>
+            </div>
+        </ImageUploadField>
     );
 }
 
