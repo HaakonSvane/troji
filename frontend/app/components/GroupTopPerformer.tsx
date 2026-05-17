@@ -1,4 +1,5 @@
 import { DisplayName } from "@/components/DisplayName";
+import { SurfaceCard } from "@/components/ui/surface-card";
 import { UserAvatar } from "@/components/UserAvatar";
 
 interface TopPerformerUser {
@@ -27,12 +28,20 @@ export function GroupTopPerformer({
 }: GroupTopPerformerProps) {
     return (
         <section className={"flex flex-col gap-4 " + (className ?? "")}>
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-                <span className="text-medal-gold">$</span>
+            <h2
+                className={
+                    "font-mono text-[11px] uppercase tracking-[0.22em] " +
+                    (user ? "text-medal-gold" : "text-muted-foreground")
+                }
+            >
+                <span className={user ? undefined : "text-medal-gold"}>$</span>
                 <span className="ml-2">top performer</span>
             </h2>
 
-            <div className="surface-card flex flex-1 flex-col gap-4 p-5 sm:p-6">
+            <SurfaceCard
+                tone={user ? "gold" : "default"}
+                className="flex flex-1 flex-col gap-4 p-5 sm:p-6"
+            >
             {user ? (
                 <div className="flex flex-1 items-center gap-4">
                     <UserAvatar
@@ -70,7 +79,7 @@ export function GroupTopPerformer({
                     </p>
                 </div>
             )}
-            </div>
+            </SurfaceCard>
         </section>
     );
 }

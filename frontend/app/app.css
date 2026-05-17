@@ -181,6 +181,10 @@ body {
         @apply rounded-md border border-border bg-surface text-card-foreground;
     }
 
+    .surface-card-gold {
+        @apply rounded-md border border-medal-gold/40 bg-medal-gold/8 text-card-foreground;
+    }
+
     .surface-card-interactive {
         @apply transition-colors hover:border-medal-gold/40;
     }
