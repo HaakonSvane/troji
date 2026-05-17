@@ -15,6 +15,8 @@ public record GroupTopPerformer(User User, int AwardCount);
 [ExtendObjectType(typeof(Database.Models.Group))]
 public static class GroupNode
 {
+    public static int GetDatabaseId([Parent] Database.Models.Group group) => group.Id;
+
     public static string? GetImageUrl(int size, [Parent] Database.Models.Group group, [Service] IImageService images)
     {
         if (group.ImageId is null)

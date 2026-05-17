@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using api.API.Errors;
 using api.Database;
+using api.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -103,6 +104,7 @@ public static class ImageEndpoints
         IFormFile file,
         IImageService images,
         TrophyDbContext db,
+        IGroupRepository groupRepository,
         HttpContext context,
         CancellationToken cancellationToken)
     {
@@ -117,9 +119,10 @@ public static class ImageEndpoints
         {
             return Results.Json(new { code = "GroupNotFoundError" }, statusCode: StatusCodes.Status404NotFound);
         }
-        if (group.AdminId != userId)
+        var isMember = await groupRepository.IsMemberAsync(groupId, userId, cancellationToken);
+        if (!isMember)
         {
-            return Results.Json(new { code = "NoAdminError" }, statusCode: StatusCodes.Status403Forbidden);
+            return Results.Json(new { code = "NoMemberError" }, statusCode: StatusCodes.Status403Forbidden);
         }
 
         string newImageId;

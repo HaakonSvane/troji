@@ -98,12 +98,13 @@ public static class GroupMutations
 
     [Error<NoUserException>]
     [Error<GroupNotFoundException>]
-    [Error<NoAdminException>]
+    [Error<NoMemberException>]
     public static async Task<Database.Models.Group> ClearGroupImageAsync(
         [TokenUser] TokenUser? tokenUser,
         [ID] int groupId,
         [Service] TrophyDbContext db,
         [Service] IImageService images,
+        [Service] IGroupRepository groupRepository,
         [Service] INodeIdSerializer serializer,
         CancellationToken cancellationToken)
     {
@@ -117,9 +118,12 @@ public static class GroupMutations
         {
             throw new GroupNotFoundException(serializer.Format("Group", groupId));
         }
-        if (group.AdminId != tokenUser.Id)
+        var isMember = await groupRepository.IsMemberAsync(groupId, tokenUser.Id, cancellationToken);
+        if (!isMember)
         {
-            throw new NoAdminException();
+            throw new NoMemberException(
+                serializer.Format("User", tokenUser.Id),
+                serializer.Format("Group", groupId));
         }
 
         var oldImageId = group.ImageId;
