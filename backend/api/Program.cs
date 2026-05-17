@@ -98,7 +98,17 @@ public class Program
             .AddScoped<IGroupRepository, GroupRepository>()
             .AddScoped<IGameRepository, GameRepository>();
 
-        builder.Services.Configure<ImageOptions>(config.GetSection(ImageOptions.SectionName));
+        var imageOptionsBuilder = builder.Services
+            .AddOptions<ImageOptions>()
+            .Bind(config.GetSection(ImageOptions.SectionName));
+        if (!isSchemaExport)
+        {
+            imageOptionsBuilder
+                .Validate(
+                    o => !string.IsNullOrWhiteSpace(o.UrlSigningKey),
+                    "Images:UrlSigningKey must be set (env: Images__UrlSigningKey).")
+                .ValidateOnStart();
+        }
         builder.Services.AddSingleton<IImageService, ImageService>();
 
         builder.Services.Configure<FormOptions>(options =>
