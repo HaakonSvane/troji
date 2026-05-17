@@ -70,6 +70,8 @@ API/Errors/
  GroupNotFoundException.cs
  InvalidDisplayNameException.cs
  InvalidGroupNameException.cs
+ InvalidImageException.cs
+ InvalidImageSizeException.cs
  InvalidUserNameException.cs
  InviteExpiredException.cs
  InviteResetTooSoonException.cs
@@ -110,6 +112,11 @@ Database/Models/
 Database/
  Seeder.cs
  TrophyDbContext.cs
+Images/
+ IImageService.cs
+ ImageEndpoints.cs
+ ImageOptions.cs
+ ImageService.cs
 Migrations/
  20230812221101_initial.cs
  20230812221101_initial.Designer.cs
@@ -163,6 +170,8 @@ Migrations/
  20260509072738_UniqueGameEmojiPerGroup.Designer.cs
  20260516055944_AddDisplayName.cs
  20260516055944_AddDisplayName.Designer.cs
+ 20260516144022_SnakeCaseNamingConvention.cs
+ 20260516144022_SnakeCaseNamingConvention.Designer.cs
  TrophyDbContextModelSnapshot.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
@@ -498,6 +507,7 @@ Transport/
  WindowsBase.dll
 <NUGET>/
  chillicream.nitro.app/30.0.2/lib/net10.0/ChilliCream.Nitro.App.dll
+ efcore.namingconventions/10.0.1/lib/net10.0/EFCore.NamingConventions.dll
  flexlabs.entityframeworkcore.upsert/10.0.0/lib/net10.0/FlexLabs.EntityFrameworkCore.Upsert.dll
  greendonut.abstractions/16.1.0-p.1.2/lib/net10.0/GreenDonut.Abstractions.dll
  greendonut.data.abstractions/16.1.0-p.1.2/lib/net10.0/GreenDonut.Data.Abstractions.dll
@@ -564,6 +574,7 @@ Transport/
  npgsql.entityframeworkcore.postgresql/10.0.1/lib/net10.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
  npgsql/10.0.2/lib/net10.0/Npgsql.dll
  shortid/4.0.0/lib/netstandard1.0/shortid.dll
+ skiasharp/3.116.0/ref/net8.0/SkiaSharp.dll
  system.commandline/2.0.5/lib/net8.0/System.CommandLine.dll
  system.identitymodel.tokens.jwt/8.0.1/lib/net9.0/System.IdentityModel.Tokens.Jwt.dll
  system.io.hashing/8.0.0/lib/net8.0/System.IO.Hashing.dll

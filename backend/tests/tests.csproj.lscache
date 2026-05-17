@@ -61,6 +61,7 @@ Integration/
  GameIntegrationTests.cs
  GraphQLHelpers.cs
  GroupIntegrationTests.cs
+ ImagesIntegrationTests.cs
  TestDataBuilder.cs
  TrophyWebAppFactory.cs
  UserIntegrationTests.cs
@@ -358,6 +359,7 @@ Usings.cs
  chillicream.nitro.app/30.0.2/lib/net10.0/ChilliCream.Nitro.App.dll
  docker.dotnet.enhanced.x509/3.126.1/lib/net9.0/Docker.DotNet.X509.dll
  docker.dotnet.enhanced/3.126.1/lib/net9.0/Docker.DotNet.dll
+ efcore.namingconventions/10.0.1/lib/net10.0/EFCore.NamingConventions.dll
  flexlabs.entityframeworkcore.upsert/10.0.0/lib/net10.0/FlexLabs.EntityFrameworkCore.Upsert.dll
  greendonut.abstractions/16.1.0-p.1.2/lib/net10.0/GreenDonut.Abstractions.dll
  greendonut.data.abstractions/16.1.0-p.1.2/lib/net10.0/GreenDonut.Data.Abstractions.dll
@@ -473,6 +475,7 @@ Usings.cs
   nunit.framework.legacy.dll
  sharpziplib/1.4.2/lib/net6.0/ICSharpCode.SharpZipLib.dll
  shortid/4.0.0/lib/netstandard1.0/shortid.dll
+ skiasharp/3.116.0/ref/net8.0/SkiaSharp.dll
  snapper.nunit/2.4.1/lib/netstandard2.0/Snapper.Nunit.dll
  snapper/2.4.1/lib/netstandard2.0/Snapper.dll
  ssh.net/2024.2.0/lib/net8.0/Renci.SshNet.dll
