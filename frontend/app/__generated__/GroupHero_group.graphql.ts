@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5ea493a5a6adb4103db6daeeda36a587>>
+ * @generated SignedSource<<f0a7a18ca00303b9ab1daea0bdcca2e7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,7 @@ export type GroupHero_group$data = {
     readonly id: string;
   } | null | undefined;
   readonly createdDate: any;
+  readonly databaseId: number;
   readonly description: string | null | undefined;
   readonly id: string;
   readonly imageUrl: string | null | undefined;
@@ -60,6 +61,13 @@ return {
   "name": "GroupHero_group",
   "selections": [
     (v0/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "databaseId",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -148,6 +156,6 @@ return {
 };
 })();
 
-(node as any).hash = "f0e749f1e54c5aaf2eca7d36bf44c49e";
+(node as any).hash = "cfeefdff70091f15ba83de3330ada97c";
 
 export default node;
