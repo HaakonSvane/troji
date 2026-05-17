@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<af9c4829f29c7e1ddcee9e15596bd24e>>
+ * @generated SignedSource<<530df58f451db1f1167993492c6f75d3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -215,12 +215,79 @@ return {
                           {
                             "kind": "Literal",
                             "name": "size",
-                            "value": 128
+                            "value": 256
                           }
                         ],
                         "kind": "ScalarField",
                         "name": "imageUrl",
-                        "storageKey": "imageUrl(size:128)"
+                        "storageKey": "imageUrl(size:256)"
+                      },
+                      {
+                        "alias": null,
+                        "args": [
+                          {
+                            "kind": "Literal",
+                            "name": "first",
+                            "value": 4
+                          }
+                        ],
+                        "concreteType": "MembersConnection",
+                        "kind": "LinkedField",
+                        "name": "members",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "totalCount",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "MembersEdge",
+                            "kind": "LinkedField",
+                            "name": "edges",
+                            "plural": true,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "User",
+                                "kind": "LinkedField",
+                                "name": "node",
+                                "plural": false,
+                                "selections": [
+                                  (v0/*: any*/),
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "displayName",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": [
+                                      {
+                                        "kind": "Literal",
+                                        "name": "size",
+                                        "value": 64
+                                      }
+                                    ],
+                                    "kind": "ScalarField",
+                                    "name": "avatarUrl",
+                                    "storageKey": "avatarUrl(size:64)"
+                                  }
+                                ],
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          }
+                        ],
+                        "storageKey": "members(first:4)"
                       },
                       (v1/*: any*/)
                     ],
@@ -249,7 +316,7 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c662652a301d4205605258023009be72",
+    "cacheID": "8051f6c653272fc115e39581212a34b8",
     "id": null,
     "metadata": {
       "connection": [
@@ -266,7 +333,7 @@ return {
     },
     "name": "groupsPageQuery",
     "operationKind": "query",
-    "text": "query groupsPageQuery {\n  me {\n    id\n    groups(first: 24, order: {createdDate: DESC}) {\n      edges {\n        node {\n          id\n          ...GroupBox_group\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n  }\n}\n\nfragment GroupBox_group on Group {\n  id\n  name\n  description\n  imageUrl(size: 128)\n}\n"
+    "text": "query groupsPageQuery {\n  me {\n    id\n    groups(first: 24, order: {createdDate: DESC}) {\n      edges {\n        node {\n          id\n          ...GroupBox_group\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n  }\n}\n\nfragment GroupBox_group on Group {\n  id\n  name\n  description\n  imageUrl(size: 256)\n  members(first: 4) {\n    totalCount\n    edges {\n      node {\n        id\n        ...UserAvatarStack_users\n      }\n    }\n  }\n}\n\nfragment UserAvatarStack_users on User {\n  id\n  displayName\n  avatarUrl(size: 64)\n}\n"
   }
 };
 })();

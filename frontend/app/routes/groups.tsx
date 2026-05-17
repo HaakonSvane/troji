@@ -134,7 +134,10 @@ export default function Groups({ loaderData }: Route.ComponentProps) {
                                     to={`/groups/${edge.node.id}`}
                                     className="group"
                                 >
-                                    <GroupBox group={edge.node} />
+                                    <GroupBox
+                                        group={edge.node}
+                                        currentUserId={data.me?.id}
+                                    />
                                 </Link>
                             );
                         })}

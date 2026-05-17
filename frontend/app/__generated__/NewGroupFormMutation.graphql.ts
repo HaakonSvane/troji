@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<47a2f8339a9a2d1ab32b915334526d0a>>
+ * @generated SignedSource<<930ad48d0a4a0c57fff7ade78a107bbe>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -184,12 +184,79 @@ return {
                   {
                     "kind": "Literal",
                     "name": "size",
-                    "value": 128
+                    "value": 256
                   }
                 ],
                 "kind": "ScalarField",
                 "name": "imageUrl",
-                "storageKey": "imageUrl(size:128)"
+                "storageKey": "imageUrl(size:256)"
+              },
+              {
+                "alias": null,
+                "args": [
+                  {
+                    "kind": "Literal",
+                    "name": "first",
+                    "value": 4
+                  }
+                ],
+                "concreteType": "MembersConnection",
+                "kind": "LinkedField",
+                "name": "members",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "totalCount",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "MembersEdge",
+                    "kind": "LinkedField",
+                    "name": "edges",
+                    "plural": true,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "User",
+                        "kind": "LinkedField",
+                        "name": "node",
+                        "plural": false,
+                        "selections": [
+                          (v3/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "displayName",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": [
+                              {
+                                "kind": "Literal",
+                                "name": "size",
+                                "value": 64
+                              }
+                            ],
+                            "kind": "ScalarField",
+                            "name": "avatarUrl",
+                            "storageKey": "avatarUrl(size:64)"
+                          }
+                        ],
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": "members(first:4)"
               }
             ],
             "storageKey": null
@@ -222,12 +289,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7f80b055271971739cdf121515632a25",
+    "cacheID": "31541bb7e8a10fdc6f57b17d47b7a861",
     "id": null,
     "metadata": {},
     "name": "NewGroupFormMutation",
     "operationKind": "mutation",
-    "text": "mutation NewGroupFormMutation(\n  $input: CreateGroupInput!\n) {\n  createGroup(input: $input) {\n    group {\n      id\n      name\n      ...GroupBox_group\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n\nfragment GroupBox_group on Group {\n  id\n  name\n  description\n  imageUrl(size: 128)\n}\n"
+    "text": "mutation NewGroupFormMutation(\n  $input: CreateGroupInput!\n) {\n  createGroup(input: $input) {\n    group {\n      id\n      name\n      ...GroupBox_group\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n\nfragment GroupBox_group on Group {\n  id\n  name\n  description\n  imageUrl(size: 256)\n  members(first: 4) {\n    totalCount\n    edges {\n      node {\n        id\n        ...UserAvatarStack_users\n      }\n    }\n  }\n}\n\nfragment UserAvatarStack_users on User {\n  id\n  displayName\n  avatarUrl(size: 64)\n}\n"
   }
 };
 })();
