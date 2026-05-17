@@ -41,7 +41,7 @@ function UserMenuContent({ queryRef }: UserMenuContentProps) {
                 <button
                     type="button"
                     aria-label="Open user menu"
-                    className="cursor-pointer rounded-full font-mono transition-opacity hover:opacity-70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-medal-gold/50"
+                    className="inline-flex cursor-pointer items-center justify-center rounded-full font-mono transition-opacity hover:opacity-70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-medal-gold/50"
                 >
                     <UserAvatar
                         displayName={displayName}

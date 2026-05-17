@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { initialsFromDisplayName } from "@/lib/format/names";
 import { cn } from "@/lib/utils";
 
@@ -17,6 +18,7 @@ interface UserAvatarProps {
     size?: UserAvatarSize;
     className?: string;
     title?: string;
+    loading?: boolean;
 }
 
 export function UserAvatar({
@@ -25,13 +27,28 @@ export function UserAvatar({
     size = "sm",
     className,
     title,
+    loading,
 }: UserAvatarProps) {
+    if (loading) {
+        return (
+            <Skeleton
+                title={title}
+                className={cn(
+                    "rounded-full ring-1 ring-medal-gold/30",
+                    sizeClass[size],
+                    className
+                )}
+            />
+        );
+    }
+
     const initials = initialsFromDisplayName(displayName);
     return (
         <Avatar
+            key={avatarUrl ? "with-image" : "no-image"}
             title={title}
             className={cn(
-                "border border-medal-gold/30 bg-surface-muted font-medium text-foreground/85",
+                "bg-surface-muted font-medium text-foreground/85 ring-1 ring-medal-gold/30",
                 sizeClass[size],
                 className
             )}
