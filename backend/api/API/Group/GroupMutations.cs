@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.API.Group;
 
+public sealed record DeletedGroupPayload([property: ID(nameof(Database.Models.Group))] int DeletedId);
+
 [MutationType]
 public static class GroupMutations
 {
@@ -162,5 +164,136 @@ public static class GroupMutations
             DecisionModel = api.Database.Models.Group.RuleType.Open,
         };
         return await groupRepository.CreateGroupAsync(tokenUser.Id, group, cancellationToken);
+    }
+
+    [Error<NoUserException>]
+    [Error<GroupNotFoundException>]
+    [Error<NoAdminException>]
+    [Error<InvalidGroupNameException>]
+    public static async Task<Database.Models.Group> UpdateGroupAsync(
+        [TokenUser] TokenUser? tokenUser,
+        [ID(nameof(Database.Models.Group))] int groupId,
+        string name,
+        string? description,
+        IGroupRepository groupRepository,
+        IGroupsByIdsDataLoader groupsByIdsDataLoader,
+        CancellationToken cancellationToken,
+        [Service] INodeIdSerializer serializer)
+    {
+        if (tokenUser is null)
+        {
+            throw new NoUserException();
+        }
+
+        var group = await groupsByIdsDataLoader.LoadAsync(groupId, cancellationToken);
+        if (group is null)
+        {
+            throw new GroupNotFoundException(serializer.Format("Group", groupId));
+        }
+        if (group.AdminId != tokenUser.Id)
+        {
+            throw new NoAdminException();
+        }
+
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new InvalidGroupNameException();
+        }
+
+        var updated = await groupRepository.UpdateGroupAsync(group, name, description, cancellationToken);
+        groupsByIdsDataLoader.RemoveCacheEntry(groupId);
+        return updated;
+    }
+
+    [Error<NoUserException>]
+    [Error<GroupNotFoundException>]
+    [Error<NoAdminException>]
+    [Error<NoMemberException>]
+    [Error<CannotTransferToSelfException>]
+    public static async Task<Database.Models.Group> TransferGroupAdminAsync(
+        [TokenUser] TokenUser? tokenUser,
+        [ID(nameof(Database.Models.Group))] int groupId,
+        [ID(nameof(Database.Models.User))] string newAdminId,
+        IGroupRepository groupRepository,
+        IGroupsByIdsDataLoader groupsByIdsDataLoader,
+        IGroupsByUserIdsDataLoader groupsByUserIdsDataLoader,
+        CancellationToken cancellationToken,
+        [Service] INodeIdSerializer serializer)
+    {
+        if (tokenUser is null)
+        {
+            throw new NoUserException();
+        }
+
+        var group = await groupsByIdsDataLoader.LoadAsync(groupId, cancellationToken);
+        if (group is null)
+        {
+            throw new GroupNotFoundException(serializer.Format("Group", groupId));
+        }
+        if (group.AdminId != tokenUser.Id)
+        {
+            throw new NoAdminException();
+        }
+        if (newAdminId == tokenUser.Id)
+        {
+            throw new CannotTransferToSelfException();
+        }
+
+        var isMember = await groupRepository.IsMemberAsync(groupId, newAdminId, cancellationToken);
+        if (!isMember)
+        {
+            throw new NoMemberException(
+                serializer.Format("User", newAdminId),
+                serializer.Format("Group", groupId));
+        }
+
+        var previousAdminId = group.AdminId;
+        var transferred = await groupRepository.TransferAdminAsync(group, newAdminId, cancellationToken);
+        groupsByIdsDataLoader.RemoveCacheEntry(groupId);
+        groupsByUserIdsDataLoader.RemoveCacheEntry(previousAdminId);
+        groupsByUserIdsDataLoader.RemoveCacheEntry(newAdminId);
+        return transferred;
+    }
+
+    [Error<NoUserException>]
+    [Error<GroupNotFoundException>]
+    [Error<NoAdminException>]
+    [Error<GroupNameMismatchException>]
+    public static async Task<DeletedGroupPayload> DeleteGroupAsync(
+        [TokenUser] TokenUser? tokenUser,
+        [ID(nameof(Database.Models.Group))] int groupId,
+        string confirmName,
+        IGroupRepository groupRepository,
+        IGroupsByIdsDataLoader groupsByIdsDataLoader,
+        IGroupsByUserIdsDataLoader groupsByUserIdsDataLoader,
+        CancellationToken cancellationToken,
+        [Service] INodeIdSerializer serializer)
+    {
+        if (tokenUser is null)
+        {
+            throw new NoUserException();
+        }
+
+        var group = await groupsByIdsDataLoader.LoadAsync(groupId, cancellationToken);
+        if (group is null)
+        {
+            throw new GroupNotFoundException(serializer.Format("Group", groupId));
+        }
+        if (group.AdminId != tokenUser.Id)
+        {
+            throw new NoAdminException();
+        }
+        if (!string.Equals(confirmName, group.Name, StringComparison.Ordinal))
+        {
+            throw new GroupNameMismatchException();
+        }
+
+        var affectedMemberIds = await groupRepository.DeleteGroupAsync(group, cancellationToken);
+        groupsByIdsDataLoader.RemoveCacheEntry(groupId);
+        foreach (var memberId in affectedMemberIds)
+        {
+            groupsByUserIdsDataLoader.RemoveCacheEntry(memberId);
+        }
+        return new DeletedGroupPayload(groupId);
     }
 }

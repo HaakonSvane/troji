@@ -43,7 +43,10 @@ public sealed class TrophyErrorFilter : IErrorFilter
             DuplicateGameEmojiException or
             SelfHandoutException or
             InvalidImageException or
-            InvalidImageSizeException)
+            InvalidImageSizeException or
+            InvalidGroupNameException or
+            CannotTransferToSelfException or
+            GroupNameMismatchException)
         {
             var code = error.Exception.GetType().Name.Replace("Exception", "Error", StringComparison.Ordinal);
 

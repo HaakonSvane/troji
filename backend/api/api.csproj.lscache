@@ -62,11 +62,14 @@ API/Account/
  UserQueries.cs
 API/Errors/
  AlreadyMemberException.cs
+ CannotTransferToSelfException.cs
  DuplicateGameEmojiException.cs
  GameLimitExceededException.cs
  GroupLimitExceededException.cs
+ GroupNameMismatchException.cs
  GroupNotFoundException.cs
  InvalidDisplayNameException.cs
+ InvalidGroupNameException.cs
  InvalidUserNameException.cs
  InviteExpiredException.cs
  InviteResetTooSoonException.cs
