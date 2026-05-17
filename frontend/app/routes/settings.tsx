@@ -1,8 +1,17 @@
-import { useState } from "react";
-import { graphql, loadQuery, useMutation, usePreloadedQuery } from "react-relay";
+import { useRef, useState } from "react";
+import { useAuth } from "@clerk/react-router";
+import {
+    fetchQuery,
+    graphql,
+    loadQuery,
+    useMutation,
+    usePreloadedQuery,
+    useRelayEnvironment,
+} from "react-relay";
 import type { settingsQuery } from "@/__generated__/settingsQuery.graphql";
 import type { settingsDisplayNameMutation } from "@/__generated__/settingsDisplayNameMutation.graphql";
 import type { settingsProfileMutation } from "@/__generated__/settingsProfileMutation.graphql";
+import type { settingsClearAvatarMutation } from "@/__generated__/settingsClearAvatarMutation.graphql";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { UserAvatar } from "@/components/UserAvatar";
 import { getRelayEnvironment } from "@/relay/environment";
@@ -14,6 +23,7 @@ import {
     getMutationErrorMessage,
     getMutationNetworkErrorMessage,
 } from "@/lib/relay/mutationErrors";
+import { uploadAvatar, UploadImageError } from "@/lib/uploadImage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,7 +34,8 @@ const SettingsPageQuery = graphql`
         me {
             id
             displayName
-            imageId
+            avatarUrl(size: 256)
+            navAvatarUrl: avatarUrl(size: 64)
             profile {
                 firstName
                 middleName
@@ -72,6 +83,24 @@ const UpdateProfileMutation = graphql`
     }
 `;
 
+const ClearAvatarMutation = graphql`
+    mutation settingsClearAvatarMutation {
+        clearUserAvatar {
+            user {
+                id
+                avatarUrl(size: 256)
+                navAvatarUrl: avatarUrl(size: 64)
+            }
+            errors {
+                __typename
+                ... on Error {
+                    message
+                }
+            }
+        }
+    }
+`;
+
 export function clientLoader(_args: Route.ClientLoaderArgs) {
     const environment = getRelayEnvironment();
     const queryRef = loadQuery<settingsQuery>(environment, SettingsPageQuery, {});
@@ -102,17 +131,148 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
     );
 }
 
+interface AvatarFieldProps {
+    displayName: string;
+    avatarUrl: string | null | undefined;
+}
+
+function AvatarField({ displayName, avatarUrl }: AvatarFieldProps) {
+    const { getToken } = useAuth();
+    const environment = useRelayEnvironment();
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [preview, setPreview] = useState<string | null>(null);
+    const [busy, setBusy] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const [commitClear, clearing] =
+        useMutation<settingsClearAvatarMutation>(ClearAvatarMutation);
+
+    const shownUrl = preview ?? avatarUrl ?? null;
+    const hasImage = shownUrl !== null;
+
+    const handleFile = async (file: File) => {
+        setError(null);
+        const localPreview = URL.createObjectURL(file);
+        setPreview(localPreview);
+        setBusy(true);
+        try {
+            await uploadAvatar(file, () => getToken());
+        } catch (err) {
+            setPreview(null);
+            URL.revokeObjectURL(localPreview);
+            setError(
+                err instanceof UploadImageError
+                    ? err.message
+                    : "Upload failed. Please try again."
+            );
+            setBusy(false);
+            return;
+        }
+
+        // Upload succeeded. The refetch is a best-effort store refresh — if it
+        // fails (transient network blip), keep the local preview visible so the
+        // user still sees their new avatar, and let the next navigation pick up
+        // the canonical URL from the server.
+        try {
+            await fetchQuery(environment, SettingsPageQuery, {}).toPromise();
+            setPreview(null);
+            URL.revokeObjectURL(localPreview);
+        } catch (err) {
+            console.error("Avatar refetch failed after successful upload", err);
+        } finally {
+            setBusy(false);
+        }
+    };
+
+    const handleRemove = () => {
+        setError(null);
+        setPreview(null);
+        commitClear({
+            variables: {},
+            onCompleted: (response) => {
+                const payload = response.clearUserAvatar;
+                if (!payload?.user) {
+                    setError(
+                        getMutationErrorMessage(
+                            payload?.errors,
+                            "Could not remove avatar."
+                        )
+                    );
+                }
+            },
+            onError: (err) => {
+                setError(getMutationNetworkErrorMessage(err, "Could not remove avatar."));
+            },
+        });
+    };
+
+    return (
+        <div className="flex items-center gap-4">
+            <UserAvatar displayName={displayName} avatarUrl={shownUrl} size="lg" />
+            <div className="flex flex-col gap-2">
+                <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                    avatar
+                </p>
+                <div className="flex flex-wrap gap-2">
+                    <input
+                        ref={inputRef}
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp"
+                        hidden
+                        onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) void handleFile(file);
+                            e.target.value = "";
+                        }}
+                    />
+                    <Button
+                        type="button"
+                        variant="outline"
+                        size="terminal"
+                        disabled={busy || clearing}
+                        onClick={() => inputRef.current?.click()}
+                    >
+                        <span aria-hidden>▸</span>
+                        <span>{busy ? "uploading" : hasImage ? "change" : "upload"}</span>
+                    </Button>
+                    {hasImage ? (
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="terminal"
+                            disabled={busy || clearing}
+                            onClick={handleRemove}
+                        >
+                            <span aria-hidden>✕</span>
+                            <span>{clearing ? "removing" : "remove"}</span>
+                        </Button>
+                    ) : null}
+                </div>
+                {error ? (
+                    <p
+                        className="font-mono text-[11px] uppercase tracking-[0.18em] text-destructive"
+                        role="alert"
+                    >
+                        <span aria-hidden className="mr-2">!</span>
+                        {error}
+                    </p>
+                ) : null}
+            </div>
+        </div>
+    );
+}
+
 interface IdentityCardProps {
     displayName: string;
     initialDisplayName: string;
-    imageId: string | null | undefined;
+    avatarUrl: string | null | undefined;
     onChange: (next: string) => void;
 }
 
 function IdentityCard({
     displayName,
     initialDisplayName,
-    imageId,
+    avatarUrl,
     onChange,
 }: IdentityCardProps) {
     const [commitDisplayName, isSubmitting] =
@@ -173,16 +333,7 @@ function IdentityCard({
                     </p>
                 </div>
 
-                <div className="flex items-center gap-4">
-                    <UserAvatar displayName={displayName} imageId={imageId} size="lg" />
-                    <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-                        avatar
-                        <br />
-                        <span className="lowercase tracking-normal text-foreground/60">
-                            uploads land later
-                        </span>
-                    </p>
-                </div>
+                <AvatarField displayName={displayName} avatarUrl={avatarUrl} />
 
                 <div className="flex flex-col gap-1.5">
                     <Label
@@ -439,7 +590,7 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
                 <IdentityCard
                     displayName={displayName}
                     initialDisplayName={initialDisplayName}
-                    imageId={data.me?.imageId}
+                    avatarUrl={data.me?.avatarUrl}
                     onChange={setDisplayName}
                 />
                 <ProfileCard

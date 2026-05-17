@@ -1,9 +1,10 @@
 import { DisplayName } from "@/components/DisplayName";
-import { initialsFromDisplayName } from "@/lib/format/names";
+import { UserAvatar } from "@/components/UserAvatar";
 
 interface TopPerformerUser {
     id: string;
     displayName: string;
+    avatarUrl?: string | null;
     profile?: {
         firstName: string;
         middleName?: string | null;
@@ -34,9 +35,11 @@ export function GroupTopPerformer({
             <div className="surface-card flex flex-1 flex-col gap-4 p-5 sm:p-6">
             {user ? (
                 <div className="flex flex-1 items-center gap-4">
-                    <div className="flex size-14 shrink-0 items-center justify-center rounded-full border border-medal-gold/40 bg-surface-muted text-base font-medium text-foreground/90">
-                        {initialsFromDisplayName(user.displayName)}
-                    </div>
+                    <UserAvatar
+                        displayName={user.displayName}
+                        avatarUrl={user.avatarUrl}
+                        size="md"
+                    />
                     <div className="flex min-w-0 flex-1 flex-col gap-1">
                         <DisplayName
                             user={user}

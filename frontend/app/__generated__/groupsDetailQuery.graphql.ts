@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8285d05779c2bcc416d1d6494725676f>>
+ * @generated SignedSource<<1ff233b822d9509f2f502018bb8c2f71>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -48,6 +48,7 @@ export type groupsDetailQuery$data = {
     readonly topPerformer: {
       readonly awardCount: number;
       readonly user: {
+        readonly avatarUrl: string | null | undefined;
         readonly displayName: string;
         readonly id: string;
         readonly profile: {
@@ -199,42 +200,38 @@ v13 = {
   "name": "awardedTrophyCount",
   "storageKey": null
 },
-v14 = [
-  (v2/*: any*/),
-  (v11/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "UserProfile",
-    "kind": "LinkedField",
-    "name": "profile",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "firstName",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "middleName",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "lastName",
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  }
-],
+v14 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "UserProfile",
+  "kind": "LinkedField",
+  "name": "profile",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "firstName",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "middleName",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "lastName",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
 v15 = {
   "alias": null,
   "args": null,
@@ -250,7 +247,24 @@ v15 = {
       "kind": "LinkedField",
       "name": "user",
       "plural": false,
-      "selections": (v14/*: any*/),
+      "selections": [
+        (v2/*: any*/),
+        (v11/*: any*/),
+        {
+          "alias": null,
+          "args": [
+            {
+              "kind": "Literal",
+              "name": "size",
+              "value": 128
+            }
+          ],
+          "kind": "ScalarField",
+          "name": "avatarUrl",
+          "storageKey": "avatarUrl(size:128)"
+        },
+        (v14/*: any*/)
+      ],
       "storageKey": null
     },
     {
@@ -283,7 +297,30 @@ v18 = {
   "kind": "ScalarField",
   "name": "description",
   "storageKey": null
-};
+},
+v19 = [
+  (v2/*: any*/),
+  (v11/*: any*/),
+  (v14/*: any*/)
+],
+v20 = [
+  (v2/*: any*/),
+  (v11/*: any*/),
+  {
+    "alias": null,
+    "args": [
+      {
+        "kind": "Literal",
+        "name": "size",
+        "value": 64
+      }
+    ],
+    "kind": "ScalarField",
+    "name": "avatarUrl",
+    "storageKey": "avatarUrl(size:64)"
+  },
+  (v14/*: any*/)
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -452,6 +489,19 @@ return {
             "storageKey": null
           },
           {
+            "alias": null,
+            "args": [
+              {
+                "kind": "Literal",
+                "name": "size",
+                "value": 256
+              }
+            ],
+            "kind": "ScalarField",
+            "name": "imageUrl",
+            "storageKey": "imageUrl(size:256)"
+          },
+          {
             "alias": "transferableMembers",
             "args": [
               {
@@ -553,7 +603,7 @@ return {
                         "kind": "LinkedField",
                         "name": "receiver",
                         "plural": false,
-                        "selections": (v14/*: any*/),
+                        "selections": (v19/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -563,7 +613,7 @@ return {
                         "kind": "LinkedField",
                         "name": "awardedBy",
                         "plural": false,
-                        "selections": (v14/*: any*/),
+                        "selections": (v19/*: any*/),
                         "storageKey": null
                       }
                     ],
@@ -583,7 +633,7 @@ return {
                     "kind": "LinkedField",
                     "name": "member",
                     "plural": false,
-                    "selections": (v14/*: any*/),
+                    "selections": (v20/*: any*/),
                     "storageKey": null
                   }
                 ],
@@ -679,7 +729,7 @@ return {
                     "kind": "LinkedField",
                     "name": "node",
                     "plural": false,
-                    "selections": (v14/*: any*/),
+                    "selections": (v20/*: any*/),
                     "storageKey": null
                   }
                 ],
@@ -698,7 +748,7 @@ return {
     ]
   },
   "params": {
-    "cacheID": "63ecab85b65e1b42e596858e1f67a7d4",
+    "cacheID": "77b7e612703611d08f40e852c4406863",
     "id": null,
     "metadata": {
       "connection": [
@@ -715,11 +765,11 @@ return {
     },
     "name": "groupsDetailQuery",
     "operationKind": "query",
-    "text": "query groupsDetailQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    admin {\n      id\n    }\n    ...GroupHero_group\n    ...GroupActivityFeed_group\n    games(first: 3) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          symbol\n          ...GroupGamesTableRow_game\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    members(first: 3) {\n      totalCount\n      edges {\n        node {\n          id\n          displayName\n          ...MemberRow_user\n        }\n      }\n    }\n    invite {\n      inviteCode\n      expirationDate\n    }\n    awardedTrophyCount\n    topPerformer {\n      user {\n        id\n        displayName\n        profile {\n          firstName\n          middleName\n          lastName\n        }\n      }\n      awardCount\n    }\n  }\n  me {\n    id\n  }\n}\n\nfragment GroupActivityFeed_group on Group {\n  recentActivityCount\n  recentActivity(first: 5) {\n    __typename\n    id\n    occurredAt\n    ... on TrophyAwardedActivity {\n      trophy {\n        id\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          displayName\n          profile {\n            firstName\n            middleName\n            lastName\n          }\n        }\n        awardedBy {\n          id\n          displayName\n          profile {\n            firstName\n            middleName\n            lastName\n          }\n        }\n      }\n    }\n    ... on MemberJoinedActivity {\n      member {\n        id\n        displayName\n        profile {\n          firstName\n          middleName\n          lastName\n        }\n      }\n    }\n  }\n}\n\nfragment GroupGamesTableRow_game on Game {\n  id\n  name\n  symbol\n  description\n  trophies {\n    totalCount\n  }\n}\n\nfragment GroupHero_group on Group {\n  id\n  name\n  description\n  createdDate\n  admin {\n    id\n    displayName\n  }\n  transferableMembers: members(first: 100) {\n    edges {\n      node {\n        id\n        displayName\n      }\n    }\n  }\n}\n\nfragment MemberRow_user on User {\n  id\n  displayName\n  profile {\n    firstName\n    middleName\n    lastName\n  }\n}\n"
+    "text": "query groupsDetailQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    admin {\n      id\n    }\n    ...GroupHero_group\n    ...GroupActivityFeed_group\n    games(first: 3) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          symbol\n          ...GroupGamesTableRow_game\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    members(first: 3) {\n      totalCount\n      edges {\n        node {\n          id\n          displayName\n          ...MemberRow_user\n        }\n      }\n    }\n    invite {\n      inviteCode\n      expirationDate\n    }\n    awardedTrophyCount\n    topPerformer {\n      user {\n        id\n        displayName\n        avatarUrl(size: 128)\n        profile {\n          firstName\n          middleName\n          lastName\n        }\n      }\n      awardCount\n    }\n  }\n  me {\n    id\n  }\n}\n\nfragment GroupActivityFeed_group on Group {\n  recentActivityCount\n  recentActivity(first: 5) {\n    __typename\n    id\n    occurredAt\n    ... on TrophyAwardedActivity {\n      trophy {\n        id\n        description\n        game {\n          id\n          symbol\n          name\n        }\n        receiver {\n          id\n          displayName\n          profile {\n            firstName\n            middleName\n            lastName\n          }\n        }\n        awardedBy {\n          id\n          displayName\n          profile {\n            firstName\n            middleName\n            lastName\n          }\n        }\n      }\n    }\n    ... on MemberJoinedActivity {\n      member {\n        id\n        displayName\n        avatarUrl(size: 64)\n        profile {\n          firstName\n          middleName\n          lastName\n        }\n      }\n    }\n  }\n}\n\nfragment GroupGamesTableRow_game on Game {\n  id\n  name\n  symbol\n  description\n  trophies {\n    totalCount\n  }\n}\n\nfragment GroupHero_group on Group {\n  id\n  name\n  description\n  createdDate\n  imageUrl(size: 256)\n  admin {\n    id\n    displayName\n  }\n  transferableMembers: members(first: 100) {\n    edges {\n      node {\n        id\n        displayName\n      }\n    }\n  }\n}\n\nfragment MemberRow_user on User {\n  id\n  displayName\n  avatarUrl(size: 64)\n  profile {\n    firstName\n    middleName\n    lastName\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f0d095b465552aacb9da99661cbd0508";
+(node as any).hash = "410f0e5ca5fcc02184bc6ebf33f3981f";
 
 export default node;

@@ -42,6 +42,8 @@ public sealed class TrophyErrorFilter : IErrorFilter
             GameLimitExceededException or
             DuplicateGameEmojiException or
             SelfHandoutException or
+            InvalidImageException or
+            InvalidImageSizeException or
             InvalidGroupNameException or
             CannotTransferToSelfException or
             GroupNameMismatchException)

@@ -59,3 +59,7 @@ frontend/.react-router/
 .playwright-mcp/
 
 .claude/worktrees/
+
+### Image storage (host-mounted; live data, never committed) ###
+/images/
+backend/api/.image-store/

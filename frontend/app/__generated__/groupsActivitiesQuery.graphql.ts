@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0c6c9814645578db830dcecdfda359a8>>
+ * @generated SignedSource<<b3a6c62f777e062209e9bc4ff9c57042>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,6 +20,7 @@ export type groupsActivitiesQuery$data = {
       readonly __typename: string;
       readonly id: string;
       readonly member?: {
+        readonly avatarUrl: string | null | undefined;
         readonly displayName: string;
         readonly id: string;
         readonly profile: {
@@ -90,49 +91,51 @@ v2 = {
   "name": "name",
   "storageKey": null
 },
-v3 = [
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "displayName",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "UserProfile",
+  "kind": "LinkedField",
+  "name": "profile",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "firstName",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "middleName",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "lastName",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v5 = [
   (v1/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "displayName",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "UserProfile",
-    "kind": "LinkedField",
-    "name": "profile",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "firstName",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "middleName",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "lastName",
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  }
+  (v3/*: any*/),
+  (v4/*: any*/)
 ],
-v4 = [
+v6 = [
   {
     "alias": null,
     "args": [
@@ -231,7 +234,7 @@ v4 = [
                     "kind": "LinkedField",
                     "name": "receiver",
                     "plural": false,
-                    "selections": (v3/*: any*/),
+                    "selections": (v5/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -241,7 +244,7 @@ v4 = [
                     "kind": "LinkedField",
                     "name": "awardedBy",
                     "plural": false,
-                    "selections": (v3/*: any*/),
+                    "selections": (v5/*: any*/),
                     "storageKey": null
                   }
                 ],
@@ -261,7 +264,24 @@ v4 = [
                 "kind": "LinkedField",
                 "name": "member",
                 "plural": false,
-                "selections": (v3/*: any*/),
+                "selections": [
+                  (v1/*: any*/),
+                  (v3/*: any*/),
+                  {
+                    "alias": null,
+                    "args": [
+                      {
+                        "kind": "Literal",
+                        "name": "size",
+                        "value": 64
+                      }
+                    ],
+                    "kind": "ScalarField",
+                    "name": "avatarUrl",
+                    "storageKey": "avatarUrl(size:64)"
+                  },
+                  (v4/*: any*/)
+                ],
                 "storageKey": null
               }
             ],
@@ -293,7 +313,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "groupsActivitiesQuery",
-    "selections": (v4/*: any*/),
+    "selections": (v6/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
@@ -302,19 +322,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "groupsActivitiesQuery",
-    "selections": (v4/*: any*/)
+    "selections": (v6/*: any*/)
   },
   "params": {
-    "cacheID": "e9aa0157d9f4813592ed2bdf0cc1f8d6",
+    "cacheID": "c41715005dd7632a65fd846c4f714ef9",
     "id": null,
     "metadata": {},
     "name": "groupsActivitiesQuery",
     "operationKind": "query",
-    "text": "query groupsActivitiesQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    name\n    recentActivityCount\n    recentActivity(first: 50) {\n      __typename\n      id\n      occurredAt\n      ... on TrophyAwardedActivity {\n        trophy {\n          id\n          description\n          game {\n            id\n            symbol\n            name\n          }\n          receiver {\n            id\n            displayName\n            profile {\n              firstName\n              middleName\n              lastName\n            }\n          }\n          awardedBy {\n            id\n            displayName\n            profile {\n              firstName\n              middleName\n              lastName\n            }\n          }\n        }\n      }\n      ... on MemberJoinedActivity {\n        member {\n          id\n          displayName\n          profile {\n            firstName\n            middleName\n            lastName\n          }\n        }\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n"
+    "text": "query groupsActivitiesQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    name\n    recentActivityCount\n    recentActivity(first: 50) {\n      __typename\n      id\n      occurredAt\n      ... on TrophyAwardedActivity {\n        trophy {\n          id\n          description\n          game {\n            id\n            symbol\n            name\n          }\n          receiver {\n            id\n            displayName\n            profile {\n              firstName\n              middleName\n              lastName\n            }\n          }\n          awardedBy {\n            id\n            displayName\n            profile {\n              firstName\n              middleName\n              lastName\n            }\n          }\n        }\n      }\n      ... on MemberJoinedActivity {\n        member {\n          id\n          displayName\n          avatarUrl(size: 64)\n          profile {\n            firstName\n            middleName\n            lastName\n          }\n        }\n      }\n    }\n  }\n  me {\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b45073d9bde937385ca58849c6c5cd01";
+(node as any).hash = "6b8660dfbe9adea36ff3de1c496be624";
 
 export default node;

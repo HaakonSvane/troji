@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bb02964ad58cc79e6e4f777a5e54ce23>>
+ * @generated SignedSource<<5fe465b2efb0ab4749df7810324328e6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 export type UserMenuQuery$variables = Record<PropertyKey, never>;
 export type UserMenuQuery$data = {
   readonly me: {
+    readonly avatarUrl: string | null | undefined;
     readonly displayName: string;
   };
 };
@@ -27,6 +28,19 @@ var v0 = {
   "kind": "ScalarField",
   "name": "displayName",
   "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": [
+    {
+      "kind": "Literal",
+      "name": "size",
+      "value": 64
+    }
+  ],
+  "kind": "ScalarField",
+  "name": "avatarUrl",
+  "storageKey": "avatarUrl(size:64)"
 };
 return {
   "fragment": {
@@ -43,7 +57,8 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v0/*: any*/)
+          (v0/*: any*/),
+          (v1/*: any*/)
         ],
         "storageKey": null
       }
@@ -66,6 +81,7 @@ return {
         "plural": false,
         "selections": [
           (v0/*: any*/),
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -79,16 +95,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1d6862c578da6da8d26dfec201a43ce8",
+    "cacheID": "a5b312459b1be7809dee5ca7883848f2",
     "id": null,
     "metadata": {},
     "name": "UserMenuQuery",
     "operationKind": "query",
-    "text": "query UserMenuQuery {\n  me {\n    displayName\n    id\n  }\n}\n"
+    "text": "query UserMenuQuery {\n  me {\n    displayName\n    avatarUrl(size: 64)\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "be0150d293065ce0350f1ac97bf52a5d";
+(node as any).hash = "c3a52bc0a7ce03c813ebf52f15fd1b17";
 
 export default node;

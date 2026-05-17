@@ -1,17 +1,19 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { initialsFromDisplayName } from "@/lib/format/names";
 import { cn } from "@/lib/utils";
 
-type UserAvatarSize = "sm" | "md" | "lg";
+export type UserAvatarSize = "xs" | "sm" | "md" | "lg";
 
 const sizeClass: Record<UserAvatarSize, string> = {
+    xs: "size-8 text-[11px]",
     sm: "size-9 text-xs",
-    md: "size-12 text-sm",
+    md: "size-14 text-base",
     lg: "size-20 text-2xl",
 };
 
 interface UserAvatarProps {
     displayName?: string | null;
-    imageId?: string | null;
+    avatarUrl?: string | null;
     size?: UserAvatarSize;
     className?: string;
     title?: string;
@@ -19,23 +21,23 @@ interface UserAvatarProps {
 
 export function UserAvatar({
     displayName,
-    imageId: _imageId,
+    avatarUrl,
     size = "sm",
     className,
     title,
 }: UserAvatarProps) {
     const initials = initialsFromDisplayName(displayName);
-
     return (
-        <span
+        <Avatar
             title={title}
             className={cn(
-                "inline-flex shrink-0 items-center justify-center rounded-full border border-medal-gold/30 bg-surface-muted font-medium text-foreground/85",
+                "border border-medal-gold/30 bg-surface-muted font-medium text-foreground/85",
                 sizeClass[size],
                 className
             )}
         >
-            {initials}
-        </span>
+            {avatarUrl ? <AvatarImage src={avatarUrl} alt="" /> : null}
+            <AvatarFallback>{initials}</AvatarFallback>
+        </Avatar>
     );
 }

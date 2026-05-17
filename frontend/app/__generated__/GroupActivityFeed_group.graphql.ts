@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<541fc60062b7344a6fdce924d634b7c1>>
+ * @generated SignedSource<<58c8af5014d13e7bc571c4be610a1ebd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type GroupActivityFeed_group$data = {
     readonly __typename: string;
     readonly id: string;
     readonly member?: {
+      readonly avatarUrl: string | null | undefined;
       readonly displayName: string;
       readonly id: string;
       readonly profile: {
@@ -68,47 +69,49 @@ var v0 = {
   "name": "id",
   "storageKey": null
 },
-v1 = [
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "displayName",
+  "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "UserProfile",
+  "kind": "LinkedField",
+  "name": "profile",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "firstName",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "middleName",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "lastName",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v3 = [
   (v0/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "displayName",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "UserProfile",
-    "kind": "LinkedField",
-    "name": "profile",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "firstName",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "middleName",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "lastName",
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  }
+  (v1/*: any*/),
+  (v2/*: any*/)
 ];
 return {
   "argumentDefinitions": [],
@@ -204,7 +207,7 @@ return {
                   "kind": "LinkedField",
                   "name": "receiver",
                   "plural": false,
-                  "selections": (v1/*: any*/),
+                  "selections": (v3/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -214,7 +217,7 @@ return {
                   "kind": "LinkedField",
                   "name": "awardedBy",
                   "plural": false,
-                  "selections": (v1/*: any*/),
+                  "selections": (v3/*: any*/),
                   "storageKey": null
                 }
               ],
@@ -234,7 +237,24 @@ return {
               "kind": "LinkedField",
               "name": "member",
               "plural": false,
-              "selections": (v1/*: any*/),
+              "selections": [
+                (v0/*: any*/),
+                (v1/*: any*/),
+                {
+                  "alias": null,
+                  "args": [
+                    {
+                      "kind": "Literal",
+                      "name": "size",
+                      "value": 64
+                    }
+                  ],
+                  "kind": "ScalarField",
+                  "name": "avatarUrl",
+                  "storageKey": "avatarUrl(size:64)"
+                },
+                (v2/*: any*/)
+              ],
               "storageKey": null
             }
           ],
@@ -250,6 +270,6 @@ return {
 };
 })();
 
-(node as any).hash = "9bff131c704a1f010675c7bbd1e56941";
+(node as any).hash = "deecbc91e27bebcaa8f1235c83bc0b99";
 
 export default node;

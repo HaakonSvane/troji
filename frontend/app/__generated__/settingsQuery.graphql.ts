@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a18b2c2bdf4ee9d48bbbf71979b02423>>
+ * @generated SignedSource<<aa4aea7db68b3397d41f171baf350f6b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,9 +12,10 @@ import { ConcreteRequest } from 'relay-runtime';
 export type settingsQuery$variables = Record<PropertyKey, never>;
 export type settingsQuery$data = {
   readonly me: {
+    readonly avatarUrl: string | null | undefined;
     readonly displayName: string;
     readonly id: string;
-    readonly imageId: string | null | undefined;
+    readonly navAvatarUrl: string | null | undefined;
     readonly profile: {
       readonly firstName: string;
       readonly lastName: string;
@@ -53,10 +54,29 @@ var v0 = [
       },
       {
         "alias": null,
-        "args": null,
+        "args": [
+          {
+            "kind": "Literal",
+            "name": "size",
+            "value": 256
+          }
+        ],
         "kind": "ScalarField",
-        "name": "imageId",
-        "storageKey": null
+        "name": "avatarUrl",
+        "storageKey": "avatarUrl(size:256)"
+      },
+      {
+        "alias": "navAvatarUrl",
+        "args": [
+          {
+            "kind": "Literal",
+            "name": "size",
+            "value": 64
+          }
+        ],
+        "kind": "ScalarField",
+        "name": "avatarUrl",
+        "storageKey": "avatarUrl(size:64)"
       },
       {
         "alias": null,
@@ -112,16 +132,16 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "cacheID": "b8f7fd6d3bc4e2eda5ea2e94043b371a",
+    "cacheID": "8e1e4fd0771f38bbc5c2326d0dcc1160",
     "id": null,
     "metadata": {},
     "name": "settingsQuery",
     "operationKind": "query",
-    "text": "query settingsQuery {\n  me {\n    id\n    displayName\n    imageId\n    profile {\n      firstName\n      middleName\n      lastName\n    }\n  }\n}\n"
+    "text": "query settingsQuery {\n  me {\n    id\n    displayName\n    avatarUrl(size: 256)\n    navAvatarUrl: avatarUrl(size: 64)\n    profile {\n      firstName\n      middleName\n      lastName\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a96875ff0827638439be06aef12eadfa";
+(node as any).hash = "99805057edbcea740f16dac5810f7898";
 
 export default node;

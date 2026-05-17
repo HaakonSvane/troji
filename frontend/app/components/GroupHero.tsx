@@ -41,6 +41,7 @@ const GroupHeroFragment = graphql`
         name
         description
         createdDate
+        imageUrl(size: 256)
         admin {
             id
             displayName
@@ -271,7 +272,16 @@ export function GroupHero({
 
             <div className="flex flex-col gap-5">
                 <div className="flex flex-col gap-3">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4">
+                        {data.imageUrl ? (
+                            <img
+                                src={data.imageUrl}
+                                alt=""
+                                loading="lazy"
+                                decoding="async"
+                                className="size-14 shrink-0 rounded-md border border-medal-gold/30 bg-surface-muted object-cover sm:size-16"
+                            />
+                        ) : null}
                         <h1 className="font-heading text-4xl font-medium leading-tight tracking-[0.015em] text-foreground sm:text-5xl">
                             {data.name}
                         </h1>

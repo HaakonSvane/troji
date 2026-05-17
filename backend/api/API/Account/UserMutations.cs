@@ -1,7 +1,10 @@
 using api.API.Errors;
+using api.Database;
 using api.Database.Models;
+using api.Images;
 using api.Repository;
 using api.Transport;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.API.Account;
 
@@ -22,6 +25,36 @@ public static class UserMutations
         }
 
         return await repository.UpdateUserDisplayNameAsync(user.Id, displayName, cancellationToken);
+    }
+
+    [Error<NoUserException>]
+    public static async Task<User> ClearUserAvatarAsync(
+        [TokenUser] TokenUser? user,
+        [Service] TrophyDbContext db,
+        [Service] IImageService images,
+        CancellationToken cancellationToken)
+    {
+        if (user is null)
+        {
+            throw new NoUserException();
+        }
+
+        var dbUser = await db.Users.FirstOrDefaultAsync(u => u.Id == user.Id, cancellationToken);
+        if (dbUser is null)
+        {
+            throw new NoUserException();
+        }
+
+        var oldImageId = dbUser.ImageId;
+        if (oldImageId is null)
+        {
+            return dbUser;
+        }
+
+        dbUser.ImageId = null;
+        await db.SaveChangesAsync(cancellationToken);
+        await images.DeleteAsync("users", oldImageId, cancellationToken);
+        return dbUser;
     }
 
     [Error<NoUserException>]

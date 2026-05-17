@@ -1,6 +1,8 @@
 using api.API.Account;
+using api.API.Errors;
 using api.API.Games;
 using api.Database.Models;
+using api.Images;
 using api.Repository;
 using HotChocolate.Authorization;
 using Game = api.Database.Models.Game;
@@ -13,6 +15,19 @@ public record GroupTopPerformer(User User, int AwardCount);
 [ExtendObjectType(typeof(Database.Models.Group))]
 public static class GroupNode
 {
+    public static string? GetImageUrl(int size, [Parent] Database.Models.Group group, [Service] IImageService images)
+    {
+        if (group.ImageId is null)
+        {
+            return null;
+        }
+        if (!images.IsValidSize(size))
+        {
+            throw new InvalidImageSizeException(size);
+        }
+        return images.SignFreshUrl("groups", group.ImageId, size);
+    }
+
     [UsePaging(IncludeTotalCount = true)]
     public static async Task<IReadOnlyList<Trophy>> GetTrophiesAsync(
         [Parent] Database.Models.Group group,

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<69d3434c7772b281e220d88a1e473900>>
+ * @generated SignedSource<<5ea493a5a6adb4103db6daeeda36a587>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,6 +18,7 @@ export type GroupHero_group$data = {
   readonly createdDate: any;
   readonly description: string | null | undefined;
   readonly id: string;
+  readonly imageUrl: string | null | undefined;
   readonly name: string;
   readonly transferableMembers: {
     readonly edges: ReadonlyArray<{
@@ -82,6 +83,19 @@ return {
     },
     {
       "alias": null,
+      "args": [
+        {
+          "kind": "Literal",
+          "name": "size",
+          "value": 256
+        }
+      ],
+      "kind": "ScalarField",
+      "name": "imageUrl",
+      "storageKey": "imageUrl(size:256)"
+    },
+    {
+      "alias": null,
       "args": null,
       "concreteType": "User",
       "kind": "LinkedField",
@@ -134,6 +148,6 @@ return {
 };
 })();
 
-(node as any).hash = "347340637e8c67aa8576d116f3d66328";
+(node as any).hash = "f0e749f1e54c5aaf2eca7d36bf44c49e";
 
 export default node;

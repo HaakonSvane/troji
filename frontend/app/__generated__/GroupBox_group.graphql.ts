@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<714cfa07c9ea24cdc0b66e099bcbd7d4>>
+ * @generated SignedSource<<2af06d5f05d12b8843cc17fd03829642>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type GroupBox_group$data = {
   readonly description: string | null | undefined;
   readonly id: string;
+  readonly imageUrl: string | null | undefined;
   readonly name: string;
   readonly " $fragmentType": "GroupBox_group";
 };
@@ -47,12 +48,25 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "description",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": [
+        {
+          "kind": "Literal",
+          "name": "size",
+          "value": 128
+        }
+      ],
+      "kind": "ScalarField",
+      "name": "imageUrl",
+      "storageKey": "imageUrl(size:128)"
     }
   ],
   "type": "Group",
   "abstractKey": null
 };
 
-(node as any).hash = "d4ed833b6699b2e6a9a27eb9b5acb2ee";
+(node as any).hash = "8bbfa09db3b3a8cb067be661075675c5";
 
 export default node;
