@@ -13,6 +13,7 @@ import type { settingsDisplayNameMutation } from "@/__generated__/settingsDispla
 import type { settingsProfileMutation } from "@/__generated__/settingsProfileMutation.graphql";
 import type { settingsClearAvatarMutation } from "@/__generated__/settingsClearAvatarMutation.graphql";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { DrawerDialog } from "@/components/DrawerDialog";
 import { UserAvatar } from "@/components/UserAvatar";
 import { getRelayEnvironment } from "@/relay/environment";
 import {
@@ -136,30 +137,34 @@ interface AvatarFieldProps {
     avatarUrl: string | null | undefined;
 }
 
+function preloadImage(url: string): Promise<void> {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve();
+        img.onerror = () => resolve();
+        img.src = url;
+    });
+}
+
 function AvatarField({ displayName, avatarUrl }: AvatarFieldProps) {
     const { getToken } = useAuth();
     const environment = useRelayEnvironment();
     const inputRef = useRef<HTMLInputElement>(null);
-    const [preview, setPreview] = useState<string | null>(null);
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [removeConfirmOpen, setRemoveConfirmOpen] = useState(false);
 
     const [commitClear, clearing] =
         useMutation<settingsClearAvatarMutation>(ClearAvatarMutation);
 
-    const shownUrl = preview ?? avatarUrl ?? null;
-    const hasImage = shownUrl !== null;
+    const hasImage = avatarUrl != null;
 
     const handleFile = async (file: File) => {
         setError(null);
-        const localPreview = URL.createObjectURL(file);
-        setPreview(localPreview);
         setBusy(true);
         try {
             await uploadAvatar(file, () => getToken());
         } catch (err) {
-            setPreview(null);
-            URL.revokeObjectURL(localPreview);
             setError(
                 err instanceof UploadImageError
                     ? err.message
@@ -169,14 +174,19 @@ function AvatarField({ displayName, avatarUrl }: AvatarFieldProps) {
             return;
         }
 
-        // Upload succeeded. The refetch is a best-effort store refresh — if it
-        // fails (transient network blip), keep the local preview visible so the
-        // user still sees their new avatar, and let the next navigation pick up
-        // the canonical URL from the server.
+        // Refetch the canonical signed URL, then preload it into the browser
+        // cache so the skeleton can flip straight to the rendered image
+        // without Radix's fallback initials flashing in between.
         try {
-            await fetchQuery(environment, SettingsPageQuery, {}).toPromise();
-            setPreview(null);
-            URL.revokeObjectURL(localPreview);
+            const result = await fetchQuery<settingsQuery>(
+                environment,
+                SettingsPageQuery,
+                {}
+            ).toPromise();
+            const nextUrl = result?.me?.avatarUrl;
+            if (nextUrl) {
+                await preloadImage(nextUrl);
+            }
         } catch (err) {
             console.error("Avatar refetch failed after successful upload", err);
         } finally {
@@ -184,9 +194,8 @@ function AvatarField({ displayName, avatarUrl }: AvatarFieldProps) {
         }
     };
 
-    const handleRemove = () => {
+    const handleConfirmRemove = () => {
         setError(null);
-        setPreview(null);
         commitClear({
             variables: {},
             onCompleted: (response) => {
@@ -198,7 +207,9 @@ function AvatarField({ displayName, avatarUrl }: AvatarFieldProps) {
                             "Could not remove avatar."
                         )
                     );
+                    return;
                 }
+                setRemoveConfirmOpen(false);
             },
             onError: (err) => {
                 setError(getMutationNetworkErrorMessage(err, "Could not remove avatar."));
@@ -208,7 +219,12 @@ function AvatarField({ displayName, avatarUrl }: AvatarFieldProps) {
 
     return (
         <div className="flex items-center gap-4">
-            <UserAvatar displayName={displayName} avatarUrl={shownUrl} size="lg" />
+            <UserAvatar
+                displayName={displayName}
+                avatarUrl={avatarUrl}
+                size="lg"
+                loading={busy}
+            />
             <div className="flex flex-col gap-2">
                 <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
                     avatar
@@ -238,13 +254,16 @@ function AvatarField({ displayName, avatarUrl }: AvatarFieldProps) {
                     {hasImage ? (
                         <Button
                             type="button"
-                            variant="ghost"
+                            variant="destructive"
                             size="terminal"
                             disabled={busy || clearing}
-                            onClick={handleRemove}
+                            onClick={() => {
+                                setError(null);
+                                setRemoveConfirmOpen(true);
+                            }}
                         >
                             <span aria-hidden>✕</span>
-                            <span>{clearing ? "removing" : "remove"}</span>
+                            <span>remove</span>
                         </Button>
                     ) : null}
                 </div>
@@ -258,6 +277,42 @@ function AvatarField({ displayName, avatarUrl }: AvatarFieldProps) {
                     </p>
                 ) : null}
             </div>
+
+            <DrawerDialog
+                open={removeConfirmOpen}
+                onOpenChange={(next) => {
+                    if (clearing) return;
+                    setRemoveConfirmOpen(next);
+                    if (!next) setError(null);
+                }}
+                title="Remove avatar?"
+                description="Your initials will be shown instead. You can upload a new image any time."
+                footer={
+                    <div className="flex justify-end gap-2">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            disabled={clearing}
+                            onClick={() => setRemoveConfirmOpen(false)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            busy={clearing}
+                            disabled={clearing}
+                            onClick={handleConfirmRemove}
+                        >
+                            Remove avatar
+                        </Button>
+                    </div>
+                }
+            >
+                {error ? (
+                    <p className="text-sm text-destructive">{error}</p>
+                ) : null}
+            </DrawerDialog>
         </div>
     );
 }
